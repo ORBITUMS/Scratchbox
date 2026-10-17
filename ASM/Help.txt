@@ -1,0 +1,2 @@
+nasm -f elf64 asm.asm -o asm.o && ld asm.o -o asm_prog
+./asm_prog

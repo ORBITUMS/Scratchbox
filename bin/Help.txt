@@ -1,0 +1,4 @@
+bin1 its only for GNU-linux
+programm.exe its only for windows
+
+Find my favorite number! 
