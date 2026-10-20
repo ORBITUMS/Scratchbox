@@ -1,20 +1,19 @@
-def f():
-    yield 1
-    print("hi")
-    yield 2
-    print(67)
-    yield 3
+import time
 
+def f():
+    while True:
+        print(1)
+        yield 1
+        print(2)
+        yield 2
+        print(3)
+        yield 3
+
+time.sleep(0.1)
 while True:
     a = 1
     g = f()
     while a == 1:
-        a = int(input("input: "))
-        try:
-          next(g)
-        except:
-            print("hah")
-            print(str(f()))
-            print(str(f()))
-            print(str(f()))
-            print(str(f()))
+        next(g)
+        time.sleep(0.5)
+
