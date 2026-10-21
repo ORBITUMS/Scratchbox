@@ -1,6 +1,7 @@
 # import time
 # start = time.perf_counter()
 
+# сделать потом вращяющяюся шнягу какую-нибудь
 from pynput import keyboard
 from pynput.keyboard import Key
 
@@ -14,52 +15,50 @@ class pixel:
   def __str__(self):
     return f"{self.x} {self.y} {self.z}"
 
-class xyzclass:
-  def __init__(self,x:int,y:int,z:int):
-    self.x = x
-    self.y = y
-    self.z = z 
+# class xyzclass:
+#   def __init__(self,x:int,y:int,z:int):
+#     self.x = x
+#     self.y = y
+#     self.z = z 
 
-def view(a: list, pixels: list, xyz: xyzclass):
-  apply_pixels(a, pixels, xyz)
-  for i in reversed(range(len(a))):
-    for j in range(len(a[i])):
-      print(a[i][j]*2, end="")
+def view(pixels: list): # xyz: xyzclass
+  Frame = apply_pixels(pixels)
+  for i in reversed(range(len(Frame))):
+    for j in range(len(Frame[i])):
+      print(Frame[i][j]*2, end="")
     print("")
 
-def apply_pixels(a: list, pixels: list, xyz: xyzclass):
+def apply_pixels(pixels: list): # xyz: xyzclass
+  a = create(15,15)
   symbols = ["█", "▓", "▒", "░", "≡", "=", "-", "."]
-  Symblos_len = len(symbols) -1
-
-  if xyz.x == 0 and xyz.y == 0 and xyz.z == 1: # будем просто изменять список пикселей а отрисовку оставим одну всегда, но это уже завтра
-    for pix in pixels:
-      if pix.z > Symblos_len:
-        pix.z = Symblos_len
-      dis = 0
-      for sym in symbols:
-        if a[pix.y][pix.x] == sym:
-          dis = 1
-          if symbols.index(sym) > pix.z:
-            a[pix.y][pix.x] = symbols[pix.z]
-      if dis == 0:
-        a[pix.y][pix.x] = symbols[pix.z]
+  Symbols_len = len(symbols)-1
+  for pix in pixels:
+    z = pix.z
+    if z > Symbols_len:
+      z = Symbols_len
+    
+    try:
+      a[pix.y][pix.x] = symbols[z]
+    except:
+      pass
+  return a
 
 def create(lines: int, columns: int):
   a = []
   for _ in range(lines):
     line = []
     for _ in range(columns):
-      line += [" "]
+      line += [" "] # " "
     a += [line] # or a.append(line)
   return a
 
 def cybe(size: int):
-  a = []
+  pixels = []
   for x in range(size):
     for y in range(size):
-      b = pixel(x,y,0)
-      a += [b]
-  return a
+      px = pixel(x,y,0)
+      pixels += [px]
+  return pixels
 
 def line(size: int):
   a = []
@@ -68,28 +67,52 @@ def line(size: int):
   return a
 
 def on_press(key):
-    global zone, pixels, xyz
-    print(": ", end="")
+    global pixels
     if key == Key.up:
-      xyz.y = 1
-      xyz.x = 0
-      xyz.z = 0
-      view(zone,pixels,xyz)
+      for px in pixels:
+        px.y += 1
+      view(pixels)
     elif key == Key.down:
-      print("!!")
+      for px in pixels:
+        px.y -= 1
+      view(pixels)
     elif key == Key.left:
-      print("!!")
+      for px in pixels:
+        px.x -= 1
+      view(pixels)
     elif key == Key.right:
-      print("!!")
+      for px in pixels:
+        px.x += 1
+      view(pixels)
+    elif key == Key.shift_r:
+      for px in pixels:
+        px.z += 1
+      view(pixels)
+    elif key == Key.shift_l:
+      for px in pixels:
+        px.z -= 1
+      view(pixels)
     elif key == Key.esc:
       return False
+    elif key == Key.alt_r:
+      for px in pixels:
+        x = px.x
+        px.x = px.z
+        px.z = x
+      view(pixels)
+    elif key == Key.alt_l:
+      for px in pixels:
+        x = px.x
+        px.x = px.y
+        px.y = x
+      view(pixels)
     else:
       return 
+
 if __name__ == "__main__":
-  pixels = cybe(4) # cybe or line
-  zone = create(15,15)
-  xyz = xyzclass(0,0,1)
-  view(zone,pixels,xyz)
+  pixels = cybe(7) # cybe or line
+  # xyz = xyzclass(0,0,1)
+  view(pixels) #xyz
   with keyboard.Listener(on_press=on_press) as listener:
     listener.join()
 
