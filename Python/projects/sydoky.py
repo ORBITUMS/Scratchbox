@@ -51,7 +51,7 @@ while running:
         text_surface = font.render(str(A[r][c]), True, BLUE)
         text_rect = text_surface.get_rect(center=(start_x + c * cell_size + cell_size // 2, start_y + r * cell_size + cell_size // 2))
         screen.blit(text_surface, text_rect)
-  func.f(A)
+  next(f(A))
   sl(1)
   pygame.display.flip()
 
