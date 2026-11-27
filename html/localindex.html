@@ -5,142 +5,216 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Космос 3D — Расширенный Атлас Вселенной</title>
     <style>
+      :root {
+        --mac-glass: rgba(28, 28, 32, 0.72);
+        --mac-glass-strong: rgba(24, 24, 28, 0.84);
+        --mac-glass-light: rgba(255, 255, 255, 0.08);
+        --mac-border: rgba(255, 255, 255, 0.14);
+        --mac-border-subtle: rgba(255, 255, 255, 0.08);
+        --mac-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        --mac-blue: #0a84ff;
+        --mac-red: #ff453a;
+        --mac-green: #30d158;
+        --mac-orange: #ff9f0a;
+        --mac-text: #f5f5f7;
+        --mac-text-2: rgba(235, 235, 245, 0.62);
+        --mac-text-3: rgba(235, 235, 245, 0.38);
+        --mac-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+      }
+
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
+
       html,
       body {
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background: #020308;
-        color: #e8f0ff;
+        background: #000000;
+        color: var(--mac-text);
         font-family:
-          "Segoe UI",
-          system-ui,
-          -apple-system,
-          sans-serif;
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+          "Segoe UI", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
         user-select: none;
       }
+
       #canvas-container {
         position: fixed;
         inset: 0;
         z-index: 1;
       }
 
-      /* Верхняя панель */
+      /* === macOS MENU BAR (ВЕРХНЯЯ ПАНЕЛЬ) === */
       #top-bar {
         position: fixed;
-        top: 14px;
-        left: 50%;
-        transform: translateX(-50%);
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 42px;
+        transform: none;
         z-index: 20;
         display: flex;
         align-items: center;
         gap: 14px;
-        background: rgba(8, 13, 28, 0.78);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(110, 165, 255, 0.25);
-        border-radius: 14px;
-        padding: 8px 18px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
-      }
-      #top-bar h1 {
-        font-size: 15px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        background: linear-gradient(90deg, #7ec8ff, #c59cff, #ffd480);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 800;
-      }
-      #status-pill {
-        font-size: 12px;
-        color: #9fc4ff;
-        padding: 3px 10px;
-        border-radius: 999px;
-        background: rgba(65, 125, 255, 0.16);
-        border: 1px solid rgba(100, 165, 255, 0.28);
+        padding: 0 18px;
+        background: rgba(22, 22, 26, 0.72);
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border-bottom: 1px solid var(--mac-border-subtle);
+        box-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
       }
 
-      /* Левая панель навигации */
+      #top-bar h1 {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+        color: var(--mac-text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #top-bar h1::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--mac-blue);
+        box-shadow: 0 0 10px rgba(10, 132, 255, 0.8);
+      }
+
+      #status-pill {
+        font-size: 12.5px;
+        font-weight: 500;
+        color: var(--mac-text-2);
+        padding: 4px 11px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid var(--mac-border-subtle);
+      }
+
+      /* Кнопка «Редактор звёзд» в правом углу Menu Bar */
+      #se-open-btn {
+        position: fixed;
+        top: 6px;
+        right: 14px;
+        height: 30px;
+        z-index: 9000;
+        padding: 0 13px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.11);
+        color: var(--mac-text);
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 600;
+        cursor: pointer;
+        backdrop-filter: blur(16px);
+        transition:
+          background 0.15s,
+          transform 0.1s;
+      }
+      #se-open-btn:hover {
+        background: var(--mac-blue);
+        border-color: rgba(255, 255, 255, 0.28);
+      }
+      #se-open-btn:active {
+        transform: scale(0.96);
+      }
+
+      /* === macOS FINDER SIDEBAR (ЛЕВАЯ ПАНЕЛЬ) === */
       #sidebar {
         position: fixed;
-        top: 70px;
+        top: 56px;
         left: 14px;
-        bottom: 88px;
-        width: 255px;
+        bottom: 80px;
+        width: 262px;
         z-index: 20;
         display: flex;
         flex-direction: column;
-        background: rgba(8, 12, 26, 0.78);
-        backdrop-filter: blur(14px);
-        border: 1px solid rgba(110, 165, 255, 0.22);
+        background: var(--mac-glass);
+        backdrop-filter: blur(32px) saturate(180%);
+        -webkit-backdrop-filter: blur(32px) saturate(180%);
+        border: 1px solid var(--mac-border);
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
-        transition: transform 0.3s ease;
+        box-shadow: var(--mac-shadow), var(--mac-highlight);
+        transition: transform 0.28s cubic-bezier(0.25, 0.9, 0.3, 1);
       }
       #sidebar.collapsed {
-        transform: translateX(-275px);
+        transform: translateX(-286px);
       }
+
+      /* Apple Segmented Control для вкладок */
       .tabs {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        border-bottom: 1px solid rgba(110, 165, 255, 0.2);
-        background: rgba(15, 24, 50, 0.6);
+        gap: 3px;
+        margin: 10px 10px 6px;
+        padding: 3px;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.32);
+        border: 1px solid var(--mac-border-subtle);
       }
       .tab-btn {
-        padding: 10px 4px;
-        background: none;
+        padding: 6px 4px;
+        background: transparent;
         border: none;
-        color: #8da6d6;
-        font-size: 11px;
-        font-weight: 700;
+        border-radius: 7px;
+        color: var(--mac-text-2);
+        font-family: inherit;
+        font-size: 11.5px;
+        font-weight: 600;
         cursor: pointer;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-        transition: 0.2s;
+        transition:
+          background 0.18s,
+          color 0.18s;
+      }
+      .tab-btn:hover {
+        color: var(--mac-text);
       }
       .tab-btn.active {
         color: #fff;
-        background: rgba(76, 132, 255, 0.25);
-        border-bottom: 2px solid #6ab4ff;
+        background: rgba(255, 255, 255, 0.18);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
       }
+
       #nav-list {
         flex: 1;
         overflow-y: scroll;
-        padding: 8px 10px 8px 8px;
-        touch-action: pan-y; /* плавный скролл пальцем прямо по списку */
+        padding: 4px 10px 10px 8px;
+        touch-action: pan-y;
       }
-      /* Широкий скроллбар для мультиборда */
+      /* Широкий скроллбар для мультиборда в стиле macOS */
       #nav-list::-webkit-scrollbar {
-        width: 18px;
+        width: 16px;
       }
       #nav-list::-webkit-scrollbar-track {
-        background: rgba(12, 20, 44, 0.85);
-        border-left: 1px solid rgba(110, 165, 255, 0.2);
-        border-radius: 0 0 14px 0;
+        background: transparent;
       }
       #nav-list::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #5aa4ff, #3b6fd9);
-        border-radius: 10px;
-        border: 3px solid rgba(12, 20, 44, 0.9);
+        background: rgba(255, 255, 255, 0.24);
+        border-radius: 999px;
+        border: 4px solid transparent;
+        background-clip: content-box;
         min-height: 48px;
       }
       #nav-list::-webkit-scrollbar-thumb:hover,
       #nav-list::-webkit-scrollbar-thumb:active {
-        background: linear-gradient(180deg, #86c0ff, #548cff);
+        background: rgba(255, 255, 255, 0.44);
+        border: 4px solid transparent;
+        background-clip: content-box;
       }
+
       .nav-group-title {
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #7092cc;
-        margin: 10px 6px 5px;
-        font-weight: 700;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--mac-text-3);
+        margin: 8px 8px 6px;
+        letter-spacing: 0.2px;
       }
       .nav-item {
         display: flex;
@@ -148,98 +222,106 @@
         gap: 10px;
         width: 100%;
         padding: 8px 10px;
-        margin-bottom: 4px;
-        border: 1px solid transparent;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.03);
-        color: #dce8ff;
+        margin-bottom: 2px;
+        border: none;
+        border-radius: 9px;
+        background: transparent;
+        color: var(--mac-text);
+        font-family: inherit;
         font-size: 13px;
+        font-weight: 500;
         cursor: pointer;
         text-align: left;
-        transition: 0.18s;
+        transition: background 0.14s;
       }
       .nav-item:hover {
-        background: rgba(88, 145, 255, 0.18);
-        border-color: rgba(120, 175, 255, 0.35);
+        background: rgba(255, 255, 255, 0.08);
       }
       .nav-item.active {
-        background: rgba(74, 134, 255, 0.32);
-        border-color: #79b8ff;
+        background: var(--mac-blue);
         color: #fff;
         font-weight: 600;
       }
+      .nav-item.active .nav-sub {
+        color: rgba(255, 255, 255, 0.8);
+      }
       .nav-dot {
-        width: 10px;
-        height: 10px;
+        width: 9px;
+        height: 9px;
         border-radius: 50%;
         flex-shrink: 0;
-        box-shadow: 0 0 8px currentColor;
+        box-shadow: 0 0 6px currentColor;
       }
       .nav-sub {
-        font-size: 10px;
-        color: #8da5cf;
+        font-size: 11px;
+        color: var(--mac-text-2);
         display: block;
         margin-top: 1px;
       }
 
-      /* Правая информационная карточка */
+      /* === macOS INSPECTOR (ПРАВАЯ КАРТОЧКА) === */
       #info-panel {
         position: fixed;
-        top: 70px;
+        top: 56px;
         right: 14px;
-        bottom: 88px;
-        width: 350px;
+        bottom: 80px;
+        width: 344px;
         z-index: 20;
         display: flex;
         flex-direction: column;
-        background: rgba(8, 12, 26, 0.82);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(110, 165, 255, 0.25);
+        background: var(--mac-glass);
+        backdrop-filter: blur(32px) saturate(180%);
+        -webkit-backdrop-filter: blur(32px) saturate(180%);
+        border: 1px solid var(--mac-border);
         border-radius: 16px;
         padding: 16px;
         overflow-y: auto;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65);
+        box-shadow: var(--mac-shadow), var(--mac-highlight);
         scrollbar-width: thin;
-        scrollbar-color: #36528a transparent;
-        transition: transform 0.3s ease;
+        scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+        transition: transform 0.28s cubic-bezier(0.25, 0.9, 0.3, 1);
       }
       #info-panel.hidden {
         transform: translateX(380px);
       }
+
       .info-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         gap: 10px;
-        border-bottom: 1px solid rgba(120, 170, 255, 0.2);
-        padding-bottom: 10px;
-        margin-bottom: 12px;
+        border-bottom: 1px solid var(--mac-border-subtle);
+        padding-bottom: 12px;
+        margin-bottom: 14px;
       }
       #info-title {
         font-size: 20px;
-        font-weight: 800;
-        color: #fff;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        color: var(--mac-text);
       }
       #info-type {
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: #7cc0ff;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--mac-blue);
         margin-top: 3px;
       }
       #close-info {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.1);
         border: none;
-        color: #bcd2ff;
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
+        color: var(--mac-text-2);
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 15px;
         line-height: 1;
+        transition:
+          background 0.15s,
+          color 0.15s;
       }
       #close-info:hover {
-        background: rgba(255, 90, 90, 0.3);
+        background: rgba(255, 69, 58, 0.85);
         color: #fff;
       }
 
@@ -247,60 +329,56 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
       }
       .stat-card {
-        background: rgba(255, 255, 255, 0.045);
-        border: 1px solid rgba(120, 170, 255, 0.14);
-        border-radius: 10px;
-        padding: 8px 9px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--mac-border-subtle);
+        border-radius: 11px;
+        padding: 9px 10px;
       }
       .stat-card.full {
         grid-column: 1 / -1;
       }
       .stat-label {
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #84a3d6;
+        font-size: 10.5px;
+        font-weight: 600;
+        color: var(--mac-text-2);
         margin-bottom: 3px;
       }
       .stat-val {
         font-size: 12.5px;
         font-weight: 600;
-        color: #f0f6ff;
-        line-height: 1.3;
+        color: var(--mac-text);
+        line-height: 1.35;
       }
 
       .info-desc {
         font-size: 13px;
         line-height: 1.55;
-        color: #d0def7;
-        margin-bottom: 12px;
+        color: rgba(245, 245, 247, 0.86);
+        margin-bottom: 14px;
       }
       .fact-box {
-        background: linear-gradient(
-          135deg,
-          rgba(72, 130, 255, 0.16),
-          rgba(162, 92, 255, 0.14)
-        );
-        border: 1px solid rgba(135, 180, 255, 0.3);
+        background: rgba(10, 132, 255, 0.12);
+        border: 1px solid rgba(10, 132, 255, 0.28);
         border-radius: 12px;
-        padding: 10px 12px;
+        padding: 11px 12px;
         font-size: 12.5px;
-        line-height: 1.45;
-        color: #eaf2ff;
+        line-height: 1.48;
+        color: var(--mac-text);
       }
       .fact-box strong {
-        color: #ffd479;
+        color: #64d2ff;
+        font-weight: 600;
         display: block;
         margin-bottom: 4px;
       }
 
-      /* Панель выбора созвездий (появляется в режиме «Вид с Земли») */
+      /* === ПАНЕЛЬ СОЗВЕЗДИЙ (ВИД С ЗЕМЛИ) === */
       #earth-sky-bar {
         position: fixed;
-        top: 68px;
+        top: 56px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 25;
@@ -309,34 +387,37 @@
         justify-content: center;
         gap: 6px;
         max-width: 680px;
-        background: rgba(8, 14, 34, 0.86);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(130, 190, 255, 0.38);
+        background: var(--mac-glass-strong);
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid var(--mac-border);
         border-radius: 14px;
         padding: 8px 12px;
-        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+        box-shadow: var(--mac-shadow), var(--mac-highlight);
       }
       #earth-sky-bar.visible {
         display: flex;
       }
       .sky-chip {
-        padding: 5px 10px;
+        padding: 5px 11px;
         border-radius: 999px;
+        font-family: inherit;
         font-size: 12px;
-        border: 1px solid rgba(130, 190, 255, 0.35);
-        background: rgba(70, 130, 255, 0.15);
-        color: #dcebff;
+        font-weight: 500;
+        border: 1px solid var(--mac-border-subtle);
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--mac-text);
         cursor: pointer;
-        transition: 0.18s;
+        transition: background 0.15s;
       }
       .sky-chip:hover,
       .sky-chip.active {
-        background: #4b8bff;
+        background: var(--mac-blue);
         color: #fff;
-        border-color: #9ec8ff;
+        border-color: transparent;
       }
 
-      /* Нижняя панель управления */
+      /* === macOS DOCK (НИЖНЯЯ ПАНЕЛЬ) === */
       #bottom-bar {
         position: fixed;
         bottom: 14px;
@@ -345,53 +426,59 @@
         z-index: 25;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         flex-wrap: wrap;
         justify-content: center;
-        max-width: 96vw;
-        background: rgba(8, 12, 26, 0.85);
-        backdrop-filter: blur(14px);
-        border: 1px solid rgba(110, 165, 255, 0.25);
-        border-radius: 16px;
-        padding: 8px 14px;
-        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
+        max-width: 90vw;
+        background: rgba(28, 28, 32, 0.72);
+        backdrop-filter: blur(34px) saturate(190%);
+        -webkit-backdrop-filter: blur(34px) saturate(190%);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 18px;
+        padding: 7px 10px;
+        box-shadow:
+          0 16px 40px rgba(0, 0, 0, 0.6),
+          var(--mac-highlight);
       }
+
       .ctrl-btn {
-        padding: 7px 11px;
+        padding: 7px 12px;
         border-radius: 10px;
-        font-size: 12px;
-        font-weight: 600;
-        border: 1px solid rgba(120, 170, 255, 0.28);
-        background: rgba(255, 255, 255, 0.06);
-        color: #e2eeff;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 500;
+        border: 1px solid transparent;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--mac-text);
         cursor: pointer;
-        transition: 0.18s;
+        transition:
+          background 0.15s,
+          transform 0.1s;
         white-space: nowrap;
       }
       .ctrl-btn:hover {
-        background: rgba(90, 150, 255, 0.25);
-        border-color: #82bfff;
+        background: rgba(255, 255, 255, 0.16);
+      }
+      .ctrl-btn:active {
+        transform: scale(0.96);
       }
       .ctrl-btn.active {
-        background: rgba(65, 135, 255, 0.42);
-        border-color: #88c4ff;
+        background: var(--mac-blue);
         color: #fff;
+        font-weight: 600;
       }
       .ctrl-btn.danger {
-        background: linear-gradient(135deg, #c92a2a, #ff5500);
-        border-color: #ff9c70;
+        background: var(--mac-red);
         color: #fff;
-        font-weight: 800;
-        box-shadow: 0 0 16px rgba(255, 72, 0, 0.45);
+        font-weight: 600;
       }
       .ctrl-btn.danger:hover {
-        filter: brightness(1.15);
-        transform: scale(1.03);
+        background: #ff6961;
       }
       .ctrl-btn.reset-btn {
-        background: rgba(35, 175, 115, 0.28);
-        border-color: #55e2a0;
-        color: #d8ffec;
+        background: var(--mac-green);
+        color: #05220e;
+        font-weight: 700;
       }
 
       .speed-group {
@@ -400,26 +487,27 @@
         gap: 6px;
         padding: 4px 10px;
         border-radius: 10px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(120, 170, 255, 0.18);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--mac-border-subtle);
       }
       .speed-group span {
-        font-size: 11px;
-        color: #9bb8e8;
+        font-size: 12px;
+        color: var(--mac-text-2);
         white-space: nowrap;
       }
       #speed-select {
-        background: #101a34;
-        color: #fff;
-        border: 1px solid rgba(120, 170, 255, 0.35);
+        background: rgba(0, 0, 0, 0.35);
+        color: var(--mac-text);
+        border: 1px solid var(--mac-border-subtle);
         border-radius: 7px;
         padding: 3px 6px;
+        font-family: inherit;
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 600;
         cursor: pointer;
       }
 
-      /* 3D подписи */
+      /* === 3D ПОДПИСИ === */
       #labels-layer {
         position: fixed;
         inset: 0;
@@ -430,30 +518,27 @@
       .space-label {
         position: absolute;
         transform: translate(-50%, -140%);
-        padding: 2px 7px;
-        border-radius: 6px;
+        padding: 3px 8px;
+        border-radius: 7px;
         font-size: 11px;
         font-weight: 600;
-        background: rgba(6, 10, 22, 0.68);
-        border: 1px solid rgba(130, 185, 255, 0.3);
-        color: #e6f0ff;
+        background: rgba(28, 28, 32, 0.76);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--mac-border);
+        color: var(--mac-text);
         white-space: nowrap;
         pointer-events: auto;
         cursor: pointer;
-        transition:
-          background 0.15s,
-          border-color 0.15s;
+        transition: background 0.15s;
       }
       .space-label:hover {
-        background: rgba(55, 120, 255, 0.55);
-        border-color: #fff;
+        background: var(--mac-blue);
+        border-color: transparent;
       }
       .space-label.constellation-lbl {
-        background: rgba(25, 18, 55, 0.55);
-        border-color: rgba(175, 140, 255, 0.45);
-        color: #d8c7ff;
-        font-size: 11px;
-        letter-spacing: 0.5px;
+        background: rgba(48, 36, 78, 0.65);
+        border-color: rgba(191, 90, 242, 0.4);
+        color: #e5c6ff;
       }
 
       /* Вспышка при столкновении */
@@ -472,250 +557,7 @@
         transition: opacity 0.25s ease-out;
       }
 
-      @media (max-width: 900px) {
-        #sidebar {
-          width: 210px;
-        }
-        #info-panel {
-          width: 290px;
-        }
-      }
-      /* === РЕДАКТОР ЗВЁЗД === */
-      #se-open-btn {
-        position: fixed;
-        top: 16px;
-        right: 16px;
-        z-index: 9000;
-        padding: 10px 16px;
-        border-radius: 12px;
-        border: 1px solid rgba(100, 180, 255, 0.45);
-        background: rgba(12, 18, 34, 0.85);
-        color: #e8f1ff;
-        font-family: inherit;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        backdrop-filter: blur(8px);
-        transition:
-          transform 0.15s,
-          background 0.2s,
-          box-shadow 0.2s;
-      }
-      #se-open-btn:hover {
-        background: rgba(28, 44, 82, 0.95);
-        box-shadow: 0 0 18px rgba(80, 160, 255, 0.45);
-        transform: translateY(-1px);
-      }
-
-      #se-modal {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        background: rgba(4, 7, 16, 0.78);
-        backdrop-filter: blur(10px);
-        font-family:
-          system-ui,
-          -apple-system,
-          sans-serif;
-        color: #e6eefc;
-      }
-      #se-modal.se-visible {
-        display: flex;
-      }
-
-      .se-window {
-        width: min(980px, 94vw);
-        max-height: 90vh;
-        display: grid;
-        grid-template-columns: 1.15fr 1fr;
-        background: #0b1020;
-        border: 1px solid rgba(120, 175, 255, 0.25);
-        border-radius: 18px;
-        overflow: hidden;
-        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.75);
-      }
-
-      .se-preview-pane {
-        position: relative;
-        background: radial-gradient(circle at center, #111936 0%, #05070f 75%);
-        display: flex;
-        flex-direction: column;
-        min-height: 440px;
-      }
-      #se-canvas {
-        width: 100%;
-        height: 100%;
-        flex: 1;
-        display: block;
-        cursor: grab;
-      }
-      #se-canvas:active {
-        cursor: grabbing;
-      }
-
-      .se-badge-box {
-        position: absolute;
-        top: 14px;
-        left: 14px;
-        right: 14px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        pointer-events: none;
-      }
-      .se-type-title {
-        font-size: 20px;
-        font-weight: 800;
-        letter-spacing: 0.3px;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-      }
-      .se-type-sub {
-        font-size: 12px;
-        color: #9bb4dc;
-        margin-top: 2px;
-      }
-      .se-class-pill {
-        padding: 5px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
-
-      .se-stats-bar {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        padding: 12px 14px;
-        background: rgba(7, 11, 24, 0.85);
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        font-size: 12px;
-      }
-      .se-stat-item span {
-        display: block;
-        color: #7e95bc;
-        font-size: 11px;
-      }
-      .se-stat-item strong {
-        color: #f0f6ff;
-        font-size: 13px;
-      }
-
-      .se-controls-pane {
-        padding: 18px 20px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        border-left: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .se-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .se-header h2 {
-        margin: 0;
-        font-size: 18px;
-      }
-      #se-close-btn {
-        background: rgba(255, 255, 255, 0.08);
-        border: none;
-        color: #fff;
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        font-size: 18px;
-        cursor: pointer;
-      }
-      #se-close-btn:hover {
-        background: rgba(255, 80, 80, 0.35);
-      }
-
-      .se-presets {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-      }
-      .se-preset-btn {
-        padding: 6px 10px;
-        border-radius: 8px;
-        border: 1px solid rgba(130, 180, 255, 0.22);
-        background: rgba(255, 255, 255, 0.05);
-        color: #d6e4ff;
-        font-size: 12px;
-        cursor: pointer;
-      }
-      .se-preset-btn:hover {
-        background: rgba(80, 150, 255, 0.25);
-      }
-
-      .se-slider-group {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-      .se-slider-label {
-        display: flex;
-        justify-content: space-between;
-        font-size: 13px;
-        color: #b7c8e6;
-      }
-      .se-slider-label b {
-        color: #ffffff;
-      }
-      .se-slider-group input[type="range"] {
-        width: 100%;
-        accent-color: #4da3ff;
-        cursor: pointer;
-      }
-
-      .se-desc-box {
-        padding: 10px 12px;
-        border-radius: 10px;
-        background: rgba(77, 163, 255, 0.09);
-        border: 1px solid rgba(77, 163, 255, 0.22);
-        font-size: 12.5px;
-        line-height: 1.45;
-        color: #cfe0ff;
-      }
-
-      .se-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-top: auto;
-      }
-      .se-action-btn {
-        padding: 10px;
-        border-radius: 10px;
-        border: none;
-        font-weight: 700;
-        font-size: 13px;
-        cursor: pointer;
-      }
-      #se-supernova-btn {
-        background: linear-gradient(135deg, #ff5e3a, #ff2a6d);
-        color: #fff;
-      }
-      #se-random-btn {
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
-      }
-
-      @media (max-width: 780px) {
-        .se-window {
-          grid-template-columns: 1fr;
-        }
-        .se-preview-pane {
-          min-height: 280px;
-        }
-      }
-      /* Кнопки зума для мультиборда (основная сцена и редактор) */
+      /* === КНОПКИ ЗУМА (ПОЗИЦИИ НЕ ТРОНУТЫ, ЦВЕТА macOS) === */
       .zoom-controls {
         display: flex;
         gap: 8px;
@@ -735,27 +577,359 @@
         width: 48px;
         height: 48px;
         border-radius: 12px;
-        border: 1px solid rgba(120, 175, 255, 0.35);
-        background: rgba(8, 13, 28, 0.85);
-        color: #eaf2ff;
+        border: 1px solid var(--mac-border);
+        background: var(--mac-glass-strong);
+        color: var(--mac-text);
+        font-family: inherit;
         font-size: 24px;
-        font-weight: 700;
+        font-weight: 500;
         line-height: 1;
         cursor: pointer;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.45),
+          var(--mac-highlight);
         touch-action: manipulation;
         transition:
           background 0.15s,
           transform 0.1s;
       }
       .zoom-btn:hover {
-        background: rgba(65, 135, 255, 0.38);
-        border-color: #88c4ff;
+        background: rgba(255, 255, 255, 0.18);
       }
       .zoom-btn:active {
         transform: scale(0.94);
-        background: rgba(65, 135, 255, 0.6);
+        background: var(--mac-blue);
+      }
+
+      /* === macOS SHEET — 3D РЕДАКТОР ЗВЁЗД === */
+      #se-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.58);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        color: var(--mac-text);
+      }
+      #se-modal.se-visible {
+        display: flex;
+      }
+
+      .se-window {
+        width: min(980px, 94vw);
+        max-height: 90vh;
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        background: rgba(28, 28, 32, 0.88);
+        backdrop-filter: blur(40px) saturate(190%);
+        -webkit-backdrop-filter: blur(40px) saturate(190%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow:
+          0 30px 90px rgba(0, 0, 0, 0.78),
+          var(--mac-highlight);
+      }
+
+      .se-preview-pane {
+        position: relative;
+        background: radial-gradient(circle at center, #141624 0%, #050508 80%);
+        display: flex;
+        flex-direction: column;
+        min-height: 450px;
+      }
+      #se-canvas {
+        width: 100%;
+        height: 100%;
+        flex: 1;
+        display: block;
+        cursor: grab;
+      }
+      #se-canvas:active {
+        cursor: grabbing;
+      }
+
+      .se-badge-box {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        right: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        pointer-events: none;
+      }
+      .se-type-title {
+        font-size: 21px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+      }
+      .se-type-sub {
+        font-size: 12.5px;
+        color: var(--mac-text-2);
+        margin-top: 2px;
+      }
+      .se-class-pill {
+        padding: 5px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--mac-border);
+      }
+
+      .se-stats-bar {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 12px 16px;
+        background: rgba(18, 18, 22, 0.85);
+        border-top: 1px solid var(--mac-border-subtle);
+      }
+      .se-stat-item span {
+        display: block;
+        color: var(--mac-text-2);
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .se-stat-item strong {
+        color: var(--mac-text);
+        font-size: 13.5px;
+        font-weight: 600;
+      }
+
+      .se-controls-pane {
+        padding: 20px 22px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        border-left: 1px solid var(--mac-border-subtle);
+      }
+      .se-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .se-header h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+      }
+      #se-close-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: var(--mac-text-2);
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        font-size: 14px;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      #se-close-btn:hover {
+        background: var(--mac-red);
+        color: #fff;
+      }
+
+      .se-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .se-preset-btn {
+        padding: 6px 11px;
+        border-radius: 8px;
+        border: 1px solid var(--mac-border-subtle);
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--mac-text);
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .se-preset-btn:hover {
+        background: var(--mac-blue);
+        border-color: transparent;
+      }
+
+      .se-slider-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .se-slider-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: var(--mac-text-2);
+      }
+      .se-slider-label b {
+        color: var(--mac-text);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+      .se-slider-group input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+        outline: none;
+        cursor: pointer;
+      }
+      .se-slider-group input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+        border: 0.5px solid rgba(0, 0, 0, 0.15);
+        transition: transform 0.1s;
+      }
+      .se-slider-group input[type="range"]::-webkit-slider-thumb:active {
+        transform: scale(1.12);
+      }
+
+      .se-desc-box {
+        padding: 11px 13px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--mac-border-subtle);
+        font-size: 12.5px;
+        line-height: 1.48;
+        color: rgba(245, 245, 247, 0.85);
+      }
+
+      .se-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: auto;
+      }
+      .se-action-btn {
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: none;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition:
+          filter 0.15s,
+          transform 0.1s;
+      }
+      .se-action-btn:active {
+        transform: scale(0.97);
+      }
+      #se-supernova-btn {
+        background: var(--mac-red);
+        color: #fff;
+      }
+      #se-supernova-btn:hover {
+        filter: brightness(1.12);
+      }
+      #se-random-btn {
+        background: rgba(255, 255, 255, 0.12);
+        color: var(--mac-text);
+      }
+      #se-random-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      @media (max-width: 900px) {
+        #sidebar {
+          width: 215px;
+        }
+        #info-panel {
+          width: 290px;
+        }
+      }
+      @media (max-width: 780px) {
+        .se-window {
+          grid-template-columns: 1fr;
+        }
+        .se-preview-pane {
+          min-height: 280px;
+        }
+      }
+      /* Карточка энергии после Большого взрыва (macOS) */
+      #energy-report {
+        position: fixed;
+        top: 64px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 40;
+        display: none;
+        width: min(460px, 92vw);
+        padding: 18px 20px;
+        border-radius: 18px;
+        background: rgba(24, 24, 28, 0.86);
+        backdrop-filter: blur(34px) saturate(190%);
+        -webkit-backdrop-filter: blur(34px) saturate(190%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow:
+          0 24px 70px rgba(0, 0, 0, 0.72),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        text-align: center;
+      }
+      #energy-report.visible {
+        display: block;
+      }
+      .er-title {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #ff9f0a;
+        margin-bottom: 6px;
+      }
+      .er-value {
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: #ffffff;
+        margin-bottom: 4px;
+      }
+      .er-sub {
+        font-size: 12.5px;
+        color: rgba(235, 235, 245, 0.68);
+        margin-bottom: 12px;
+      }
+      .er-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        text-align: left;
+      }
+      .er-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 10px;
+        padding: 8px 10px;
+      }
+      .er-card span {
+        display: block;
+        font-size: 10.5px;
+        color: rgba(235, 235, 245, 0.55);
+      }
+      .er-card strong {
+        font-size: 12.5px;
+        color: #f5f5f7;
       }
     </style>
   </head>
@@ -769,16 +943,31 @@
       <div id="status-pill">Солнечная система и Глубокий космос</div>
     </div>
 
-    <!-- Выбор созвездия в режиме «Вид с Земли» -->
+    <div id="energy-report">
+      <div class="er-title">Энергия Большого взрыва</div>
+      <div class="er-value" id="er-joules">4.82 × 10⁵⁴ Дж</div>
+      <div class="er-sub" id="er-words">4.82 септдециллиона джоулей</div>
+      <div class="er-grid">
+        <div class="er-card">
+          <span>Тротиловый эквивалент</span>
+          <strong id="er-tnt">1.15 × 10³⁹ Мт</strong>
+        </div>
+        <div class="er-card">
+          <span>Энергия Солнца</span>
+          <strong id="er-sun">4.0 × 10²⁰ лет свечения</strong>
+        </div>
+      </div>
+    </div>
+
     <div id="earth-sky-bar">
       <span
         style="
           font-size: 12px;
-          color: #9cc4ff;
+          color: rgba(235, 235, 245, 0.7);
           align-self: center;
           margin-right: 4px;
         "
-        >🔭 Смотреть с Земли на:</span
+        >Смотреть с Земли:</span
       >
       <div
         id="sky-chips"
@@ -787,13 +976,12 @@
       <button
         class="sky-chip"
         id="exit-earth-sky"
-        style="background: rgba(255, 80, 80, 0.3); border-color: #ff8a8a"
+        style="background: rgba(255, 69, 58, 0.85); color: #fff"
       >
-        ✕ Выйти
+        Выйти
       </button>
     </div>
 
-    <!-- Левая навигация -->
     <aside id="sidebar">
       <div class="tabs">
         <button class="tab-btn active" data-tab="solar">Система</button>
@@ -803,7 +991,6 @@
       <div id="nav-list"></div>
     </aside>
 
-    <!-- Правая карточка объекта -->
     <aside id="info-panel">
       <div class="info-header">
         <div>
@@ -817,10 +1004,9 @@
       <div class="fact-box" id="info-fact"></div>
     </aside>
 
-    <!-- Нижняя панель -->
     <div id="bottom-bar">
-      <button class="ctrl-btn" id="btn-menu">☰ Меню</button>
-      <button class="ctrl-btn" id="btn-pause">⏸ Пауза</button>
+      <button class="ctrl-btn" id="btn-menu">Меню</button>
+      <button class="ctrl-btn" id="btn-pause">Пауза</button>
       <div class="speed-group">
         <span>Скорость:</span>
         <select id="speed-select">
@@ -837,12 +1023,12 @@
       </div>
       <button class="ctrl-btn active" id="btn-orbits">Орбиты</button>
       <button class="ctrl-btn active" id="btn-labels">Подписи</button>
-      <button class="ctrl-btn active" id="btn-const">Созвездия</button>
-      <button class="ctrl-btn" id="btn-earth-sky">🔭 Вид с Земли</button>
-      <button class="ctrl-btn" id="btn-tour">▶ Авто-тур</button>
-      <button class="ctrl-btn danger" id="btn-collide">💥 Столкнуть всё</button>
+      <button class="ctrl-btn" id="btn-const">Созвездия</button>
+      <button class="ctrl-btn" id="btn-earth-sky">Вид с Земли</button>
+      <button class="ctrl-btn" id="btn-tour">Авто-тур</button>
+      <button class="ctrl-btn danger" id="btn-collide">Большой взрыв</button>
       <button class="ctrl-btn reset-btn" id="btn-reset" style="display: none">
-        ↺ Сбросить
+        Сбросить
       </button>
     </div>
 
@@ -861,7 +1047,7 @@
       }
     </script>
     <!-- === РЕДАКТОР ЗВЁЗД === -->
-    <button id="se-open-btn">⭐ Редактор звёзд</button>
+    <button id="se-open-btn">Редактор звёзд</button>
 
     <div id="se-modal">
       <div class="se-window">
@@ -905,21 +1091,19 @@
           </div>
 
           <div class="se-presets">
-            <button class="se-preset-btn" data-preset="sun">☀️ Солнце</button>
+            <button class="se-preset-btn" data-preset="sun">Солнце</button>
             <button class="se-preset-btn" data-preset="brown">
-              🟤 Коричневый
+              Коричневый
             </button>
             <button class="se-preset-btn" data-preset="betelgeuse">
-              🔴 Бетельгейзе
+              Бетельгейзе
             </button>
             <button class="se-preset-btn" data-preset="whitedwarf">
-              ⚪ Белый карлик
+              Белый карлик
             </button>
-            <button class="se-preset-btn" data-preset="pulsar">
-              ⚡ Пульсар
-            </button>
+            <button class="se-preset-btn" data-preset="pulsar">Пульсар</button>
             <button class="se-preset-btn" data-preset="blackhole">
-              🕳️ Чёрная дыра
+              Чёрная дыра
             </button>
           </div>
 
@@ -973,12 +1157,8 @@
           </div>
 
           <div class="se-actions">
-            <button class="se-action-btn" id="se-supernova-btn">
-              💥 Коллапс / Взрыв
-            </button>
-            <button class="se-action-btn" id="se-random-btn">
-              🎲 Случайная
-            </button>
+            <button class="se-action-btn" id="se-supernova-btn">Взрыв</button>
+            <button class="se-action-btn" id="se-random-btn">Случайная</button>
           </div>
         </div>
       </div>
@@ -997,17 +1177,20 @@
           group: "solar",
           color: "#ffae33",
           stats: {
+            "Кем и когда открыто":
+              "Известно с древности; звёздная природа доказана Аристархом и Коперником",
+            "Происхождение названия":
+              "От праславянского *sъlnьce и лат. Sol — римского бога солнца",
             "Макс. температура": "15 000 000 °C (ядро)",
             "Мин. температура": "3 800 °C (пятна)",
             Диаметр: "1 392 700 км",
             "Запущено зондов": "Более 25 (Parker, SOHO, Solar Orbiter)",
-            "Макс. высота структур": "Протуберанцы до 500 000 км",
             Гравитация: "274 м/с² (27.9 g)",
             "Состав атмосферы":
               "73.4% водород, 25% гелий, 1.6% тяжёлые элементы (O, C, Ne, Fe)",
           },
           desc: "Центральная звезда нашей системы, содержащая 99.86% всей её массы. Энергия рождается в недрах за счёт термоядерного синтеза водорода в гелий.",
-          fact: "Зонд Parker Solar Probe в 2024–2025 годах подлетел к Солнцу на рекордные 6.1 млн км и разогнался до 692 000 км/ч — это самый быстрый аппарат в истории.",
+          fact: "Зонд Parker Solar Probe подлетел к Солнцу на рекордные 6.1 млн км и разогнался до 692 000 км/ч — это самый быстрый аппарат в истории.",
         },
         mercury: {
           name: "Меркурий",
@@ -1015,17 +1198,20 @@
           group: "solar",
           color: "#b5a89a",
           stats: {
+            "Кем и когда открыт":
+              "Известен с древности (шумеры, III тыс. до н. э.)",
+            "Происхождение названия":
+              "В честь римского бога торговли и скорости Меркурия за быстрое движение по небу",
             "Макс. температура": "+430 °C (день)",
             "Мин. температура": "−180 °C (ночь)",
             "Макс. высота гор": "4.48 км (горы Калорис)",
             "Запущено зондов": "3 миссии (Mariner 10, MESSENGER, BepiColombo)",
             "Диаметр / Сутки": "4 879 км / 58.6 земных сут.",
-            "Год / Спутники": "88 земных сут. / 0",
             "Состав атмосферы":
-              "Экзосфера: 42% O₂, 29% Na, 22% H₂, 6% He, 0.5% K (почти вакуум)",
+              "Экзосфера: 42% O₂, 29% Na, 22% H₂, 6% He (почти вакуум)",
           },
           desc: "Ближайшая к Солнцу и самая маленькая планета системы. Из-за отсутствия плотной атмосферы перепады температур между днём и ночью превышают 600 градусов.",
-          fact: "Несмотря на близость к Солнцу, в глубоких полярных кратерах Меркурия, куда никогда не падает свет, обнаружен настоящий водяной лёд.",
+          fact: "В глубоких полярных кратерах Меркурия, куда никогда не падает свет, обнаружен настоящий водяной лёд.",
         },
         venus: {
           name: "Венера",
@@ -1033,17 +1219,20 @@
           group: "solar",
           color: "#e8c488",
           stats: {
+            "Кем и когда открыта":
+              "Известна с древности (вавилонские хроники, XVII в. до н. э.)",
+            "Происхождение названия":
+              "В честь римской богини любви и красоты Венеры за ослепительный блеск",
             "Макс. температура": "+475 °C (поверхность)",
             "Мин. температура": "+437 °C (вершины гор)",
             "Макс. высота гор": "11 км (гора Максвелла)",
             "Запущено зондов": "Более 45 («Венера-7..14», Magellan, Akatsuki)",
-            "Диаметр / Сутки": "12 104 км / 243 земн. сут. (ретроград.)",
-            "Год / Спутники": "225 земных сут. / 0",
+            "Диаметр / Сутки": "12 104 км / 243 земн. сут.",
             "Состав атмосферы":
-              "96.5% CO₂, 3.5% N₂, следы SO₂ и облака серной кислоты (давление 92 атм)",
+              "96.5% CO₂, 3.5% N₂, облака серной кислоты (давление 92 атм)",
           },
           desc: "Самая горячая планета Солнечной системы из-за чудовищного парникового эффекта. Вращается вокруг оси в обратную сторону относительно большинства планет.",
-          fact: "Советская станция «Венера-7» в 1970 году совершила первую в истории мягкую посадку на другую планету, а «Венера-13» передала первые цветные панорамы.",
+          fact: "Станция «Венера-7» в 1970 году совершила первую в истории мягкую посадку на другую планету.",
         },
         earth: {
           name: "Земля",
@@ -1051,18 +1240,20 @@
           group: "solar",
           color: "#4da6ff",
           stats: {
+            "Кем и когда признана планетой":
+              "Николай Коперник, 1543 год (гелиоцентрическая модель)",
+            "Происхождение названия":
+              "От праславянского *zemja («почва, суша, низ»); единственная планета не в честь бога",
             "Макс. температура": "+56.7 °C (Долина Смерти)",
             "Мин. температура": "−89.2 °C (станция Восток)",
-            "Макс. высота гор":
-              "8.848 км (Эверест) / 10.2 км от дна (Мауна-Кеа)",
-            "Запущено аппаратов": "Более 15 000 спутников и станций",
+            "Макс. высота гор": "8.848 км (Эверест)",
             "Диаметр / Сутки": "12 742 км / 23 ч 56 мин",
             "Год / Спутники": "365.25 сут. / 1 (Луна)",
             "Состав атмосферы":
               "78.08% азот (N₂), 20.95% кислород (O₂), 0.93% аргон, 0.04% CO₂",
           },
           desc: "Единственный известный мир с жидкими океанами на поверхности, тектоникой плит, защитным магнитным полем и плотной кислородной атмосферой.",
-          fact: "Голубой ореол нашей атмосферы возникает благодаря рэлеевскому рассеянию: молекулы азота и кислорода сильнее всего рассеивают короткие синие волны солнечного света.",
+          fact: "Голубой ореол нашей атмосферы возникает благодаря рэлеевскому рассеянию коротких синих волн солнечного света.",
         },
         iss: {
           name: "МКС (Международная космическая станция)",
@@ -1070,8 +1261,10 @@
           group: "solar",
           color: "#7df9ff",
           stats: {
-            "Макс. температура": "+121 °C (на солнечной стороне)",
-            "Мин. температура": "−157 °C (в тени Земли)",
+            "Кем и когда запущена":
+              "Коалиция 14 стран (Россия, США, ЕС, Япония, Канада), 20 ноября 1998 года",
+            "Происхождение названия":
+              "Международная космическая станция — совместный орбитальный проект",
             "Высота орбиты": "408–420 км над Землёй",
             "Скорость полёта": "27 600 км/ч (7.66 км/с)",
             "Размеры / Масса": "109 × 73 м / ~420 тонн",
@@ -1079,27 +1272,29 @@
             "Состав воздуха внутри":
               "78% N₂, 21% O₂, давление 1 атм (как на Земле)",
           },
-          desc: "Крупнейший искусственный объект на орбите Земли и главная космическая лаборатория человечества. Вы можете следить за её полётом прямо сейчас!",
-          fact: "Экипаж МКС непрерывно живёт и работает в космосе с ноября 2000 года — на станции побывало уже более 280 астронавтов и космонавтов из 23 стран.",
+          desc: "Крупнейший искусственный объект на орбите Земли и главная космическая лаборатория человечества.",
+          fact: "Экипаж МКС непрерывно живёт и работает в космосе с ноября 2000 года — на станции побывало более 280 человек.",
         },
         moon: {
-          name: "Луна (и секретная база)",
+          name: "Луна",
           type: "Естественный спутник Земли",
           group: "solar",
           color: "#cfd4dc",
           stats: {
+            "Кем и когда открыта":
+              "Известна с древности; первые наблюдения в телескоп — Галилео Галилей, 1609 г.",
+            "Происхождение названия":
+              "От праславянского *luna и лат. Luna («светлая, сияющая»)",
             "Макс. температура": "+127 °C (лунный день)",
             "Мин. температура": "−173 °C (лунная ночь)",
             "Макс. высота гор": "5.5 км (гора Гюйгенс)",
-            "Запущено зондов":
-              "Более 140 миссий (Луна, Аполлон, Чанъэ, Чандраян)",
             "Диаметр / Гравитация": "3 474 км / 1.62 м/с² (0.165 g)",
             "Расстояние до Земли": "384 400 км",
             "Состав атмосферы":
               "Следовая экзосфера: He, Ne, Ar, Na, K (фактически вакуум)",
           },
-          desc: "Единственное небесное тело за пределами Земли, на которое ступал человек. Приблизь камеру к поверхности — в кратере прячутся наши пасхальные инопланетяне с летающей тарелкой!",
-          fact: "Луна ежегодно удаляется от Земли примерно на 3.8 см из-за приливного взаимодействия, которое также постепенно замедляет вращение нашей планеты.",
+          desc: "Единственное небесное тело за пределами Земли, на которое ступал человек. Поверхность покрыта ударными кратерами и тёмными базальтовыми морями.",
+          fact: "Луна ежегодно удаляется от Земли примерно на 3.8 см из-за приливного взаимодействия.",
         },
         mars: {
           name: "Марс",
@@ -1107,18 +1302,19 @@
           group: "solar",
           color: "#e0633c",
           stats: {
+            "Кем и когда открыт":
+              "Известен с древности (древние египтяне, II тыс. до н. э.)",
+            "Происхождение названия":
+              "В честь римского бога войны Марса за кроваво-красный оттенок",
             "Макс. температура": "+20 °C (летом на экваторе)",
             "Мин. температура": "−153 °C (зимой на полюсах)",
-            "Макс. высота гор": "21.9 км (вулкан Олимп — высочайший в системе)",
-            "Запущено зондов":
-              "Более 50 (Viking, Curiosity, Perseverance, Ingenuity)",
+            "Макс. высота гор": "21.9 км (вулкан Олимп)",
+            "Запущено зондов": "Более 50 (Viking, Curiosity, Perseverance)",
             "Диаметр / Сутки": "6 779 км / 24 ч 37 мин",
-            "Год / Спутники": "687 земных сут. / 2 (Фобос и Деймос)",
-            "Состав атмосферы":
-              "95.3% CO₂, 2.6% N₂, 1.9% Ar, 0.16% O₂ (давление 0.6% земного)",
+            "Состав атмосферы": "95.3% CO₂, 2.6% N₂, 1.9% Ar, 0.16% O₂",
           },
-          desc: "Красная планета, покрытая оксидом железа. Имеет гигантский каньон Долины Маринер длиной 4 000 км и полярные ледяные шапки. По поверхности прямо сейчас катается марсоход!",
-          fact: "Основание марсианского вулкана Олимп имеет диаметр около 600 км — он настолько огромен, что его склоны выходят за пределы плотных слоёв атмосферы Марса.",
+          desc: "Красная планета, покрытая оксидом железа. Имеет гигантский каньон Долины Маринер длиной 4 000 км и полярные ледяные шапки.",
+          fact: "Основание марсианского вулкана Олимп имеет диаметр около 600 км — его склоны выходят за пределы плотных слоёв атмосферы.",
         },
         rover: {
           name: "Марсоход Perseverance (NASA)",
@@ -1126,17 +1322,18 @@
           group: "solar",
           color: "#ffd166",
           stats: {
-            "Прилетел на Марс": "18 февраля 2021 года (кратер Езеро)",
-            "Возраст на Марсе": "5 лет и 9 месяцев (~2 050 марсианских суток)",
+            "Кем и когда запущен":
+              "NASA (JPL), посадка 18 февраля 2021 года в кратере Езеро",
+            "Происхождение названия":
+              "«Настойчивость» — название выбрал школьник Александр Мазер на конкурсе NASA",
             Питание: "РИТЭГ на плутонии-238 (ресурс до 14 лет)",
             "Масса / Колёса": "1 025 кг / 6 колёс с титановыми спицами",
             "Скорость / Пробег": "до 0.15 км/ч (проехал более 30 км)",
-            "Температура вокруг": "от −130 °C ночью до +20 °C днём",
             "Задачи миссии":
-              "Поиск следов древней жизни, сбор проб грунта и добыча O₂ из атмосферы (MOXIE)",
+              "Поиск следов древней жизни, сбор проб грунта и добыча O₂ (MOXIE)",
           },
-          desc: "Реальный планетоход NASA, запущенный 30 июля 2020 года и совершивший посадку в кратере Езеро — на дне высохшего древнего озера. Он бурит марсианские скалы, запечатывает образцы в титановые пробирки и передаёт панорамы в HD.",
-          fact: "Вместе с Perseverance на Марс прилетел первый в истории внеземной вертолёт Ingenuity (совершил 72 полёта), а прибор MOXIE впервые смог выработать чистый кислород прямо из углекислого газа Марса.",
+          desc: "Реальный планетоход NASA, исследующий дно древнего озера в кратере Езеро. Бурит скалы, запечатывает пробы и передаёт панорамы.",
+          fact: "Прибор MOXIE на его борту впервые смог выработать чистый кислород прямо из углекислого газа марсианской атмосферы.",
         },
         jupiter: {
           name: "Юпитер",
@@ -1144,18 +1341,19 @@
           group: "solar",
           color: "#d9a477",
           stats: {
+            "Кем и когда открыт":
+              "Известен с древности; 4 главных спутника открыл Галилей в 1610 г.",
+            "Происхождение названия":
+              "В честь верховного римского бога неба и грома Юпитера за гигантский размер",
             "Макс. температура": "+24 000 °C (ядро)",
             "Мин. температура": "−145 °C (верхние облака)",
-            "Макс. высота гор": "Нет твёрдой поверхности",
-            "Запущено зондов":
-              "9 миссий (Pioneer, Voyager, Galileo, Juno, Europa Clipper)",
             "Диаметр / Сутки": "139 820 км / 9 ч 55 мин",
             "Год / Спутники": "11.86 лет / 95 подтверждённых",
             "Состав атмосферы":
               "89.8% водород (H₂), 10.2% гелий (He), следы метана и аммиака",
           },
-          desc: "Крупнейшая планета Солнечной системы, в 2.5 раза массивнее всех остальных планет вместе взятых. Знаменита гигантским антициклоном — Большим Красным Пятном.",
-          fact: "В глубинах Юпитера давление настолько велико, что водород сжимается в жидкий металл, порождая колоссальное магнитное поле в 20 000 раз сильнее земного.",
+          desc: "Крупнейшая планета Солнечной системы, в 2.5 раза массивнее всех остальных планет вместе взятых. Знаменита Большим Красным Пятном.",
+          fact: "В глубинах Юпитера давление сжимает водород в жидкий металл, порождая магнитное поле в 20 000 раз сильнее земного.",
         },
         saturn: {
           name: "Сатурн",
@@ -1163,18 +1361,19 @@
           group: "solar",
           color: "#ebd098",
           stats: {
+            "Кем и когда открыт":
+              "Известен с древности; кольца открыл Галилей (1610) и объяснил Гюйгенс (1655)",
+            "Происхождение названия":
+              "В честь римского бога земледелия и времени Сатурна за неспешный ход по небу",
             "Макс. температура": "+11 700 °C (ядро)",
             "Мин. температура": "−178 °C (верхние облака)",
-            "Макс. высота гор": "Нет твёрдой поверхности",
-            "Запущено зондов":
-              "4 миссии (Pioneer 11, Voyager 1 и 2, Cassini-Huygens)",
             "Диаметр / Сутки": "116 460 км / 10 ч 33 мин",
             "Год / Спутники": "29.45 лет / 146 подтверждённых",
             "Состав атмосферы":
               "96.3% водород (H₂), 3.25% гелий (He), 0.45% метан и аммиак",
           },
-          desc: "Властелин самых впечатляющих колец, состоящих из миллиардов частиц водяного льда и камня. На северном полюсе бушует устойчивый шестиугольный шторм.",
-          fact: "Средняя плотность Сатурна (0.687 г/см³) меньше плотности воды — гигантская планета могла бы плавать в достаточно большом океане.",
+          desc: "Властелин самых впечатляющих колец из миллиардов частиц водяного льда и камня. На северном полюсе бушует шестиугольный шторм.",
+          fact: "Средняя плотность Сатурна (0.687 г/см³) меньше плотности воды — он мог бы плавать в достаточно большом океане.",
         },
         uranus: {
           name: "Уран",
@@ -1182,17 +1381,19 @@
           group: "solar",
           color: "#7de3f4",
           stats: {
+            "Кем и когда открыт":
+              "Уильям Гершель, 13 марта 1781 года (первая планета, открытая в телескоп)",
+            "Происхождение названия":
+              "Предложено Иоганном Боде в честь греческого бога неба Урана — отца Сатурна",
             "Макс. температура": "+4 700 °C (ядро)",
             "Мин. температура": "−224 °C (самая холодная атмосфера)",
-            "Макс. высота гор": "Нет твёрдой поверхности",
-            "Запущено зондов": "1 миссия (Voyager 2 в 1986 году)",
             "Диаметр / Сутки": "50 724 км / 17 ч 14 мин",
             "Год / Спутники": "84 земных года / 28",
             "Состав атмосферы":
               "82.5% H₂, 15.2% He, 2.3% метан (CH₄ — даёт бирюзовый цвет)",
           },
-          desc: "Уникальный ледяной гигант, ось вращения которого наклонена на 97.8° — планета буквально «катится» по орбите на боку вместе со своими вертикальными кольцами.",
-          fact: "Из-за экстремального наклона оси полярный день и полярная ночь на каждом полюсе Урана длятся по 42 земных года.",
+          desc: "Ледяной гигант, ось вращения которого наклонена на 97.8° — планета буквально «катится» по орбите на боку.",
+          fact: "Из-за экстремального наклона оси полярный день и полярная ночь на Уране длятся по 42 земных года.",
         },
         neptune: {
           name: "Нептун",
@@ -1200,17 +1401,18 @@
           group: "solar",
           color: "#4576ff",
           stats: {
+            "Кем и когда открыт":
+              "Иоганн Галле по расчётам Урбена Леверье и Джона Адамса, 23 сентября 1846 г.",
+            "Происхождение названия":
+              "В честь римского бога морей Нептуна за глубокий синий цвет атмосферы",
             "Макс. температура": "+5 100 °C (ядро)",
             "Мин. температура": "−218 °C (верхние облака)",
-            "Макс. высота гор": "Нет твёрдой поверхности",
-            "Запущено зондов": "1 миссия (Voyager 2 в 1989 году)",
             "Диаметр / Сутки": "49 244 км / 16 ч 6 мин",
             "Год / Спутники": "164.8 земных лет / 16",
-            "Состав атмосферы":
-              "80% H₂, 19% He, 1.5% метан (CH₄), следы этана и ацетилена",
+            "Состав атмосферы": "80% H₂, 19% He, 1.5% метан (CH₄)",
           },
-          desc: "Самая дальняя крупная планета, открытая математически «на кончике пера» до того, как её увидели в телескоп. В атмосфере дуют сверхзвуковые ветры до 2 100 км/ч.",
-          fact: "В недрах Урана и Нептуна под колоссальным давлением молекулы метана распадаются, и к ядру могут опускаться настоящие дожди из алмазов.",
+          desc: "Первая планета, открытая математически «на кончике пера» до наблюдений в телескоп. В атмосфере дуют ветры до 2 100 км/ч.",
+          fact: "В недрах Нептуна под чудовищным давлением углерод из метана может кристаллизоваться в настоящие алмазные дожди.",
         },
         blackhole: {
           name: "Чёрная дыра (Стрелец A*)",
@@ -1218,17 +1420,17 @@
           group: "deep",
           color: "#ff8533",
           stats: {
+            "Кем и когда открыта":
+              "Брюс Балик и Роберт Браун (1974); масса доказана Генцелем и Гез (Нобель 2020)",
+            "Происхождение названия":
+              "Находится в созвездии Стрельца; звёздочка (*) означает «возбуждённый» радиоисточник",
             "Температура диска": "До 10 000 000 000 °C (плазма)",
-            "Температура Хокинга": "~10⁻¹⁴ К (почти абсолютный ноль)",
             Масса: "4.3 млн масс Солнца",
             "Горизонт событий": "Диаметр ~24 млн км",
-            "Запущено зондов": "0 (наблюдается телескопом EHT)",
             Расстояние: "26 670 световых лет (центр Млечного Пути)",
-            "Состав аккреции":
-              "Ионизированный водород, гелий и релятивистская плазма",
           },
-          desc: "Гравитационный монстр, искривляющий само пространство-время. Вращающийся аккреционный диск светится из-за чудовищного трения, а с полюсов вырываются релятивистские джеты.",
-          fact: "Из-за гравитационного линзирования свет от задней части диска огибает чёрную дыру сверху и снизу — поэтому мы видим характерное двойное огненное кольцо.",
+          desc: "Гравитационный монстр в центре нашей Галактики, искривляющий пространство-время. Окружён раскалённым аккреционным диском и релятивистскими джетами.",
+          fact: "В 2022 году коллаборация Event Horizon Telescope впервые получила прямое радиоизображение тени Стрельца A*.",
         },
         pulsar: {
           name: "Пульсар PSR B1919+21",
@@ -1236,16 +1438,17 @@
           group: "deep",
           color: "#45f3ff",
           stats: {
-            "Макс. температура": "600 000 – 1 000 000 °C (поверхность)",
-            "Мин. температура": "Остывает миллионы лет",
-            "Макс. высота гор": "Не более 1–5 мм (из-за чудовищной гравитации)",
+            "Кем и когда открыт":
+              "Джоселин Белл Бернелл и Энтони Хьюиш, ноябрь 1967 года (первый в истории)",
+            "Происхождение названия":
+              "От англ. Pulsating Source of Radio + координаты прямого восхождения и склонения",
+            "Макс. температура": "600 000 – 1 000 000 °C",
             "Диаметр / Масса": "Всего ~20 км / ~1.5 массы Солнца",
             "Скорость вращения": "Десятки и сотни оборотов в секунду",
             "Магнитное поле": "В триллион раз сильнее земного",
-            Состав: "Вырожденный нейтронный газ и железная кора",
           },
-          desc: "Сверхплотный остаток взрыва сверхновой, вращающийся с бешеной скоростью. Как космический маяк, он бьёт узкими пучками радио- и рентгеновского излучения из магнитных полюсов.",
-          fact: "Одна чайная ложка вещества нейтронной звезды весила бы на Земле около 1 миллиарда тонн — примерно столько же, сколько вся гора Эверест!",
+          desc: "Сверхплотный остаток сверхновой, вращающийся с огромной скоростью и испускающий узкие пучки излучения из магнитных полюсов.",
+          fact: "Из-за поразительной точности импульсов первооткрыватели в шутку назвали его LGM-1 («Маленькие зелёные человечки»).",
         },
         betelgeuse: {
           name: "Бетельгейзе",
@@ -1253,16 +1456,17 @@
           group: "deep",
           color: "#ff5233",
           stats: {
+            "Кем и когда открыта":
+              "Известна с древности; переменность открыл Джон Гершель в 1836 году",
+            "Происхождение названия":
+              "От арабского «Яд аль-Джауза» — «рука (плечо) Ориона»",
             "Макс. температура": "3 600 °C (поверхность)",
-            "Мин. температура": "3 100 °C (конвективные ячейки)",
             Диаметр: "~1.06 млрд км (~760 диаметров Солнца)",
             Светимость: "В 126 000 раз ярче Солнца",
             Расстояние: "~550 световых лет (созвездие Ориона)",
-            "Стадия жизни": "Готова взорваться как сверхновая",
-            Состав: "Водородная оболочка, гелиево-углеродно-кислородное ядро",
           },
-          desc: "Колоссальная пульсирующая звезда в «плече» Ориона. Если поместить её на место Солнца, она поглотила бы Меркурий, Венеру, Землю, Марс и дотянулась бы до орбиты Юпитера.",
-          fact: "Когда Бетельгейзе взорвётся сверхновой, она будет светить на земном небе яркостью с полную Луну и станет видна даже днём.",
+          desc: "Колоссальная пульсирующая звезда в «плече» Ориона. На месте Солнца она поглотила бы все внутренние планеты вплоть до пояса астероидов.",
+          fact: "Когда Бетельгейзе взорвётся сверхновой, она будет светить яркостью с полную Луну и станет видна даже днём.",
         },
         rigel: {
           name: "Ригель",
@@ -1270,16 +1474,17 @@
           group: "deep",
           color: "#6ec6ff",
           stats: {
+            "Кем и когда открыт":
+              "Известен с древности; кратность системы открыл Уильям Гершель в 1781 году",
+            "Происхождение названия":
+              "От арабского «Риджль аль-Джауза» — «нога великана (Ориона)»",
             "Макс. температура": "12 100 °C (поверхность)",
-            "Мин. температура": "11 500 °C",
             Диаметр: "~110 млн км (~79 диаметров Солнца)",
             Светимость: "В 120 000 раз ярче Солнца",
             Расстояние: "860 световых лет (созвездие Ориона)",
-            Возраст: "Всего ~8 млн лет (живёт быстро)",
-            Состав: "Водород, гелий, мощный звёздный ветер",
           },
-          desc: "Ослепительный бело-голубой сверхгигант, самая яркая звезда созвездия Ориона. Его мощнейшее излучение подсвечивает соседнюю туманность Голова Ведьмы.",
-          fact: "Массивные голубые сверхгиганты сжигают своё топливо в тысячи раз быстрее Солнца и живут всего несколько миллионов лет вместо миллиардов.",
+          desc: "Ослепительный бело-голубой сверхгигант, самая яркая звезда созвездия Ориона. Его излучение подсвечивает туманность Голова Ведьмы.",
+          fact: "Массивные голубые сверхгиганты сжигают топливо в тысячи раз быстрее Солнца и живут всего ~8–10 млн лет.",
         },
         orion_nebula: {
           name: "Туманность Ориона (M42)",
@@ -1287,17 +1492,18 @@
           group: "deep",
           color: "#e066ff",
           stats: {
-            "Макс. температура": "10 000 °C (ионизированный газ)",
-            "Мин. температура": "−250 °C (плотные пылевые коконы)",
+            "Кем и когда открыта":
+              "Никола-Клод Фабри де Пейреск, 26 ноября 1610 года",
+            "Происхождение названия":
+              "По расположению в созвездии Ориона; M42 — номер в каталоге Шарля Мессье (1769)",
             Размер: "24 световых года в поперечнике",
             Расстояние: "1 344 световых года",
-            "Запущено зондов": "0 (изучена Hubble и James Webb)",
             "Звёзд внутри": "Более 700 молодых протозвёзд",
             Состав:
-              "Ионизированный водород (Hα), кислород (O III), гелий, космическая пыль",
+              "Ионизированный водород (Hα), кислород (O III), гелий, пыль",
           },
-          desc: "Ближайшая к Земле гигантская «звёздная колыбель», видимая даже невооружённым глазом как туманное пятнышко в мече Ориона.",
-          fact: "Телескоп «Джеймс Уэбб» обнаружил внутри туманности Ориона десятки свободно плавающих объектов размером с Юпитер, летающих парами.",
+          desc: "Ближайшая к Земле гигантская «звёздная колыбель», видимая невооружённым глазом в мече Ориона.",
+          fact: "Телескоп «Джеймс Уэбб» обнаружил внутри туманности Ориона десятки свободно плавающих объектов размером с Юпитер.",
         },
         ring_nebula: {
           name: "Туманность Кольцо (M57)",
@@ -1305,17 +1511,17 @@
           group: "deep",
           color: "#47ffd1",
           stats: {
-            "Макс. температура": "125 000 °C (белый карлик в центре)",
-            "Мин. температура": "10 000 °C (внешняя газовая оболочка)",
+            "Кем и когда открыта":
+              "Антуан Даркье де Пельпуа и Шарль Мессье, январь 1779 года",
+            "Происхождение названия":
+              "За характерную форму светящегося кольца в телескопе; M57 — номер по Мессье",
+            "Температура центра": "125 000 °C (белый карлик)",
             Диаметр: "2.6 световых года",
             Расстояние: "2 570 световых лет (созвездие Лиры)",
-            "Скорость расширения": "20–30 км/с",
             "Возраст оболочки": "~4 000 лет",
-            Состав:
-              "Сброшенные слои гелия, кислорода, азота и ионизированного водорода",
           },
-          desc: "Светящаяся газовая оболочка, сброшенная умирающей звездой, похожей на наше Солнце. В самом центре сияет раскалённый белый карлик.",
-          fact: "Через 5–6 миллиардов лет наше Солнце завершит свою эволюцию похожим образом, окружив себя светящейся планетарной туманностью.",
+          desc: "Светящаяся газовая оболочка, сброшенная умирающей звездой, похожей на Солнце. В центре сияет раскалённый белый карлик.",
+          fact: "Через 5–6 миллиардов лет наше Солнце завершит эволюцию похожим образом.",
         },
         milkyway: {
           name: "Млечный Путь",
@@ -1323,28 +1529,127 @@
           group: "deep",
           color: "#a8b8ff",
           stats: {
+            "Кем и когда открыта природа":
+              "Галилео Галилей, 1610 год (доказал в телескоп, что это скопление звёзд)",
+            "Происхождение названия":
+              "От греческого Galaxias Kyklos — «молочный круг» (по мифу о молоке богини Геры)",
             Диаметр: "105 700 световых лет",
             "Количество звёзд": "200 – 400 миллиардов",
             Возраст: "13.6 миллиардов лет",
-            "Толщина диска": "~1 000 световых лет",
-            "Галактический год": "230 млн лет (оборот Солнца вокруг центра)",
-            "Центр галактики": "Сверхмассивная ЧД Стрелец A*",
-            Состав:
-              "Звёзды, тёмная материя (~85%), молекулярный газ и пылевые рукава",
+            "Галактический год": "230 млн лет",
           },
-          desc: "Наш галактический дом — грандиозный звёздный мегаполис с четырьмя главными спиральными рукавами (Персея, Щита-Центавра, Стрельца и Наугольника).",
-          fact: "Через ~4.5 миллиарда лет Млечный Путь столкнётся с соседней галактикой Андромеда, образовав единую гигантскую эллиптическую галактику.",
+          desc: "Наш галактический дом — грандиозный звёздный мегаполис с четырьмя главными спиральными рукавами.",
+          fact: "Через ~4.5 миллиарда лет Млечный Путь столкнётся с галактикой Андромеда, образовав единую гигантскую галактику.",
+        },
+        halley: {
+          name: "Комета Галлея (1P/Halley)",
+          type: "Короткопериодическая комета",
+          group: "solar",
+          color: "#7ae8ff",
+          stats: {
+            "Кем и когда открыта":
+              "Наблюдалась с 240 г. до н. э.; периодичность доказал Эдмунд Галлей в 1705 г.",
+            "Происхождение названия":
+              "Названа в честь английского астронома Эдмунда Галлея, предсказавшего её возвращение",
+            "Размер ядра": "15 × 8 км (грязный ледяной ком)",
+            "Период обращения": "75–76 лет (следующий визит — 2061 г.)",
+            "Хвосты кометы":
+              "Прямой голубой ионный (от Солнца) и изогнутый жёлтый пылевой",
+            "Запущено зондов":
+              "5 аппаратов («Вега-1, 2», Giotto, Suisei, Sakigake в 1986 г.)",
+          },
+          desc: "Самая знаменитая комета в истории. При приближении к Солнцу лёд испаряется, и солнечный ветер выдувает голубой ионный хвост строго в сторону от Солнца.",
+          fact: "Во время последнего пролёта в 1986 году европейский зонд Giotto подлетел к ядру кометы на 596 км и впервые сфотографировал её вблизи.",
+        },
+        dyson: {
+          name: "Сфера Дайсона",
+          type: "Гипотетическая астроинженерная мегаструктура",
+          group: "deep",
+          color: "#ffd166",
+          stats: {
+            "Кем и когда предложена":
+              "Физик Фримен Дайсон, 1960 год (идея роя коллекторов вокруг звезды)",
+            "Происхождение названия":
+              "По фамилии автора концепции Фримена Дайсона",
+            "Тип цивилизации": "II тип по шкале Кардашёва",
+            "Выходная мощность": "~3.8 × 10²⁶ Вт (вся энергия звезды)",
+            "Диаметр роя": "Около 1–2 астрономических единиц",
+            Конструкция:
+              "Вращающиеся силовые кольца и рой орбитальных солнечных панелей",
+          },
+          desc: "Научно-фантастическая пасхалка: гипотетическая мегаструктура, окружающая звезду сетью коллекторов и колец для улавливания почти всей её световой энергии.",
+          fact: "Сам Дайсон подчеркивал, что сплошная твёрдая оболочка разрушилась бы от гравитации, поэтому реальная конструкция должна быть именно «роем» из миллионов независимых спутников.",
+        },
+        vampire_star: {
+          name: "Двойная звезда-вампир (RS Змееносца)",
+          type: "Взаимодействующая двойная система",
+          group: "deep",
+          color: "#ff7b54",
+          stats: {
+            "Кем и когда открыта":
+              "Вильямина Флеминг, 1898 год (первая вспышка новой)",
+            "Происхождение названия":
+              "«Вампиром» астрономы называют плотную звезду, вытягивающую газ у соседа",
+            Компоненты: "Красный гигант-донор и сверхплотный белый карлик",
+            "Период орбиты": "453 земных дня вокруг общего центра масс",
+            "Эффект аккреции":
+              "Газовый мост плазмы перетекает на диск белого карлика",
+            Опасность: "Периодические термоядерные вспышки (повторная новая)",
+          },
+          desc: "Две звезды вращаются вплотную вокруг общего центра масс. Гравитация крошечного белого карлика вытягивает светящийся поток плазмы из раздутого красного гиганта.",
+          fact: "Когда на поверхности белого карлика накапливается критическая масса украденного водорода, происходит мощнейший термоядерный взрыв, после чего процесс начинается заново.",
+        },
+        pillars: {
+          name: "Столпы Творения (M16)",
+          type: "Межзвёздные газопылевые колонны · Туманность Орла",
+          group: "deep",
+          color: "#d49a6a",
+          stats: {
+            "Кем и когда открыты":
+              "Туманность — Жан-Филипп де Шезо (1745); Столпы прославил Hubble (1995)",
+            "Происхождение названия":
+              "Внутри этих гигантских столбов газа прямо сейчас рождаются новые звёзды",
+            "Высота главного столба": "Около 4–5 световых лет",
+            Расстояние: "6 500 – 7 000 световых лет (созвездие Змеи)",
+            "Температура газа":
+              "От −260 °C внутри до +10 000 °C на светящихся краях",
+            Состав:
+              "Холодный молекулярный водород, космическая пыль, ионизированный кислород",
+          },
+          desc: "Три колоссальные колонны из холодного газа и пыли, подсвеченные ультрафиолетом молодых звёзд. Внутри плотных «вершин» формируются целые планетные системы.",
+          fact: "Снимки телескопа «Джеймс Уэбб» в инфракрасном диапазоне позволили заглянуть сквозь пыль и увидеть сотни ярко-красных новорождённых звёзд внутри столбов.",
+        },
+        crab_nebula: {
+          name: "Крабовидная туманность (M1)",
+          type: "Остаток сверхновой 1054 года с пульсаром",
+          group: "deep",
+          color: "#ff6b8b",
+          stats: {
+            "Кем и когда открыта":
+              "Вспышка — китайские астрономы (4 июля 1054 г.); туманность — Джон Бевис (1731)",
+            "Происхождение названия":
+              "Лорд Росс в 1844 году зарисовал её в телескоп и сравнил с формой краба",
+            Диаметр: "11 световых лет (расширяется со скоростью 1 500 км/с)",
+            Расстояние: "6 500 световых лет (созвездие Тельца)",
+            "Центральный объект":
+              "Пульсар PSR B0531+21 (30 оборотов в секунду)",
+            Состав: "Волокна ионизированного водорода, гелия, кислорода и серы",
+          },
+          desc: "Светящаяся паутина из раскалённых газовых волокон, оставшаяся после взрыва сверхновой. В самом центре крутится сверхбыстрый пульсар, подсвечивающий туманность изнутри.",
+          fact: "В 1054 году вспышка этой сверхновой была настолько яркой, что её наблюдали на небе даже днём в течение 23 суток.",
         },
       };
 
-      // Данные 3D-созвездий (сферические координаты RA/Dec в градусах для небесной сферы)
+      // 24 главных созвездия небесной сферы (с историей открытия)
       const CONSTELLATIONS_DATA = [
         {
           id: "ursa_major",
           name: "Большая Медведица",
           color: "#7cc4ff",
-          desc: "Самое узнаваемое созвездие северного неба со знаменитым «Ковшом» из семи ярких звёзд. По двум крайним звёздам ковша легко найти Полярную звезду.",
-          fact: "Пять центральных звёзд Ковша физически связаны и летят сквозь космос вместе, а две крайние движутся в противоположную сторону — через 50 000 лет форма Ковша изменится.",
+          discoveredBy: "Древние греки / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Самое узнаваемое созвездие северного неба со знаменитым «Ковшом» из семи ярких звёзд.",
+          fact: "По двум крайним звёздам Ковша (Мерак и Дубхе) легко найти Полярную звезду.",
           stars: [
             [165, 61.7, "Дубхе"],
             [165.4, 56.4, "Мерак"],
@@ -1365,11 +1670,40 @@
           ],
         },
         {
+          id: "ursa_minor",
+          name: "Малая Медведица",
+          color: "#9fd4ff",
+          discoveredBy: "Фалес Милетский / Птолемей",
+          discoveredYear: "VI век до н. э.",
+          desc: "Околополярное созвездие, на конце «ручки» которого сияет Полярная звезда — главный ориентир Севера.",
+          fact: "Полярная звезда на самом деле является тройной звёздной системой с жёлтым сверхгигантом.",
+          stars: [
+            [37.9, 89.2, "Полярная"],
+            [263.0, 86.6, "Йильдун"],
+            [251.5, 82.0, "Эпсилон"],
+            [236.0, 77.8, "Дзета"],
+            [222.7, 74.2, "Кохаб"],
+            [230.2, 71.8, "Феркад"],
+            [244.4, 75.7, "Эта"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 5],
+            [5, 6],
+            [6, 3],
+          ],
+        },
+        {
           id: "orion",
           name: "Орион",
           color: "#ffb870",
-          desc: "Величественное экваториальное созвездие «Охотника», украшенное красным Бетельгейзе, голубым Ригелем и знаменитым Поясом Ориона из трёх звёзд.",
-          fact: "Под Поясом Ориона находится «Меч», в центре которого сияет огромная Туманность Ориона — ближайшая фабрика новых звёзд.",
+          discoveredBy: "Древние шумеры / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Экваториальное созвездие «Охотника» с красным Бетельгейзе, голубым Ригелем и Поясом Ориона.",
+          fact: "Под Поясом Ориона находится Туманность Ориона — ближайшая крупная фабрика звёзд.",
           stars: [
             [88.8, 7.4, "Бетельгейзе"],
             [81.3, 6.3, "Беллатрикс"],
@@ -1394,8 +1728,10 @@
           id: "cassiopeia",
           name: "Кассиопея",
           color: "#c89eff",
-          desc: "Яркое околополярное созвездие в форме буквы W или M, расположенное прямо на полосе Млечного Пути напротив Большой Медведицы.",
-          fact: "Если бы вы смотрели на наше Солнце с ближайшей к нам звезды Альфа Центавра, оно выглядело бы как яркая шестая звезда в созвездии Кассиопеи!",
+          discoveredBy: "Древние греки / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Яркое созвездие в форме буквы W или M, лежащее прямо на полосе Млечного Пути.",
+          fact: "В 1572 году Тихо Браге наблюдал в Кассиопее сверхновую, доказав, что звёздное небо изменчиво.",
           stars: [
             [2.3, 59.1, "Каф"],
             [10.1, 56.5, "Шедар"],
@@ -1412,10 +1748,12 @@
         },
         {
           id: "cygnus",
-          name: "Лебедь (Северный Крест)",
+          name: "Лебедь",
           color: "#7affdf",
-          desc: "Изящное созвездие в самом сердце летнего Млечного Пути. В его «хвосте» сияет сверхгигант Денеб — одна из самых ярких звёзд Галактики.",
-          fact: "В созвездии Лебедя расположен знаменитый объект Лебедь X-1 — первая в истории подтверждённая чёрная дыра звёздной массы.",
+          discoveredBy: "Древние греки / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Созвездие «Северный Крест» в сердце летнего Млечного Пути со сверхгигантом Денеб.",
+          fact: "Здесь находится Лебедь X-1 — первая в истории подтверждённая чёрная дыра звёздной массы.",
           stars: [
             [310.3, 45.3, "Денеб"],
             [305.5, 40.3, "Садр"],
@@ -1434,8 +1772,10 @@
           id: "scorpius",
           name: "Скорпион",
           color: "#ff708d",
-          desc: "Южное зодиакальное созвездие с характерным изогнутым «хвостом» и красным сверхгигантом Антаресом («соперником Марса») в самом сердце.",
-          fact: "Именно в направлении созвездий Скорпиона и Стрельца находится плотный светящийся центр нашей галактики Млечный Путь.",
+          discoveredBy: "Древние вавилоняне / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Южное зодиакальное созвездие с изогнутым хвостом и красным сверхгигантом Антаресом.",
+          fact: "Антарес переводится как «соперник Марса» из-за схожего ярко-красного цвета.",
           stars: [
             [240.1, -22.6, "Джубба"],
             [241.3, -19.8, "Акраб"],
@@ -1456,8 +1796,10 @@
           id: "leo",
           name: "Лев",
           color: "#ffe07d",
-          desc: "Весеннее зодиакальное созвездие с узнаваемым «Серпом» (гривой льва) и ярчайшей звездой Регул («Маленький король»).",
-          fact: "Каждый ноябрь из области созвездия Льва приходит знаменитый метеорный поток Леониды, иногда устраивающий настоящие «звёздные штормы».",
+          discoveredBy: "Древние месопотамцы / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Весеннее зодиакальное созвездие с узнаваемым «Серпом» и ярчайшей звездой Регул.",
+          fact: "Каждый ноябрь из созвездия Льва приходит знаменитый метеорный поток Леониды.",
           stars: [
             [152.1, 11.9, "Регул"],
             [151.8, 16.8, "Эта Льва"],
@@ -1475,8 +1817,699 @@
             [5, 0],
           ],
         },
+        {
+          id: "lyra",
+          name: "Лира",
+          color: "#80e5ff",
+          discoveredBy: "Древние греки / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Небольшое, но яркое созвездие с Вегой — пятой по яркости звездой ночного неба.",
+          fact: "Около 12 000 лет назад Вега была Полярной звездой и снова станет ею через 13 700 лет.",
+          stars: [
+            [279.2, 38.8, "Вега"],
+            [281.2, 37.6, "Дзета"],
+            [282.5, 33.4, "Шелиак"],
+            [284.7, 32.7, "Сулафат"],
+            [283.6, 36.9, "Дельта"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 1],
+          ],
+        },
+        {
+          id: "aquila",
+          name: "Орёл",
+          color: "#a3d9ff",
+          discoveredBy: "Древние греки / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Экваториальное созвездие, главная звезда которого — Альтаир — входит в Летний треугольник.",
+          fact: "Альтаир вращается так быстро (оборот за 9 часов), что сплющен у полюсов на 20%.",
+          stars: [
+            [297.7, 8.9, "Альтаир"],
+            [296.6, 10.6, "Таразед"],
+            [298.8, 6.4, "Альшаин"],
+            [291.4, 3.1, "Дельта"],
+            [286.4, -4.9, "Лямбда"],
+            [302.8, -0.8, "Тета"],
+          ],
+          edges: [
+            [1, 0],
+            [0, 2],
+            [0, 3],
+            [3, 4],
+            [2, 5],
+          ],
+        },
+        {
+          id: "taurus",
+          name: "Телец",
+          color: "#ffaa70",
+          discoveredBy: "Древние вавилоняне / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Зимнее зодиакальное созвездие с оранжевым гигантом Альдебараном и скоплением Плеяды.",
+          fact: "В Тельце находится Крабовидная туманность — остаток сверхновой 1054 года.",
+          stars: [
+            [68.9, 16.5, "Альдебаран"],
+            [81.6, 28.6, "Эльнат"],
+            [84.4, 21.1, "Дзета"],
+            [64.9, 15.6, "Гамма"],
+            [67.2, 19.2, "Айн"],
+            [56.9, 24.1, "Альциона"],
+          ],
+          edges: [
+            [1, 4],
+            [4, 3],
+            [3, 0],
+            [0, 2],
+            [4, 5],
+          ],
+        },
+        {
+          id: "gemini",
+          name: "Близнецы",
+          color: "#ffe999",
+          discoveredBy: "Древние греки / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Зодиакальное созвездие с двумя яркими «головами» — Кастором и Поллуксом.",
+          fact: "Кастор представляет собой сложную систему сразу из шести связанных звёзд.",
+          stars: [
+            [113.6, 31.9, "Кастор"],
+            [116.3, 28.0, "Поллукс"],
+            [99.4, 16.4, "Альхена"],
+            [106.0, 20.6, "Мекбуда"],
+            [101.3, 25.1, "Мебсута"],
+            [110.0, 21.9, "Васат"],
+          ],
+          edges: [
+            [0, 4],
+            [4, 3],
+            [1, 5],
+            [5, 2],
+            [0, 1],
+          ],
+        },
+        {
+          id: "virgo",
+          name: "Дева",
+          color: "#d4e6ff",
+          discoveredBy: "Древние вавилоняне / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Второе по площади созвездие всего неба со звездой Спика и гигантским скоплением галактик.",
+          fact: "В созвездии Девы расположена галактика M87, чью чёрную дыру впервые сфотографировали в 2019 году.",
+          stars: [
+            [201.3, -11.2, "Спика"],
+            [190.4, -1.4, "Поррима"],
+            [195.5, 10.9, "Виндемиатрикс"],
+            [185.0, -0.7, "Заниах"],
+            [177.7, 1.8, "Завийява"],
+            [214.0, -6.0, "Хезе"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 2],
+            [1, 3],
+            [3, 4],
+            [0, 5],
+          ],
+        },
+        {
+          id: "sagittarius",
+          name: "Стрелец",
+          color: "#ffc299",
+          discoveredBy: "Древние шумеры / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Южное зодиакальное созвездие в форме «Чайника», указывающее прямо на центр Млечного Пути.",
+          fact: "В Стрельце находится больше объектов каталога Мессье (15), чем в любом другом созвездии.",
+          stars: [
+            [276.0, -34.4, "Каус Аустралис"],
+            [283.8, -26.3, "Нунки"],
+            [277.0, -25.4, "Каус Бореалис"],
+            [275.2, -29.8, "Каус Медиа"],
+            [285.6, -29.9, "Асцелла"],
+            [271.5, -30.4, "Альназл"],
+          ],
+          edges: [
+            [5, 3],
+            [3, 0],
+            [0, 4],
+            [4, 1],
+            [1, 2],
+            [2, 3],
+          ],
+        },
+        {
+          id: "pegasus",
+          name: "Пегас",
+          color: "#b5c7ff",
+          discoveredBy: "Древние греки / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Осеннее созвездие, образующее знаменитый «Большой квадрат Пегаса».",
+          fact: "У звезды 51 Пегаса в 1995 году была открыта первая экзопланета у звезды солнечного типа.",
+          stars: [
+            [346.2, 15.2, "Маркаб"],
+            [345.9, 28.1, "Шеат"],
+            [3.3, 15.2, "Альгениб"],
+            [2.1, 29.1, "Альферац"],
+            [326.0, 9.9, "Эниф"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 3],
+            [3, 2],
+            [2, 0],
+            [0, 4],
+          ],
+        },
+        {
+          id: "andromeda",
+          name: "Андромеда",
+          color: "#d6b3ff",
+          discoveredBy: "Древние греки / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Северное созвездие, знаменитое ближайшей к нам большой спиральной галактикой M31.",
+          fact: "Галактика Андромеды — самый далёкий объект (2.5 млн св. лет), видимый невооружённым глазом.",
+          stars: [
+            [2.1, 29.1, "Альферац"],
+            [9.8, 30.9, "Дельта"],
+            [17.4, 35.6, "Мирах"],
+            [31.0, 42.3, "Аламак"],
+            [10.7, 41.3, "Галактика M31"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [2, 4],
+          ],
+        },
+        {
+          id: "perseus",
+          name: "Персей",
+          color: "#99e6ff",
+          discoveredBy: "Древние греки / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Созвездие на Млечном Пути, содержащее знаменитую затменную переменную звезду Алголь.",
+          fact: "Каждый август в Персее наблюдается самый популярный метеорный поток года — Персеиды.",
+          stars: [
+            [51.1, 49.9, "Мирфак"],
+            [47.0, 40.9, "Алголь"],
+            [55.7, 47.8, "Дельта"],
+            [59.5, 40.0, "Эпсилон"],
+            [58.5, 31.9, "Дзета"],
+            [42.7, 55.9, "Эта"],
+          ],
+          edges: [
+            [5, 0],
+            [0, 1],
+            [0, 2],
+            [2, 3],
+            [3, 4],
+          ],
+        },
+        {
+          id: "auriga",
+          name: "Возничий",
+          color: "#fff0a6",
+          discoveredBy: "Древние вавилоняне / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Зимнее пятиугольное созвездие, увенчанное Капеллой — шестой по яркости звездой неба.",
+          fact: "Капелла состоит из двух пар двойных звёзд, вращающихся вокруг общего центра масс.",
+          stars: [
+            [79.2, 46.0, "Капелла"],
+            [89.9, 44.9, "Менкалинан"],
+            [89.9, 37.2, "Махасим"],
+            [81.6, 28.6, "Эльнат"],
+            [74.2, 33.2, "Хассалех"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 0],
+          ],
+        },
+        {
+          id: "canis_major",
+          name: "Большой Пёс",
+          color: "#8cd9ff",
+          discoveredBy: "Древние египтяне / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Зимнее созвездие, где сияет Сириус — абсолютно самая яркая звезда всего ночного неба.",
+          fact: "В Древнем Египте первый утренний восход Сириуса предвещал ежегодный разлив Нила.",
+          stars: [
+            [101.3, -16.7, "Сириус"],
+            [95.7, -17.9, "Мирцам"],
+            [104.7, -28.9, "Адара"],
+            [107.1, -26.4, "Везен"],
+            [111.0, -29.3, "Алудра"],
+          ],
+          edges: [
+            [1, 0],
+            [0, 3],
+            [3, 2],
+            [3, 4],
+          ],
+        },
+        {
+          id: "draco",
+          name: "Дракон",
+          color: "#70ffb8",
+          discoveredBy: "Древние греки / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Длинное извилистое околополярное созвездие, обвивающее Малую Медведицу.",
+          fact: "Звезда Тубан в Драконе была Полярной звездой во времена строительства египетских пирамид.",
+          stars: [
+            [269.2, 51.5, "Этамин"],
+            [262.6, 52.3, "Растабан"],
+            [258.4, 65.7, "Альдибаин"],
+            [246.0, 61.5, "Атаин"],
+            [211.1, 64.4, "Тубан"],
+            [172.8, 69.3, "Джиаузар"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 5],
+          ],
+        },
+        {
+          id: "crux",
+          name: "Южный Крест",
+          color: "#80d4ff",
+          discoveredBy: "Америго Веспуччи / Огюстен Руайе",
+          discoveredYear: "1501 / выделено в 1679 г.",
+          desc: "Самое маленькое, но одно из самых знаменитых созвездий, указывающее на Южный полюс мира.",
+          fact: "Южный Крест изображён на флагах Австралии, Новой Зеландии, Бразилии и Папуа — Новой Гвинеи.",
+          stars: [
+            [186.6, -63.1, "Акрукс"],
+            [187.8, -57.1, "Гакрукс"],
+            [191.9, -59.7, "Мимоза"],
+            [183.8, -58.7, "Имаи"],
+          ],
+          edges: [
+            [0, 1],
+            [2, 3],
+          ],
+        },
+        {
+          id: "centaurus",
+          name: "Центавр",
+          color: "#ffd280",
+          discoveredBy: "Древние греки / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Крупное южное созвездие, в котором находится ближайшая к Солнцу звёздная система Альфа Центавра.",
+          fact: "Красный карлик Проксима Центавра удалён от нас всего на 4.24 световых года.",
+          stars: [
+            [219.9, -60.8, "Альфа Центавра"],
+            [210.9, -60.4, "Хадар"],
+            [211.7, -36.4, "Менкент"],
+            [190.4, -48.9, "Мулифен"],
+            [182.1, -50.7, "Дельта"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [3, 4],
+          ],
+        },
+        {
+          id: "aquarius",
+          name: "Водолей",
+          color: "#66ccff",
+          discoveredBy: "Древние вавилоняне / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Обширное зодиакальное созвездие с известной планетарной туманностью Улитка.",
+          fact: "В Водолее находится знаменитая система TRAPPIST-1 с семью землеподобными экзопланетами.",
+          stars: [
+            [331.4, -0.3, "Садальмелик"],
+            [322.9, -5.6, "Садальсууд"],
+            [335.4, -1.4, "Садахбия"],
+            [343.7, -15.8, "Скат"],
+            [311.9, -9.5, "Альбали"],
+          ],
+          edges: [
+            [4, 1],
+            [1, 0],
+            [0, 2],
+            [2, 3],
+          ],
+        },
+        {
+          id: "pisces",
+          name: "Рыбы",
+          color: "#99d6ff",
+          discoveredBy: "Древние вавилоняне / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Зодиакальное созвездие из двух цепочек звёзд, соединённых звездой Альриша.",
+          fact: "В созвездии Рыб сегодня располагается точка весеннего равноденствия.",
+          stars: [
+            [30.5, 2.8, "Альриша"],
+            [22.9, 15.3, "Куллат Нуну"],
+            [14.4, 7.9, "Эпсилон"],
+            [354.9, 5.6, "Йота"],
+            [349.3, 3.3, "Гамма"],
+          ],
+          edges: [
+            [1, 0],
+            [0, 2],
+            [2, 3],
+            [3, 4],
+          ],
+        },
+        {
+          id: "aries",
+          name: "Овен",
+          color: "#ffb380",
+          discoveredBy: "Древние вавилоняне / Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Небольшое, но исторически важное зодиакальное созвездие с ярким гигантом Хамаль.",
+          fact: "Две тысячи лет назад именно в Овне находилась точка весеннего равноденствия.",
+          stars: [
+            [31.8, 23.5, "Хамаль"],
+            [28.7, 20.8, "Шератан"],
+            [28.4, 19.3, "Мезартим"],
+            [42.5, 27.3, "41 Овна"],
+          ],
+          edges: [
+            [3, 0],
+            [0, 1],
+            [1, 2],
+          ],
+        },
+        {
+          id: "cancer",
+          name: "Рак",
+          color: "#ffbd80",
+          discoveredBy: "Древние вавилоняне / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Зодиакальное созвездие между Близнецами и Львом, известное ярким звёздным скоплением Ясли (M44).",
+          fact: "Около двух тысяч лет назад в созвездии Рака находилась точка летнего солнцестояния — отсюда название «Тропик Рака».",
+          stars: [
+            [134.6, 11.9, "Акубенс"],
+            [124.1, 9.2, "Альтарф"],
+            [130.8, 21.5, "Азеллюс Бореалис"],
+            [131.2, 18.2, "Азеллюс Аустралис"],
+            [131.7, 28.8, "Йота Рака"],
+          ],
+          edges: [
+            [4, 2],
+            [2, 3],
+            [3, 0],
+            [3, 1],
+          ],
+        },
+        {
+          id: "libra",
+          name: "Весы",
+          color: "#9ee6ff",
+          discoveredBy: "Древние римляне / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Единственное зодиакальное созвездие, изображающее неодушевлённый предмет — весы равноденствия.",
+          fact: "В древности звёзды Весов считались клешнями соседнего Скорпиона, что до сих пор отражено в их арабских названиях.",
+          stars: [
+            [222.7, -16.0, "Зубен эль Генуби"],
+            [229.3, -9.4, "Зубен эль Шемали"],
+            [226.0, -25.3, "Брахиум"],
+            [233.9, -14.8, "Зубен эль Акраб"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 3],
+            [3, 2],
+            [2, 0],
+            [0, 3],
+          ],
+        },
+        {
+          id: "capricornus",
+          name: "Козерог",
+          color: "#80ffd4",
+          discoveredBy: "Древние шумеры / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Южное зодиакальное созвездие в форме широкого треугольника, символизирующее мифического морского козла.",
+          fact: "Именно в созвездии Козерога в 1846 году Иоганн Галле впервые обнаружил планету Нептун.",
+          stars: [
+            [304.5, -12.5, "Альгеди"],
+            [305.3, -14.8, "Дабих"],
+            [325.0, -16.7, "Нашира"],
+            [326.8, -16.1, "Денеб Альгеди"],
+            [312.9, -26.9, "Омега"],
+            [321.7, -22.4, "Дзета"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 4],
+            [4, 5],
+            [5, 2],
+            [2, 3],
+            [3, 1],
+          ],
+        },
+        {
+          id: "hercules",
+          name: "Геркулес",
+          color: "#d4b3ff",
+          discoveredBy: "Древние греки / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Пятое по площади созвездие неба с характерной трапецией («Краеугольным камнем») в центре.",
+          fact: "В направлении созвездия Геркулеса движется вся наша Солнечная система со скоростью около 20 км/с; здесь же сияет шаровое скопление M13.",
+          stars: [
+            [247.6, 21.5, "Корнефорос"],
+            [250.3, 31.6, "Дзета"],
+            [250.7, 38.9, "Эта"],
+            [258.8, 36.8, "Пи"],
+            [255.1, 30.9, "Эпсилон"],
+            [258.7, 14.4, "Рас Альгети"],
+            [258.8, 24.8, "Сарик"],
+          ],
+          edges: [
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 1],
+            [1, 0],
+            [4, 6],
+            [6, 5],
+          ],
+        },
+        {
+          id: "ophiuchus",
+          name: "Змееносец",
+          color: "#99ff99",
+          discoveredBy: "Древние греки / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Крупное экваториальное созвездие, которое Солнце пересекает каждый год с конца ноября по середину декабря.",
+          fact: "В Змееносце находится звезда Барнарда — вторая по близости к Солнцу звёздная система (5.96 световых лет).",
+          stars: [
+            [263.7, 12.6, "Рас Альхаге"],
+            [265.9, 4.6, "Кебальрай"],
+            [257.6, -15.7, "Сабик"],
+            [243.6, -3.7, "Йед Приор"],
+            [249.3, -10.6, "Дзета"],
+            [260.5, -25.0, "Тета"],
+          ],
+          edges: [
+            [0, 1],
+            [0, 3],
+            [3, 4],
+            [4, 2],
+            [2, 1],
+            [2, 5],
+          ],
+        },
+        {
+          id: "bootes",
+          name: "Волопас",
+          color: "#ffd980",
+          discoveredBy: "Древние греки / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Весеннее созвездие в форме воздушного змея, увенчанное Арктуром — самой яркой звездой Северного полушария.",
+          fact: "Арктур — древний оранжевый гигант, прилетевший в наш район Галактики из другой, поглощённой Млечным Путём карликовой галактики.",
+          stars: [
+            [213.9, 19.2, "Арктур"],
+            [221.2, 27.1, "Ицар"],
+            [218.0, 38.3, "Сегинус"],
+            [225.5, 40.4, "Неккар"],
+            [228.9, 33.3, "Дельта"],
+            [208.7, 18.4, "Муфрид"],
+          ],
+          edges: [
+            [0, 5],
+            [0, 1],
+            [1, 4],
+            [4, 3],
+            [3, 2],
+            [2, 0],
+          ],
+        },
+        {
+          id: "corona_borealis",
+          name: "Северная Корона",
+          color: "#e6ccff",
+          discoveredBy: "Древние греки / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Изящная дуга из семи звёзд между Волопасом и Геркулесом с главной звездой Гемма («Жемчужина»).",
+          fact: "Здесь расположена повторная новая T Северной Короны, которая раз в ~80 лет внезапно вспыхивает в тысячи раз ярче обычного.",
+          stars: [
+            [233.7, 26.7, "Гемма"],
+            [232.0, 29.1, "Нусакан"],
+            [233.2, 31.4, "Тета"],
+            [235.7, 26.3, "Гамма"],
+            [237.4, 26.1, "Дельта"],
+            [239.4, 26.9, "Эпсилон"],
+          ],
+          edges: [
+            [2, 1],
+            [1, 0],
+            [0, 3],
+            [3, 4],
+            [4, 5],
+          ],
+        },
+        {
+          id: "cepheus",
+          name: "Цефей",
+          color: "#a6c8ff",
+          discoveredBy: "Древние греки / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Северное околополярное созвездие в форме домика с острой крышей, лежащее рядом с Кассиопеей.",
+          fact: "Звезда Дельта Цефея дала название целому классу пульсирующих звёзд — цефеид, по которым астрономы измеряют расстояния до других галактик.",
+          stars: [
+            [319.6, 62.6, "Альдерамин"],
+            [322.2, 70.6, "Альфирк"],
+            [354.8, 77.6, "Эрраи"],
+            [332.7, 58.2, "Дзета"],
+            [342.4, 66.2, "Йота"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 2],
+            [2, 4],
+            [4, 3],
+            [3, 0],
+            [1, 4],
+          ],
+        },
+        {
+          id: "canis_minor",
+          name: "Малый Пёс",
+          color: "#fff0b3",
+          discoveredBy: "Древние греки / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Компактное зимнее созвездие с Проционом — восьмой по яркости звездой всего ночного неба.",
+          fact: "Процион входит в знаменитый «Зимний треугольник» вместе с Сириусом и Бетельгейзе и находится всего в 11.4 световых годах от Земли.",
+          stars: [
+            [114.8, 5.2, "Процион"],
+            [111.8, 8.3, "Гомейса"],
+          ],
+          edges: [[0, 1]],
+        },
+        {
+          id: "hydra",
+          name: "Гидра",
+          color: "#80ffb3",
+          discoveredBy: "Древние вавилоняне / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Самое большое по площади и самое длинное созвездие на всём небе — тянется почти на треть небесной сферы.",
+          fact: "Единственная яркая звезда созвездия называется Альфард, что по-арабски буквально означает «Одинокая».",
+          stars: [
+            [131.7, 6.4, "Эпсилон"],
+            [133.8, 5.9, "Дзета"],
+            [141.9, -8.7, "Альфард"],
+            [162.4, -16.2, "Ню"],
+            [173.3, -31.9, "Кси"],
+            [199.7, -23.2, "Гамма"],
+            [211.6, -26.7, "Пи"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 5],
+            [5, 6],
+          ],
+        },
+        {
+          id: "cetus",
+          name: "Кит",
+          color: "#85c2ff",
+          discoveredBy: "Древние месопотамцы / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Четвёртое по размеру созвездие, расположенное в области неба, которую в древности называли «Морем».",
+          fact: "В созвездии Кита находится звезда Мира («Удивительная») — первая в истории открытая переменная звезда, и солнцеподобная Тау Кита.",
+          stars: [
+            [45.6, 4.1, "Менкар"],
+            [40.8, 3.2, "Каффальджидма"],
+            [34.8, -3.0, "Мира"],
+            [27.9, -10.3, "Батен Кайтос"],
+            [26.0, -15.9, "Тау Кита"],
+            [10.9, -18.0, "Дифда"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 5],
+            [5, 3],
+          ],
+        },
+        {
+          id: "piscis_austrinus",
+          name: "Южная Рыба",
+          color: "#70dbff",
+          discoveredBy: "Древние вавилоняне / Клавдий Птолемей",
+          discoveredYear: "II век н. э. («Альмагест»)",
+          desc: "Южное осеннее созвездие с яркой одинокой звездой Фомальгаут — одной из четырёх «королевских звёзд» древности.",
+          fact: "Вокруг Фомальгаута телескопы Hubble и James Webb обнаружили гигантское пылевое кольцо, напоминающее Око Саурона.",
+          stars: [
+            [344.4, -29.6, "Фомальгаут"],
+            [340.2, -27.0, "Эпсилон"],
+            [344.0, -32.5, "Дельта"],
+            [337.9, -32.3, "Бета"],
+            [326.2, -33.0, "Йота"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 4],
+            [4, 3],
+            [3, 2],
+            [2, 0],
+          ],
+        },
+        {
+          id: "vela",
+          name: "Паруса",
+          color: "#80ccff",
+          discoveredBy: "Никола-Луи де Лакайль",
+          discoveredYear: "1752 год (выделено из Корабля Арго)",
+          desc: "Яркое южное созвездие, через которое проходит богатейший участок Млечного Пути и гигантский остаток сверхновой Парусов.",
+          fact: "Четыре яркие звезды Парусов и Киля образуют «Ложный Крест», который мореплаватели прошлого часто путали с Южным Крестом.",
+          stars: [
+            [122.4, -47.3, "Регор"],
+            [131.2, -54.7, "Альсефина"],
+            [137.0, -43.4, "Сухайль"],
+            [140.5, -55.0, "Маркеб"],
+            [161.7, -49.4, "Мю Парусов"],
+          ],
+          edges: [
+            [0, 1],
+            [1, 3],
+            [3, 4],
+            [4, 2],
+            [2, 0],
+          ],
+        },
       ];
-
       // =========================================================================
       // 2. ПРОЦЕДУРНЫЕ ГЕНЕРАТОРЫ ДЕТАЛИЗИРОВАННЫХ ТЕКСТУР И GLSL-ШЕЙДЕРОВ
       // =========================================================================
@@ -1861,6 +2894,209 @@
         side: THREE.DoubleSide,
         depthWrite: false,
       });
+
+      // --- ШЕЙДЕР ЖИВОЙ ПЛАЗМЫ ДЛЯ ЛЮБОЙ ЗВЕЗДЫ (БЕТЕЛЬГЕЙЗЕ, РИГЕЛЬ) ---
+      function createStarSurfaceMaterial(
+        coolHex,
+        mainHex,
+        hotHex,
+        speed = 0.25,
+      ) {
+        return new THREE.ShaderMaterial({
+          uniforms: {
+            uTime: { value: 0 },
+            uCool: { value: new THREE.Color(coolHex) },
+            uMain: { value: new THREE.Color(mainHex) },
+            uHot: { value: new THREE.Color(hotHex) },
+            uSpeed: { value: speed },
+          },
+          vertexShader: `
+            varying vec3 vNormal;
+            varying vec3 vPos;
+            varying vec3 vViewDir;
+            void main() {
+              vPos = position;
+              vNormal = normalize(normalMatrix * normal);
+              vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+              vViewDir = normalize(-mvPos.xyz);
+              gl_Position = projectionMatrix * mvPos;
+            }
+          `,
+          fragmentShader: `
+            uniform float uTime;
+            uniform vec3 uCool;
+            uniform vec3 uMain;
+            uniform vec3 uHot;
+            uniform float uSpeed;
+            varying vec3 vNormal;
+            varying vec3 vPos;
+            varying vec3 vViewDir;
+            float hash(vec3 p) {
+              p = fract(p * 0.3183099 + 0.1);
+              p *= 17.0;
+              return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+            }
+            float noise(vec3 x) {
+              vec3 i = floor(x), f = fract(x);
+              f = f * f * (3.0 - 2.0 * f);
+              return mix(
+                mix(mix(hash(i+vec3(0,0,0)), hash(i+vec3(1,0,0)), f.x),
+                    mix(hash(i+vec3(0,1,0)), hash(i+vec3(1,1,0)), f.x), f.y),
+                mix(mix(hash(i+vec3(0,0,1)), hash(i+vec3(1,0,1)), f.x),
+                    mix(hash(i+vec3(0,1,1)), hash(i+vec3(1,1,1)), f.x), f.y), f.z);
+            }
+            void main() {
+              vec3 p = normalize(vPos) * 5.0;
+              float t = uTime * uSpeed;
+              float n = noise(p + vec3(t, -t * 0.7, t * 0.5)) * 0.58
+                      + noise(p * 2.4 - vec3(t * 1.4)) * 0.28
+                      + noise(p * 5.2 + vec3(t * 2.1)) * 0.14;
+              vec3 col = mix(uCool, uMain, smoothstep(0.24, 0.68, n));
+              col = mix(col, uHot, smoothstep(0.68, 0.94, n));
+              float limb = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 2.3);
+              col += uHot * limb * 0.65;
+              gl_FragColor = vec4(col, 1.0);
+            }
+          `,
+        });
+      }
+
+      // --- МЯГКИЙ АТМОСФЕРНЫЙ ОРЕОЛ (FRESNEL) ДЛЯ ПЛАНЕТ ---
+      function createPlanetRimMaterial(colorHex, intensity = 0.65) {
+        return new THREE.ShaderMaterial({
+          uniforms: {
+            uColor: { value: new THREE.Color(colorHex) },
+            uIntensity: { value: intensity },
+          },
+          vertexShader: `
+            varying vec3 vNormal;
+            varying vec3 vViewDir;
+            void main() {
+              vNormal = normalize(normalMatrix * normal);
+              vec4 mv = modelViewMatrix * vec4(position, 1.0);
+              vViewDir = normalize(-mv.xyz);
+              gl_Position = projectionMatrix * mv;
+            }
+          `,
+          fragmentShader: `
+            uniform vec3 uColor;
+            uniform float uIntensity;
+            varying vec3 vNormal;
+            varying vec3 vViewDir;
+            void main() {
+              float fresnel = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 3.2);
+              gl_FragColor = vec4(uColor * 1.35, fresnel * uIntensity);
+            }
+          `,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          side: THREE.FrontSide,
+          depthWrite: false,
+        });
+      }
+
+      // --- ОБЪЁМНЫЙ GLSL-ШЕЙДЕР ПОЛОС СВЕТА (ДЖЕТЫ ПУЛЬСАРА И ЧЁРНОЙ ДЫРЫ) ---
+      function createVolumetricJetMaterial(innerHex, outerHex, speed = 6.0) {
+        return new THREE.ShaderMaterial({
+          uniforms: {
+            uTime: { value: 0 },
+            uInner: { value: new THREE.Color(innerHex) },
+            uOuter: { value: new THREE.Color(outerHex) },
+            uSpeed: { value: speed },
+          },
+          vertexShader: `
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vViewDir;
+            void main() {
+              vUv = uv;
+              vNormal = normalize(normalMatrix * normal);
+              vec4 mv = modelViewMatrix * vec4(position, 1.0);
+              vViewDir = normalize(-mv.xyz);
+              gl_Position = projectionMatrix * mv;
+            }
+          `,
+          fragmentShader: `
+            uniform float uTime;
+            uniform vec3 uInner;
+            uniform vec3 uOuter;
+            uniform float uSpeed;
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vViewDir;
+            void main() {
+              // vUv.y = 0 у источника (полюса), 1 на дальнем конце луча
+              float edge = pow(abs(dot(vNormal, vViewDir)), 1.45);
+              float baseFade = smoothstep(0.0, 0.08, vUv.y);
+              float tipFade = pow(1.0 - vUv.y, 1.65);
+              float stream1 = sin(vUv.x * 18.85 + vUv.y * 14.0 - uTime * uSpeed) * 0.5 + 0.5;
+              float stream2 = sin(vUv.x * 37.70 - vUv.y * 22.0 - uTime * uSpeed * 1.4) * 0.5 + 0.5;
+              float energy = 0.65 + 0.35 * mix(stream1, stream2, 0.5);
+              vec3 col = mix(uOuter, uInner, pow(edge, 1.6) * (1.0 - vUv.y * 0.5));
+              float alpha = edge * baseFade * tipFade * energy * 0.92;
+              gl_FragColor = vec4(col * 1.45, clamp(alpha, 0.0, 1.0));
+            }
+          `,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        });
+      }
+
+      // Мягкая текстура дифракционных лучей для Ригеля (8 мягких лучей)
+      function createStarFlareTexture() {
+        const size = 512;
+        const c = document.createElement("canvas");
+        c.width = c.height = size;
+        const ctx = c.getContext("2d");
+        const mid = size / 2;
+
+        // Мягкое центральное гало
+        const core = ctx.createRadialGradient(
+          mid,
+          mid,
+          0,
+          mid,
+          mid,
+          mid * 0.85,
+        );
+        core.addColorStop(0, "rgba(255,255,255,1)");
+        core.addColorStop(0.18, "rgba(180,232,255,0.72)");
+        core.addColorStop(0.5, "rgba(70,165,255,0.22)");
+        core.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = core;
+        ctx.fillRect(0, 0, size, size);
+
+        // Главные и диагональные лучи дифракции
+        const drawSpike = (angle, len, thickness, alpha) => {
+          ctx.save();
+          ctx.translate(mid, mid);
+          ctx.rotate(angle);
+          const g = ctx.createLinearGradient(-len, 0, len, 0);
+          g.addColorStop(0, "rgba(120,210,255,0)");
+          g.addColorStop(0.42, `rgba(180,235,255,${alpha * 0.55})`);
+          g.addColorStop(0.5, `rgba(255,255,255,${alpha})`);
+          g.addColorStop(0.58, `rgba(180,235,255,${alpha * 0.55})`);
+          g.addColorStop(1, "rgba(120,210,255,0)");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, len, thickness, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        };
+
+        drawSpike(0, mid * 0.98, 5, 0.95);
+        drawSpike(Math.PI / 2, mid * 0.98, 5, 0.95);
+        drawSpike(Math.PI / 4, mid * 0.62, 3, 0.5);
+        drawSpike(-Math.PI / 4, mid * 0.62, 3, 0.5);
+
+        const tex = new THREE.CanvasTexture(c);
+        tex.needsUpdate = true;
+        return tex;
+      }
+
+      const animatedShaderMats = [];
 
       // === КОНЕЦ ЧАСТИ 1 (ВТОРУЮ ЧАСТЬ ВСТАВЛЯТЬ СРАЗУ НИЖЕ ЭТОЙ СТРОКИ) ===
       // =========================================================================
@@ -2293,6 +3529,24 @@
         mesh.rotation.z = cfg.tilt;
         group.add(mesh);
         registerClickable(mesh, cfg.id);
+        const rimColors = {
+          venus: 0xffd58a,
+          mars: 0xff7b4d,
+          jupiter: 0xf2c18d,
+          saturn: 0xffe4aa,
+          uranus: 0x80f2ff,
+          neptune: 0x4d88ff,
+        };
+        if (rimColors[cfg.id]) {
+          const rimMesh = new THREE.Mesh(
+            new THREE.SphereGeometry(cfg.r * 1.045, 48, 48),
+            createPlanetRimMaterial(
+              rimColors[cfg.id],
+              cfg.id === "venus" ? 0.55 : 0.42,
+            ),
+          );
+          group.add(rimMesh);
+        }
 
         // Особые детали для Земли: облака + реалистичная атмосфера + МКС + Луна с инопланетянами
         if (cfg.id === "earth") {
@@ -2338,7 +3592,11 @@
           issPivot.rotation.z = 0.9; // наклон орбиты МКС ~51.6°
           group.add(issPivot);
 
-          // Тонкая орбита МКС
+          // --- МКС на наклонённой орбите ~51.6° ---
+          const issTiltGroup = new THREE.Group();
+          issTiltGroup.rotation.z = 0.9;
+          group.add(issTiltGroup);
+
           const issOrbitPts = [];
           for (let i = 0; i <= 90; i++) {
             const a = (i / 90) * Math.PI * 2;
@@ -2354,8 +3612,11 @@
               opacity: 0.45,
             }),
           );
-          issPivot.add(issOrbitLine);
+          issTiltGroup.add(issOrbitLine);
           orbitLines.push(issOrbitLine);
+
+          issPivot = new THREE.Group();
+          issTiltGroup.add(issPivot);
 
           issGroup = new THREE.Group();
           issGroup.position.set(10.6, 0, 0);
@@ -2597,7 +3858,7 @@
           };
           labelEntries.push({
             id: "moon",
-            name: "Луна 👽",
+            name: "Луна",
             object: moonGroup,
             yOffset: 3.1,
           });
@@ -3463,28 +4724,35 @@
       blackHoleGroup.add(bhHalo);
 
       // Релятивистские джеты (два мощных луча плазмы с полюсов)
-      const bhJetMat = new THREE.MeshBasicMaterial({
-        color: 0x7acbff,
-        transparent: true,
-        opacity: 0.34,
-        side: THREE.DoubleSide,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      });
-      const bhJetTop = new THREE.Mesh(
-        new THREE.ConeGeometry(34, 620, 32, 1, true),
-        bhJetMat,
+      const bhJetMatOuter = createVolumetricJetMaterial(
+        0xd8f3ff,
+        0x5c8aff,
+        5.5,
       );
-      bhJetTop.position.y = 330;
-      bhJetTop.rotation.x = Math.PI;
-      blackHoleGroup.add(bhJetTop);
+      const bhJetMatInner = createVolumetricJetMaterial(
+        0xffffff,
+        0x7ae8ff,
+        8.0,
+      );
+      animatedShaderMats.push(bhJetMatOuter, bhJetMatInner);
 
-      const bhJetBot = new THREE.Mesh(
-        new THREE.ConeGeometry(34, 620, 32, 1, true),
-        bhJetMat,
-      );
-      bhJetBot.position.y = -330;
-      blackHoleGroup.add(bhJetBot);
+      function addBHJet(sign) {
+        const outer = new THREE.Mesh(
+          new THREE.CylinderGeometry(58, 8, 1350, 32, 1, true),
+          bhJetMatOuter,
+        );
+        outer.position.y = sign * 695;
+        if (sign < 0) outer.rotation.x = Math.PI;
+        const inner = new THREE.Mesh(
+          new THREE.CylinderGeometry(18, 3, 1250, 24, 1, true),
+          bhJetMatInner,
+        );
+        inner.position.y = sign * 645;
+        if (sign < 0) inner.rotation.x = Math.PI;
+        blackHoleGroup.add(outer, inner);
+      }
+      addBHJet(1);
+      addBHJet(-1);
 
       // Вихрь затягиваемой материи вокруг Чёрной дыры (2 200 частиц)
       const bhParticles = (function buildBHParticles() {
@@ -3571,29 +4839,35 @@
       pulsarHalo.scale.set(140, 140, 1);
       pulsarGroup.add(pulsarHalo);
 
-      // Два сверхъярких прожекторных луча пульсара
-      const pulsarBeamMat = new THREE.MeshBasicMaterial({
-        color: 0x55f6ff,
-        transparent: true,
-        opacity: 0.58,
-        side: THREE.DoubleSide,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      });
-      const pBeam1 = new THREE.Mesh(
-        new THREE.ConeGeometry(28, 720, 24, 1, true),
-        pulsarBeamMat,
+      const pulsarJetOuter = createVolumetricJetMaterial(
+        0xe0ffff,
+        0x1ac8ff,
+        9.0,
       );
-      pBeam1.position.y = 370;
-      pBeam1.rotation.x = Math.PI;
-      pulsarAxisGroup.add(pBeam1);
+      const pulsarJetInner = createVolumetricJetMaterial(
+        0xffffff,
+        0x80f8ff,
+        12.5,
+      );
+      animatedShaderMats.push(pulsarJetOuter, pulsarJetInner);
 
-      const pBeam2 = new THREE.Mesh(
-        new THREE.ConeGeometry(28, 720, 24, 1, true),
-        pulsarBeamMat,
-      );
-      pBeam2.position.y = -370;
-      pulsarAxisGroup.add(pBeam2);
+      function addPulsarJet(sign) {
+        const outer = new THREE.Mesh(
+          new THREE.CylinderGeometry(64, 6, 1650, 32, 1, true),
+          pulsarJetOuter,
+        );
+        outer.position.y = sign * 840;
+        if (sign < 0) outer.rotation.x = Math.PI;
+        const inner = new THREE.Mesh(
+          new THREE.CylinderGeometry(20, 2.5, 1550, 24, 1, true),
+          pulsarJetInner,
+        );
+        inner.position.y = sign * 790;
+        if (sign < 0) inner.rotation.x = Math.PI;
+        pulsarAxisGroup.add(outer, inner);
+      }
+      addPulsarJet(1);
+      addPulsarJet(-1);
 
       // 3D-силовые линии дипольного магнитного поля (10 светящихся петель)
       for (let i = 0; i < 10; i++) {
@@ -3642,13 +4916,17 @@
       const betelgeuseGroup = new THREE.Group();
       betelgeuseGroup.position.set(12000, -1800, 10500);
       deepSpaceGroup.add(betelgeuseGroup);
-
-      const betelMesh = new THREE.Mesh(
-        new THREE.SphereGeometry(145, 48, 48),
-        new THREE.MeshBasicMaterial({ color: 0xff4c24 }),
+      const betelMat = createStarSurfaceMaterial(
+        0x7a1204,
+        0xff4518,
+        0xffc864,
+        0.22,
       );
-      betelgeuseGroup.add(betelMesh);
-      registerClickable(betelMesh, "betelgeuse");
+      animatedShaderMats.push(betelMat);
+      const betelMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(145, 64, 64),
+        betelMat,
+      );
 
       const betelGlow = new THREE.Sprite(
         new THREE.SpriteMaterial({
@@ -3680,12 +4958,32 @@
       rigelGroup.position.set(-12500, -2100, 11000);
       deepSpaceGroup.add(rigelGroup);
 
+      const rigelMat = createStarSurfaceMaterial(
+        0x1f62d6,
+        0x70c8ff,
+        0xffffff,
+        0.35,
+      );
+      animatedShaderMats.push(rigelMat);
       const rigelMesh = new THREE.Mesh(
-        new THREE.SphereGeometry(92, 48, 48),
-        new THREE.MeshBasicMaterial({ color: 0xb8e6ff }),
+        new THREE.SphereGeometry(92, 64, 64),
+        rigelMat,
       );
       rigelGroup.add(rigelMesh);
       registerClickable(rigelMesh, "rigel");
+
+      const rigelFlare = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: createStarFlareTexture(),
+          color: 0xd4f2ff,
+          transparent: true,
+          opacity: 0.95,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        }),
+      );
+      rigelFlare.scale.set(920, 920, 1);
+      rigelGroup.add(rigelFlare);
 
       const rigelGlow = new THREE.Sprite(
         new THREE.SpriteMaterial({
@@ -3898,12 +5196,623 @@
         object: ringNebulaGroup,
         yOffset: 300,
       });
+      // --- 8.7 КОМЕТА ГАЛЛЕЯ С ДВУМЯ ХВОСТАМИ (В СОЛНЕЧНОЙ СИСТЕМЕ) ---
+      const halleyOrbitGroup = new THREE.Group();
+      halleyOrbitGroup.rotation.z = 0.26; // наклон орбиты кометы
+      halleyOrbitGroup.rotation.y = 0.4;
+      solarSystemGroup.add(halleyOrbitGroup);
 
+      const halleyA = 2750,
+        halleyB = 1050,
+        halleyFocus = 2520;
+      const halleyOrbitPts = [];
+      for (let i = 0; i <= 180; i++) {
+        const t = (i / 180) * Math.PI * 2;
+        halleyOrbitPts.push(
+          new THREE.Vector3(
+            Math.cos(t) * halleyA - halleyFocus,
+            0,
+            Math.sin(t) * halleyB,
+          ),
+        );
+      }
+      const halleyOrbitLine = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints(halleyOrbitPts),
+        new THREE.LineBasicMaterial({
+          color: 0x5cc8ff,
+          transparent: true,
+          opacity: 0.32,
+        }),
+      );
+      halleyOrbitGroup.add(halleyOrbitLine);
+      orbitLines.push(halleyOrbitLine);
+
+      const halleyGroup = new THREE.Group();
+      halleyOrbitGroup.add(halleyGroup);
+
+      const halleyNucleus = new THREE.Mesh(
+        new THREE.DodecahedronGeometry(3.2, 1),
+        new THREE.MeshStandardMaterial({
+          color: 0xb8c7d9,
+          roughness: 0.9,
+          metalness: 0.1,
+        }),
+      );
+      halleyNucleus.scale.set(1.4, 0.85, 0.95);
+      halleyGroup.add(halleyNucleus);
+      registerClickable(halleyNucleus, "halley");
+
+      const halleyComa = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: glowCyan,
+          color: 0xb8f4ff,
+          transparent: true,
+          opacity: 0.92,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        }),
+      );
+      halleyComa.scale.set(28, 28, 1);
+      halleyGroup.add(halleyComa);
+
+      // Голубой ионный хвост (всегда строго от Солнца)
+      const ionTailGeo = new THREE.CylinderGeometry(18, 2.2, 240, 20, 1, true);
+      ionTailGeo.translate(0, 120, 0);
+      ionTailGeo.rotateX(Math.PI / 2);
+      const ionTailMat = createVolumetricJetMaterial(0xe0fbff, 0x1a9fff, 7.5);
+      animatedShaderMats.push(ionTailMat);
+      const halleyIonTail = new THREE.Mesh(ionTailGeo, ionTailMat);
+      halleyGroup.add(halleyIonTail);
+
+      // Жёлтый пылевой хвост (шире и слегка отклонён назад по орбите)
+      const dustTailGeo = new THREE.CylinderGeometry(34, 3.0, 195, 20, 1, true);
+      dustTailGeo.translate(0, 97.5, 0);
+      dustTailGeo.rotateX(Math.PI / 2);
+      const dustTailMat = createVolumetricJetMaterial(0xfff5d6, 0xffaa44, 3.5);
+      animatedShaderMats.push(dustTailMat);
+      const halleyDustTail = new THREE.Mesh(dustTailGeo, dustTailMat);
+      halleyGroup.add(halleyDustTail);
+
+      const halleyHit = new THREE.Mesh(
+        new THREE.SphereGeometry(18, 10, 10),
+        new THREE.MeshBasicMaterial({ visible: false }),
+      );
+      halleyGroup.add(halleyHit);
+      registerClickable(halleyHit, "halley");
+
+      const halleyState = { angle: 0.55 };
+      focusTargets.halley = {
+        object: halleyGroup,
+        radius: 14,
+        viewDist: 95,
+        isDynamic: true,
+      };
+      labelEntries.push({
+        id: "halley",
+        name: "Комета Галлея",
+        object: halleyGroup,
+        yOffset: 16,
+      });
+
+      // --- 8.8 СФЕРА ДАЙСОНА (МЕГАСТРУКТУРА ВОКРУГ ЗВЕЗДЫ) ---
+      const dysonGroup = new THREE.Group();
+      dysonGroup.position.set(16500, 5200, 4500);
+      deepSpaceGroup.add(dysonGroup);
+
+      const dysonStarMat = createStarSurfaceMaterial(
+        0xff8800,
+        0xffd966,
+        0xffffff,
+        0.3,
+      );
+      animatedShaderMats.push(dysonStarMat);
+      const dysonStar = new THREE.Mesh(
+        new THREE.SphereGeometry(68, 48, 48),
+        dysonStarMat,
+      );
+      dysonGroup.add(dysonStar);
+      registerClickable(dysonStar, "dyson");
+
+      const dysonGlow = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: glowGold,
+          color: 0xffcc55,
+          transparent: true,
+          opacity: 0.72,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        }),
+      );
+      dysonGlow.scale.set(270, 270, 1);
+      dysonGroup.add(dysonGlow);
+
+      // Вращающиеся механические кольца мегаструктуры
+      const dysonRings = [];
+      const ringMetalMat = new THREE.MeshStandardMaterial({
+        color: 0x3b4454,
+        metalness: 0.88,
+        roughness: 0.28,
+        emissive: 0x0b2238,
+        emissiveIntensity: 0.45,
+      });
+      const ringGlowMat = new THREE.MeshBasicMaterial({
+        color: 0x4de8ff,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending,
+      });
+
+      [
+        { r: 122, tube: 5.5, rot: [0.3, 0, 0.2], spd: [0.0, 0.28, 0.08] },
+        { r: 144, tube: 4.8, rot: [1.2, 0.4, 0], spd: [0.16, -0.22, 0.05] },
+        { r: 168, tube: 4.2, rot: [-0.8, 0.6, 0.9], spd: [-0.12, 0.18, -0.14] },
+        { r: 194, tube: 3.6, rot: [0.5, -0.9, 1.3], spd: [0.09, 0.14, 0.19] },
+      ].forEach((cfg) => {
+        const rGroup = new THREE.Group();
+        rGroup.rotation.set(cfg.rot[0], cfg.rot[1], cfg.rot[2]);
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(cfg.r, cfg.tube, 12, 96),
+          ringMetalMat,
+        );
+        const strip = new THREE.Mesh(
+          new THREE.TorusGeometry(cfg.r, cfg.tube * 0.28, 8, 96),
+          ringGlowMat,
+        );
+        rGroup.add(ring, strip);
+        dysonGroup.add(rGroup);
+        dysonRings.push({ group: rGroup, spd: cfg.spd });
+      });
+
+      // Рой из 180 солнечных панелей-коллекторов вокруг звезды
+      const dysonSwarm = (function buildDysonSwarm() {
+        const count = 180;
+        const panelGeo = new THREE.BoxGeometry(16, 10, 1.4);
+        const panelMat = new THREE.MeshStandardMaterial({
+          color: 0x1b3c70,
+          emissive: 0x184878,
+          emissiveIntensity: 0.55,
+          metalness: 0.85,
+          roughness: 0.22,
+        });
+        const inst = new THREE.InstancedMesh(panelGeo, panelMat, count);
+        const dObj = new THREE.Object3D();
+        for (let i = 0; i < count; i++) {
+          const r = 104 + (i % 4) * 26;
+          const theta = (i / count) * Math.PI * 2 * 5;
+          const phi = Math.acos(1 - 2 * ((i + 0.5) / count));
+          dObj.position.set(
+            r * Math.sin(phi) * Math.cos(theta),
+            r * Math.cos(phi),
+            r * Math.sin(phi) * Math.sin(theta),
+          );
+          dObj.lookAt(0, 0, 0);
+          dObj.updateMatrix();
+          inst.setMatrixAt(i, dObj.matrix);
+        }
+        dysonGroup.add(inst);
+        return inst;
+      })();
+
+      const dysonHit = new THREE.Mesh(
+        new THREE.SphereGeometry(185, 12, 12),
+        new THREE.MeshBasicMaterial({ visible: false }),
+      );
+      dysonGroup.add(dysonHit);
+      registerClickable(dysonHit, "dyson");
+
+      focusTargets.dyson = { object: dysonGroup, radius: 195, viewDist: 520 };
+      labelEntries.push({
+        id: "dyson",
+        name: "Сфера Дайсона",
+        object: dysonGroup,
+        yOffset: 225,
+      });
+
+      // --- 8.9 ДВОЙНАЯ ЗВЕЗДА-«ВАМПИР» С ПОТОКОМ ПЛАЗМЫ ---
+      const vampireGroup = new THREE.Group();
+      vampireGroup.position.set(-16000, 4200, 5200);
+      deepSpaceGroup.add(vampireGroup);
+
+      const vampireOrbitGroup = new THREE.Group();
+      vampireGroup.add(vampireOrbitGroup);
+
+      // Красный гигант-донор (слегка вытянут приливной силой в сторону карлика)
+      const donorMat = createStarSurfaceMaterial(
+        0x7a1204,
+        0xff4b1f,
+        0xffcf70,
+        0.26,
+      );
+      animatedShaderMats.push(donorMat);
+      const donorMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(82, 48, 48),
+        donorMat,
+      );
+      donorMesh.position.set(-145, 0, 0);
+      donorMesh.scale.set(1.18, 0.95, 0.95);
+      vampireOrbitGroup.add(donorMesh);
+      registerClickable(donorMesh, "vampire_star");
+
+      const donorGlow = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: glowGold,
+          color: 0xff4c24,
+          transparent: true,
+          opacity: 0.72,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        }),
+      );
+      donorGlow.position.set(-145, 0, 0);
+      donorGlow.scale.set(310, 310, 1);
+      vampireOrbitGroup.add(donorGlow);
+
+      // Белый карлик-«вампир» + горячий аккреционный диск
+      const dwarfAnchor = new THREE.Group();
+      dwarfAnchor.position.set(135, 0, 0);
+      vampireOrbitGroup.add(dwarfAnchor);
+
+      const vampireDwarf = new THREE.Mesh(
+        new THREE.SphereGeometry(18, 32, 32),
+        new THREE.MeshBasicMaterial({ color: 0xe8fbff }),
+      );
+      dwarfAnchor.add(vampireDwarf);
+      registerClickable(vampireDwarf, "vampire_star");
+
+      const vampireDwarfHalo = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: glowCyan,
+          color: 0x66e8ff,
+          transparent: true,
+          opacity: 0.95,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        }),
+      );
+      vampireDwarfHalo.scale.set(110, 110, 1);
+      dwarfAnchor.add(vampireDwarfHalo);
+
+      const vampireDisk = (function buildVampireDisk() {
+        const cnt = 950;
+        const pos = new Float32Array(cnt * 3);
+        const col = new Float32Array(cnt * 3);
+        const cIn = new THREE.Color(0xffffff);
+        const cOut = new THREE.Color(0x38b6ff);
+        for (let i = 0; i < cnt; i++) {
+          const r = 24 + Math.pow(Math.random(), 1.2) * 86;
+          const a = Math.random() * Math.PI * 2;
+          pos[i * 3] = Math.cos(a) * r;
+          pos[i * 3 + 1] = (Math.random() - 0.5) * 9;
+          pos[i * 3 + 2] = Math.sin(a) * r;
+          const c = new THREE.Color().lerpColors(cIn, cOut, (r - 24) / 86);
+          col[i * 3] = c.r;
+          col[i * 3 + 1] = c.g;
+          col[i * 3 + 2] = c.b;
+        }
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+        const pts = new THREE.Points(
+          g,
+          new THREE.PointsMaterial({
+            size: 11,
+            map: glowCyan,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.85,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+        dwarfAnchor.add(pts);
+        return pts;
+      })();
+
+      // Живой газовый мост плазмы от красного гиганта к белому карлику
+      const vampireStream = (function buildPlasmaStream() {
+        const count = 650;
+        const pos = new Float32Array(count * 3);
+        const col = new Float32Array(count * 3);
+        const progress = new Float32Array(count);
+        const spread = new Float32Array(count * 3);
+        const cStart = new THREE.Color(0xff5a22);
+        const cEnd = new THREE.Color(0xb8f4ff);
+        for (let i = 0; i < count; i++) {
+          progress[i] = Math.random();
+          spread[i * 3] = (Math.random() - 0.5) * 26;
+          spread[i * 3 + 1] = (Math.random() - 0.5) * 18;
+          spread[i * 3 + 2] = (Math.random() - 0.5) * 26;
+          const c = new THREE.Color().lerpColors(cStart, cEnd, progress[i]);
+          col[i * 3] = c.r;
+          col[i * 3 + 1] = c.g;
+          col[i * 3 + 2] = c.b;
+        }
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+        const pts = new THREE.Points(
+          g,
+          new THREE.PointsMaterial({
+            size: 16,
+            map: glowGold,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.88,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+        vampireOrbitGroup.add(pts);
+        return { points: pts, progress, spread, count };
+      })();
+
+      const vampireHit = new THREE.Mesh(
+        new THREE.SphereGeometry(220, 12, 12),
+        new THREE.MeshBasicMaterial({ visible: false }),
+      );
+      vampireGroup.add(vampireHit);
+      registerClickable(vampireHit, "vampire_star");
+
+      focusTargets.vampire_star = {
+        object: vampireGroup,
+        radius: 220,
+        viewDist: 580,
+      };
+      labelEntries.push({
+        id: "vampire_star",
+        name: "Двойная звезда-вампир",
+        object: vampireGroup,
+        yOffset: 170,
+      });
+
+      // --- 8.10 СТОЛПЫ ТВОРЕНИЯ (ТУМАННОСТЬ ОРЛА M16) ---
+      const pillarsGroup = new THREE.Group();
+      pillarsGroup.position.set(2800, -5200, -16000);
+      deepSpaceGroup.add(pillarsGroup);
+
+      (function buildPillarsOfCreation() {
+        const defs = [
+          {
+            x: -155,
+            z: -25,
+            h: 560,
+            baseR: 92,
+            topR: 52,
+            tiltZ: -0.11,
+            count: 2200,
+          },
+          {
+            x: 15,
+            z: 35,
+            h: 430,
+            baseR: 74,
+            topR: 42,
+            tiltZ: -0.06,
+            count: 1700,
+          },
+          {
+            x: 155,
+            z: 10,
+            h: 300,
+            baseR: 62,
+            topR: 34,
+            tiltZ: 0.08,
+            count: 1300,
+          },
+        ];
+        const total = defs.reduce((s, d) => s + d.count, 0);
+        const pos = new Float32Array(total * 3);
+        const col = new Float32Array(total * 3);
+
+        const cBase = new THREE.Color(0x523124);
+        const cMid = new THREE.Color(0xc97b42);
+        const cRim = new THREE.Color(0x45d6d6);
+        const cTip = new THREE.Color(0xffe6a8);
+
+        let idx = 0;
+        defs.forEach((d) => {
+          for (let i = 0; i < d.count; i++) {
+            const hNorm = Math.pow(Math.random(), 0.85);
+            const y = hNorm * d.h - d.h * 0.45;
+            const maxR =
+              THREE.MathUtils.lerp(d.baseR, d.topR, hNorm) *
+              (1 + Math.sin(hNorm * 11) * 0.14);
+            const rFrac = Math.pow(Math.random(), 0.55);
+            const r = rFrac * maxR;
+            const a = Math.random() * Math.PI * 2;
+
+            pos[idx * 3] = d.x + Math.cos(a) * r + y * d.tiltZ;
+            pos[idx * 3 + 1] = y;
+            pos[idx * 3 + 2] = d.z + Math.sin(a) * r;
+
+            const c = new THREE.Color();
+            if (rFrac > 0.78 && hNorm > 0.35) {
+              c.lerpColors(cRim, cTip, hNorm);
+            } else {
+              c.lerpColors(cBase, cMid, hNorm);
+              if (hNorm > 0.82) c.lerp(cTip, (hNorm - 0.82) / 0.18);
+            }
+            const br = 0.45 + Math.random() * 0.55;
+            col[idx * 3] = c.r * br;
+            col[idx * 3 + 1] = c.g * br;
+            col[idx * 3 + 2] = c.b * br;
+            idx++;
+          }
+
+          // Молодые звёзды, подсвечивающие вершину каждого столба
+          const tipStar = new THREE.Sprite(
+            new THREE.SpriteMaterial({
+              map: glowGold,
+              color: 0xfff0c2,
+              transparent: true,
+              opacity: 0.9,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false,
+            }),
+          );
+          tipStar.position.set(d.x + d.h * 0.55 * d.tiltZ, d.h * 0.54, d.z);
+          tipStar.scale.set(95, 95, 1);
+          pillarsGroup.add(tipStar);
+        });
+
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+        pillarsGroup.add(
+          new THREE.Points(
+            g,
+            new THREE.PointsMaterial({
+              size: 46,
+              map: glowGold,
+              vertexColors: true,
+              transparent: true,
+              opacity: 0.58,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false,
+            }),
+          ),
+        );
+
+        const hit = new THREE.Mesh(
+          new THREE.SphereGeometry(280, 12, 12),
+          new THREE.MeshBasicMaterial({ visible: false }),
+        );
+        pillarsGroup.add(hit);
+        registerClickable(hit, "pillars");
+      })();
+
+      focusTargets.pillars = {
+        object: pillarsGroup,
+        radius: 340,
+        viewDist: 920,
+      };
+      labelEntries.push({
+        id: "pillars",
+        name: "Столпы Творения (M16)",
+        object: pillarsGroup,
+        yOffset: 360,
+      });
+
+      // --- 8.11 КРАБОВИДНАЯ ТУМАННОСТЬ (M1) С ПУЛЬСАРОМ В ЦЕНТРЕ ---
+      const crabGroup = new THREE.Group();
+      crabGroup.position.set(-8500, -4800, -14500);
+      deepSpaceGroup.add(crabGroup);
+
+      const crabPulsarSpin = new THREE.Group();
+      crabGroup.add(crabPulsarSpin);
+
+      (function buildCrabNebula() {
+        const count = 4200;
+        const pos = new Float32Array(count * 3);
+        const col = new Float32Array(count * 3);
+        const cCore = new THREE.Color(0x55d8ff);
+        const cMid = new THREE.Color(0xff5277);
+        const cEdge = new THREE.Color(0xffa64d);
+
+        for (let i = 0; i < count; i++) {
+          const isInner = i < count * 0.38;
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.acos(2 * Math.random() - 1);
+          // Волокнистая «паутина» за счёт синусоидальных гребней
+          const filament =
+            1 + 0.24 * Math.sin(theta * 7 + phi * 5) * Math.cos(phi * 6);
+          const r =
+            (isInner
+              ? Math.pow(Math.random(), 0.7) * 185
+              : 140 + Math.random() * 195) * filament;
+
+          pos[i * 3] = r * Math.sin(phi) * Math.cos(theta) * 1.25;
+          pos[i * 3 + 1] = r * Math.cos(phi) * 0.92;
+          pos[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+
+          const c = new THREE.Color();
+          if (isInner) c.copy(cCore);
+          else c.lerpColors(cMid, cEdge, Math.random());
+          const br = 0.45 + Math.random() * 0.55;
+          col[i * 3] = c.r * br;
+          col[i * 3 + 1] = c.g * br;
+          col[i * 3 + 2] = c.b * br;
+        }
+
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+        crabGroup.add(
+          new THREE.Points(
+            g,
+            new THREE.PointsMaterial({
+              size: 42,
+              map: glowPink,
+              vertexColors: true,
+              transparent: true,
+              opacity: 0.62,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false,
+            }),
+          ),
+        );
+
+        // Центральный Крабовидный пульсар
+        const cpAxis = new THREE.Group();
+        cpAxis.rotation.z = 0.5;
+        crabPulsarSpin.add(cpAxis);
+
+        const cpCore = new THREE.Mesh(
+          new THREE.SphereGeometry(10, 20, 20),
+          new THREE.MeshBasicMaterial({ color: 0xffffff }),
+        );
+        cpAxis.add(cpCore);
+
+        const cpJetMat = createVolumetricJetMaterial(0xffffff, 0x33ddff, 11.0);
+        animatedShaderMats.push(cpJetMat);
+        [-1, 1].forEach((s) => {
+          const j = new THREE.Mesh(
+            new THREE.CylinderGeometry(18, 2.5, 290, 20, 1, true),
+            cpJetMat,
+          );
+          j.position.y = s * 150;
+          if (s < 0) j.rotation.x = Math.PI;
+          cpAxis.add(j);
+        });
+
+        const cpHalo = new THREE.Sprite(
+          new THREE.SpriteMaterial({
+            map: glowCyan,
+            color: 0x66e8ff,
+            transparent: true,
+            opacity: 0.9,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+        cpHalo.scale.set(120, 120, 1);
+        crabGroup.add(cpHalo);
+
+        const hit = new THREE.Mesh(
+          new THREE.SphereGeometry(260, 12, 12),
+          new THREE.MeshBasicMaterial({ visible: false }),
+        );
+        crabGroup.add(hit);
+        registerClickable(hit, "crab_nebula");
+      })();
+
+      focusTargets.crab_nebula = {
+        object: crabGroup,
+        radius: 280,
+        viewDist: 780,
+      };
+      labelEntries.push({
+        id: "crab_nebula",
+        name: "Крабовидная туманность (M1)",
+        object: crabGroup,
+        yOffset: 320,
+      });
       // =========================================================================
       // 9. 3D-СОЗВЕЗДИЯ НА НЕБЕСНОЙ СФЕРЕ (ВИДНЫ И ИЗ КОСМОСА, И С ЗЕМЛИ)
       // =========================================================================
       const constellationsGroup = new THREE.Group();
       scene.add(constellationsGroup);
+      constellationsGroup.visible = false;
 
       const CONSTELLATION_SPHERE_R = 26000;
       const constellationCenters = {}; // id -> THREE.Vector3 (центр созвездия)
@@ -3975,33 +5884,147 @@
       });
 
       // =========================================================================
-      // 10. ФИЗИКА СТОЛКНОВЕНИЯ («💥 СТОЛКНУТЬ ВСЁ»), ВЗРЫВЫ И ОСКОЛКИ
+      // 10. БОЛЬШОЙ ВЗРЫВ: ЧЁРНАЯ ДЫРА ПОГЛОЩАЕТ ВСЁ И ДЕТОНИРУЕТ
       // =========================================================================
+      const energyReport = document.getElementById("energy-report");
+      const erJoules = document.getElementById("er-joules");
+      const erWords = document.getElementById("er-words");
+      const erTnt = document.getElementById("er-tnt");
+      const erSun = document.getElementById("er-sun");
+
+      const bhHomePos = blackHoleGroup.position.clone();
+
+      // Далёкие объекты, которые поглотит Чёрная дыра (Млечный Путь не трогаем)
+      const deepSpaceBodies = [
+        {
+          obj: pulsarGroup,
+          home: pulsarGroup.position.clone(),
+          color: 0x45f3ff,
+          radius: 95,
+          alive: true,
+          speed: 0,
+          growth: 0.25,
+          energy: 2.7e47,
+        },
+        {
+          obj: betelgeuseGroup,
+          home: betelgeuseGroup.position.clone(),
+          color: 0xff5233,
+          radius: 145,
+          alive: true,
+          speed: 0,
+          growth: 0.35,
+          energy: 3.2e48,
+        },
+        {
+          obj: rigelGroup,
+          home: rigelGroup.position.clone(),
+          color: 0x6ec6ff,
+          radius: 95,
+          alive: true,
+          speed: 0,
+          growth: 0.35,
+          energy: 3.7e48,
+        },
+        {
+          obj: orionNebulaGroup,
+          home: orionNebulaGroup.position.clone(),
+          color: 0xe066ff,
+          radius: 320,
+          alive: true,
+          speed: 0,
+          growth: 0.45,
+          energy: 3.6e50,
+        },
+        {
+          obj: ringNebulaGroup,
+          home: ringNebulaGroup.position.clone(),
+          color: 0x47ffd1,
+          radius: 240,
+          alive: true,
+          speed: 0,
+          growth: 0.25,
+          energy: 1.1e47,
+        },
+        {
+          obj: dysonGroup,
+          home: dysonGroup.position.clone(),
+          color: 0xffd166,
+          radius: 195,
+          alive: true,
+          speed: 0,
+          growth: 0.25,
+          energy: 1.9e47,
+        },
+        {
+          obj: vampireGroup,
+          home: vampireGroup.position.clone(),
+          color: 0xff7b54,
+          radius: 220,
+          alive: true,
+          speed: 0,
+          growth: 0.35,
+          energy: 7.2e47,
+        },
+        {
+          obj: pillarsGroup,
+          home: pillarsGroup.position.clone(),
+          color: 0xd49a6a,
+          radius: 340,
+          alive: true,
+          speed: 0,
+          growth: 0.45,
+          energy: 4.1e50,
+        },
+        {
+          obj: crabGroup,
+          home: crabGroup.position.clone(),
+          color: 0xff6b8b,
+          radius: 280,
+          alive: true,
+          speed: 0,
+          growth: 0.3,
+          energy: 2.8e47,
+        },
+      ];
+
       const collisionState = {
         active: false,
+        phase: "idle", // idle | devour | singularity | done
         sunDestroyed: false,
+        sunAlive: true,
+        bhArrived: false,
+        bhScale: 1.0,
+        bhTargetScale: 1.0,
+        singularityTimer: 0,
+        shake: 0,
       };
 
-      const explosionDebris = []; // разлетающиеся осколки после взрывов
-      const shockwaves = []; // расширяющиеся световые кольца взрывов
+      const explosionDebris = [];
+      const shockwaves = [];
+      let bigBangCloud = null;
       const flashOverlay = document.getElementById("flash-overlay");
+      const upVec = new THREE.Vector3(0, 1, 0);
 
-      function triggerScreenFlash(intensity = 0.85) {
+      function triggerScreenFlash(intensity = 0.85, durationMs = 180) {
         flashOverlay.style.opacity = String(intensity);
         setTimeout(() => {
           flashOverlay.style.opacity = "0";
-        }, 120);
+        }, durationMs);
       }
 
-      // Спавн взрыва: ударная волна + десятки горящих осколков
-      function spawnExplosion(pos, colorHex, count = 48, scale = 1.0) {
-        triggerScreenFlash(Math.min(0.95, 0.35 + scale * 0.22));
+      // Вспышка аккреции при поглощении объекта Чёрной дырой
+      function spawnAccretionBurst(pos, colorHex, count = 36, scale = 1.0) {
+        triggerScreenFlash(Math.min(0.75, 0.22 + scale * 0.1));
+        collisionState.shake = Math.min(
+          0.9,
+          collisionState.shake + 0.14 * scale,
+        );
 
-        // Ударная волна
         const wave = new THREE.Mesh(
-          new THREE.RingGeometry(2 * scale, 5 * scale, 48),
+          new THREE.RingGeometry(4 * scale, 9 * scale, 48),
           new THREE.MeshBasicMaterial({
-            color: 0xffcc77,
+            color: colorHex,
             transparent: true,
             opacity: 0.9,
             side: THREE.DoubleSide,
@@ -4012,107 +6035,266 @@
         wave.position.copy(pos);
         wave.lookAt(camera.position);
         scene.add(wave);
-        shockwaves.push({ mesh: wave, life: 1.0, speed: 90 * scale });
+        shockwaves.push({ mesh: wave, life: 1.0, speed: 110 * scale });
 
-        // Огненная вспышка
         const burst = new THREE.Sprite(
           new THREE.SpriteMaterial({
             map: glowGold,
             color: colorHex,
+            transparent: true,
+            opacity: 0.95,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+        burst.position.copy(pos);
+        burst.scale.set(70 * scale, 70 * scale, 1);
+        scene.add(burst);
+        shockwaves.push({
+          mesh: burst,
+          life: 1.0,
+          speed: 80 * scale,
+          isSprite: true,
+        });
+
+        const fragGeo = new THREE.DodecahedronGeometry(1.5 * scale, 0);
+        const fragMat = new THREE.MeshStandardMaterial({
+          color: colorHex,
+          emissive: colorHex,
+          emissiveIntensity: 0.9,
+          roughness: 0.5,
+        });
+
+        for (let i = 0; i < count; i++) {
+          const rock = new THREE.Mesh(fragGeo, fragMat);
+          rock.position.copy(pos);
+          const s = 0.35 + Math.random() * 1.1;
+          rock.scale.set(s, s * 0.8, s);
+          const dir = new THREE.Vector3(
+            Math.random() - 0.5,
+            (Math.random() - 0.5) * 0.8,
+            Math.random() - 0.5,
+          ).normalize();
+          scene.add(rock);
+          explosionDebris.push({
+            mesh: rock,
+            vel: dir.multiplyScalar(
+              (65 + Math.random() * 190) * Math.sqrt(scale),
+            ),
+            rotVel: new THREE.Vector3(
+              Math.random() * 4,
+              Math.random() * 4,
+              Math.random() * 4,
+            ),
+            life: 4.5 + Math.random() * 3.5,
+          });
+        }
+      }
+
+      function spawnGrandBigBang() {
+        triggerScreenFlash(1.0, 550);
+        collisionState.shake = 1.8;
+
+        // 4 многослойные объёмные сферы ударной волны
+        [
+          { color: 0xffffff, speed: 1450, op: 1.0 },
+          { color: 0x64d2ff, speed: 1050, op: 0.8 },
+          { color: 0xff9f0a, speed: 780, op: 0.72 },
+          { color: 0xc864ff, speed: 540, op: 0.65 },
+        ].forEach((cfg) => {
+          const sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(22, 44, 44),
+            new THREE.MeshBasicMaterial({
+              color: cfg.color,
+              transparent: true,
+              opacity: cfg.op,
+              side: THREE.BackSide,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false,
+            }),
+          );
+          scene.add(sphere);
+          shockwaves.push({
+            mesh: sphere,
+            life: 2.0,
+            speed: cfg.speed,
+            isSphere: true,
+          });
+        });
+
+        // 3000 частиц разлетающейся плазмы и материи
+        const count = 3000;
+        const pos = new Float32Array(count * 3);
+        const col = new Float32Array(count * 3);
+        const vels = new Float32Array(count * 3);
+        const palette = [
+          new THREE.Color(0xffffff),
+          new THREE.Color(0x64d2ff),
+          new THREE.Color(0xffb84d),
+          new THREE.Color(0xd966ff),
+          new THREE.Color(0xff453a),
+        ];
+
+        for (let i = 0; i < count; i++) {
+          const u = Math.random();
+          const v = Math.random();
+          const theta = u * Math.PI * 2;
+          const phi = Math.acos(2 * v - 1);
+          const spd = 320 + Math.pow(Math.random(), 0.65) * 3200;
+          vels[i * 3] = Math.sin(phi) * Math.cos(theta) * spd;
+          vels[i * 3 + 1] = Math.cos(phi) * spd;
+          vels[i * 3 + 2] = Math.sin(phi) * Math.sin(theta) * spd;
+
+          const c = palette[Math.floor(Math.random() * palette.length)];
+          col[i * 3] = c.r;
+          col[i * 3 + 1] = c.g;
+          col[i * 3 + 2] = c.b;
+        }
+
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+        const pts = new THREE.Points(
+          geo,
+          new THREE.PointsMaterial({
+            size: 95,
+            map: glowWhite,
+            vertexColors: true,
             transparent: true,
             opacity: 1.0,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
           }),
         );
-        burst.position.copy(pos);
-        burst.scale.set(45 * scale, 45 * scale, 1);
-        scene.add(burst);
-        shockwaves.push({
-          mesh: burst,
-          life: 1.0,
-          speed: 65 * scale,
-          isSprite: true,
-        });
+        scene.add(pts);
+        bigBangCloud = { points: pts, vels, life: 1.0 };
 
-        // Осколки планеты
-        const fragGeo = new THREE.DodecahedronGeometry(1.4 * scale, 0);
-        const fragMat = new THREE.MeshStandardMaterial({
-          color: colorHex,
-          emissive: 0xff5500,
-          emissiveIntensity: 0.85,
-          roughness: 0.75,
-        });
+        // Суммарная энергия E = Mc² (Стрелец A* + Солнечная система + звёзды + туманности)
+        const bhRestEnergy = 7.69e53; // 4.3 млн M☉ * c²
+        const solarEnergy = 1.79e47; // Солнце и планеты
+        const totalEnergy = deepSpaceBodies.reduce(
+          (sum, b) => sum + b.energy,
+          bhRestEnergy + solarEnergy,
+        );
 
-        for (let i = 0; i < count; i++) {
-          const rock = new THREE.Mesh(fragGeo, fragMat);
-          rock.position.copy(pos);
-          const s = 0.35 + Math.random() * 1.15;
-          rock.scale.set(s, s * 0.75, s * 1.1);
+        const exp = Math.floor(Math.log10(totalEnergy));
+        const mantissa = (totalEnergy / Math.pow(10, exp)).toFixed(2);
+        const tntMt = totalEnergy / 4.184e15;
+        const tntExp = Math.floor(Math.log10(tntMt));
+        const tntMant = (tntMt / Math.pow(10, tntExp)).toFixed(2);
+        const sunYears = totalEnergy / 1.2e34;
+        const sunExp = Math.floor(Math.log10(sunYears));
+        const sunMant = (sunYears / Math.pow(10, sunExp)).toFixed(1);
 
-          const dir = new THREE.Vector3(
-            Math.random() - 0.5,
-            (Math.random() - 0.5) * 0.85,
-            Math.random() - 0.5,
-          ).normalize();
-          const vel = dir.multiplyScalar(
-            (40 + Math.random() * 145) * Math.sqrt(scale),
-          );
+        erJoules.textContent = `${mantissa} × 10^${exp} Дж`;
+        erWords.textContent = `Полное высвобождение энергии поглощённой Чёрной дыры и звёзд`;
+        erTnt.textContent = `${tntMant} × 10^${tntExp} Мт ТНТ`;
+        erSun.textContent = `${sunMant} × 10^${sunExp} лет свечения`;
+        energyReport.classList.add("visible");
+        statusPill.textContent = `Большой взрыв: ${mantissa} × 10^${exp} Дж`;
+      }
 
-          scene.add(rock);
-          explosionDebris.push({
-            mesh: rock,
-            vel,
-            rotVel: new THREE.Vector3(
-              Math.random() * 4,
-              Math.random() * 4,
-              Math.random() * 4,
-            ),
-            life: 6.0 + Math.random() * 5.0,
-          });
+      // Гарантированное притягивание объекта к Чёрной дыре по затухающей спирали без пролёта мимо
+      function pullIntoBlackHole(
+        obj,
+        currentSpeed,
+        accel,
+        dt,
+        bhPos,
+        eatRadius,
+        swirlFactor,
+      ) {
+        const toBH = new THREE.Vector3().subVectors(bhPos, obj.position);
+        const dist = toBH.length();
+        const nextSpeed = currentSpeed + accel * dt;
+        const step = nextSpeed * dt;
+
+        // Эффект спагеттификации (сжатие/вытягивание при входе в горизонт событий)
+        const stretchZone = eatRadius * 4.5;
+        if (dist < stretchZone) {
+          const k = Math.max(0.08, dist / stretchZone);
+          obj.scale.set(k, k, 1 + (1 - k) * 1.4);
+          obj.lookAt(bhPos);
         }
+
+        if (dist <= eatRadius || step >= dist) {
+          return { eaten: true, speed: nextSpeed };
+        }
+
+        const dir = toBH.divideScalar(dist);
+        obj.position.addScaledVector(dir, step);
+
+        // Мягкая спираль, которая плавно затухает к 0 при подлёте к горизонту
+        const swirlAmp = Math.min(dist * 0.35, step * swirlFactor);
+        const swirl = new THREE.Vector3().crossVectors(upVec, dir).normalize();
+        obj.position.addScaledVector(swirl, swirlAmp);
+
+        return { eaten: false, speed: nextSpeed };
       }
 
       function triggerCollision() {
         if (collisionState.active) return;
         collisionState.active = true;
+        collisionState.phase = "devour";
         collisionState.sunDestroyed = false;
+        collisionState.sunAlive = true;
+        collisionState.bhArrived = false;
+        collisionState.bhScale = 1.0;
+        collisionState.bhTargetScale = 1.0;
+        collisionState.singularityTimer = 0;
+        energyReport.classList.remove("visible");
 
-        // Направляем каждую планету прямо к центру (0, 0, 0) с нарастающим ускорением
         planetObjects.forEach((p) => {
-          if (!p.alive) return;
-          const toCenter = new THREE.Vector3().subVectors(
-            new THREE.Vector3(0, 0, 0),
-            p.group.position,
-          );
-          const dist = toCenter.length();
-          // Нормализуем скорость так, чтобы планеты прилетали к центру примерно одновременно и врезались друг в друга!
-          const speed = Math.max(55, dist * 0.42);
-          p.velocity.copy(toCenter.normalize().multiplyScalar(speed));
+          p.pullSpeed = Math.max(260, p.group.position.length() * 0.45);
+        });
+        deepSpaceBodies.forEach((b) => {
+          b.alive = true;
+          b.speed = Math.max(2200, b.obj.position.length() * 0.32);
         });
       }
 
       function updateCollisionPhysics(dt) {
-        // 1. Обновляем ударные волны
+        // 1. Ударные волны
         for (let i = shockwaves.length - 1; i >= 0; i--) {
           const sw = shockwaves[i];
-          sw.life -= dt * 1.15;
+          sw.life -= dt * (sw.isSphere ? 0.52 : 1.2);
           if (sw.life <= 0) {
             scene.remove(sw.mesh);
             shockwaves.splice(i, 1);
             continue;
           }
-          if (sw.isSprite) {
+          if (sw.isSphere) {
+            sw.mesh.scale.addScalar(sw.speed * dt * 0.085);
+            sw.mesh.material.opacity = Math.min(1, sw.life * 0.55);
+          } else if (sw.isSprite) {
             sw.mesh.scale.addScalar(sw.speed * dt * 2.5);
             sw.mesh.material.opacity = sw.life;
           } else {
-            sw.mesh.scale.addScalar(sw.speed * dt * 0.14);
+            sw.mesh.scale.addScalar(sw.speed * dt * 0.16);
             sw.mesh.lookAt(camera.position);
             sw.mesh.material.opacity = sw.life * 0.85;
           }
         }
 
-        // 2. Обновляем разлетающиеся осколки
+        // 2. Облако Большого взрыва
+        if (bigBangCloud) {
+          bigBangCloud.life = Math.max(0, bigBangCloud.life - dt * 0.085);
+          const posAttr = bigBangCloud.points.geometry.attributes.position;
+          const arr = posAttr.array;
+          const v = bigBangCloud.vels;
+          for (let i = 0; i < arr.length; i++) {
+            arr[i] += v[i] * dt;
+            v[i] *= 1 - dt * 0.1;
+          }
+          posAttr.needsUpdate = true;
+          bigBangCloud.points.material.opacity = bigBangCloud.life;
+          if (bigBangCloud.life <= 0) {
+            scene.remove(bigBangCloud.points);
+            bigBangCloud = null;
+          }
+        }
+
+        // 3. Осколки
         for (let i = explosionDebris.length - 1; i >= 0; i--) {
           const d = explosionDebris[i];
           d.life -= dt;
@@ -4127,106 +6309,191 @@
           d.mesh.rotation.z += d.rotVel.z * dt;
         }
 
+        // Тряска камеры
+        if (collisionState.shake > 0.01) {
+          camera.position.x +=
+            (Math.random() - 0.5) * collisionState.shake * 35;
+          camera.position.y +=
+            (Math.random() - 0.5) * collisionState.shake * 35;
+          collisionState.shake *= Math.max(0, 1 - dt * 3.2);
+        }
+
         if (!collisionState.active) return;
 
-        // 3. Двигаем планеты к центру с гравитационным ускорением
-        for (const p of planetObjects) {
-          if (!p.alive) continue;
-          const toCenter = new THREE.Vector3().subVectors(
-            new THREE.Vector3(0, 0, 0),
-            p.group.position,
-          );
-          const dist = toCenter.length();
-          if (dist > 1) {
-            p.velocity.add(toCenter.normalize().multiplyScalar(140 * dt));
-          }
-          p.group.position.addScaledVector(p.velocity, dt);
-          p.mesh.rotation.y += p.rotSpeed * 4;
-        }
-
-        // 4. Проверяем столкновения ПЛАНЕТА С ПЛАНЕТОЙ
-        for (let i = 0; i < planetObjects.length; i++) {
-          const a = planetObjects[i];
-          if (!a.alive) continue;
-          for (let j = i + 1; j < planetObjects.length; j++) {
-            const b = planetObjects[j];
-            if (!b.alive) continue;
-            const d = a.group.position.distanceTo(b.group.position);
-            if (d <= (a.radius + b.radius) * 1.15) {
-              const mid = new THREE.Vector3()
-                .addVectors(a.group.position, b.group.position)
-                .multiplyScalar(0.5);
-              spawnExplosion(
-                mid,
-                a.color,
-                55,
-                Math.max(a.radius, b.radius) * 0.14,
+        // ФАЗА 1: Чёрная дыра прилетает в центр и поглощает всё
+        if (collisionState.phase === "devour") {
+          const origin = new THREE.Vector3(0, 0, 0);
+          if (!collisionState.bhArrived) {
+            const toCenter = origin.clone().sub(blackHoleGroup.position);
+            const distBH = toCenter.length();
+            const stepBH = Math.max(1800, distBH * 2.2) * dt;
+            if (distBH <= stepBH + 20) {
+              blackHoleGroup.position.set(0, 0, 0);
+              collisionState.bhArrived = true;
+            } else {
+              blackHoleGroup.position.addScaledVector(
+                toCenter.normalize(),
+                stepBH,
               );
-              spawnExplosion(
-                mid,
-                b.color,
-                45,
-                Math.min(a.radius, b.radius) * 0.14,
-              );
-              a.alive = false;
-              b.alive = false;
-              a.group.visible = false;
-              b.group.visible = false;
             }
           }
-        }
 
-        // 5. Проверяем столкновение планет с СОЛНЦЕМ в центре
-        for (const p of planetObjects) {
-          if (!p.alive) continue;
-          const distToSun = p.group.position.length();
-          if (distToSun <= 32 + p.radius) {
-            spawnExplosion(
-              p.group.position.clone(),
-              p.color,
-              65,
-              Math.max(1.2, p.radius * 0.16),
+          // Плавный рост Чёрной дыры по мере поглощения материи
+          collisionState.bhScale +=
+            (collisionState.bhTargetScale - collisionState.bhScale) *
+            Math.min(1, dt * 4.5);
+          blackHoleGroup.scale.setScalar(collisionState.bhScale);
+
+          const bhPos = blackHoleGroup.position;
+          const horizonR = 65 * collisionState.bhScale;
+
+          // Поглощение Солнца, когда Чёрная дыра дошла до центра
+          if (collisionState.sunAlive && collisionState.bhArrived) {
+            const res = pullIntoBlackHole(
+              sunGroup,
+              350,
+              900,
+              dt,
+              bhPos,
+              horizonR,
+              0.2,
             );
-            p.alive = false;
-            p.group.visible = false;
+            if (res.eaten) {
+              collisionState.sunAlive = false;
+              collisionState.sunDestroyed = true;
+              sunGroup.visible = false;
+              collisionState.bhTargetScale += 0.4;
+              spawnAccretionBurst(bhPos.clone(), 0xffaa22, 60, 2.4);
+            }
+          }
+
+          // Поглощение всех планет
+          for (const p of planetObjects) {
+            if (!p.alive) continue;
+            const res = pullIntoBlackHole(
+              p.group,
+              p.pullSpeed,
+              1400,
+              dt,
+              bhPos,
+              horizonR + p.radius,
+              0.45,
+            );
+            p.pullSpeed = res.speed;
+            if (res.eaten) {
+              p.alive = false;
+              p.group.visible = false;
+              collisionState.bhTargetScale += 0.14;
+              spawnAccretionBurst(
+                bhPos.clone(),
+                p.color,
+                32,
+                Math.max(1.0, p.radius * 0.12),
+              );
+            }
+          }
+
+          // Поглощение Пульсара, Бетельгейзе, Ригеля и обеих Туманностей
+          for (const b of deepSpaceBodies) {
+            if (!b.alive) continue;
+            const res = pullIntoBlackHole(
+              b.obj,
+              b.speed,
+              3800,
+              dt,
+              bhPos,
+              horizonR + b.radius * 0.35,
+              0.32,
+            );
+            b.speed = res.speed;
+            b.obj.rotation.y += dt * 1.8;
+            if (res.eaten) {
+              b.alive = false;
+              b.obj.visible = false;
+              collisionState.bhTargetScale += b.growth;
+              spawnAccretionBurst(bhPos.clone(), b.color, 55, 3.2);
+            }
+          }
+
+          // Когда Чёрная дыра поглотила абсолютно всё — переходим в критическую сингулярность
+          if (
+            collisionState.bhArrived &&
+            !collisionState.sunAlive &&
+            planetObjects.every((p) => !p.alive) &&
+            deepSpaceBodies.every((b) => !b.alive)
+          ) {
+            collisionState.phase = "singularity";
+            collisionState.singularityTimer = 0;
+            statusPill.textContent =
+              "Критическая масса! Сжатие в сингулярность...";
           }
         }
+        // ФАЗА 2: Перегруженная Чёрная дыра пульсирует, схлопывается в точку и взрывается
+        else if (collisionState.phase === "singularity") {
+          collisionState.singularityTimer += dt;
+          const t = Math.min(1, collisionState.singularityTimer / 1.5);
+          const squeeze =
+            collisionState.bhScale * (1 - t * 0.96) +
+            Math.sin(t * 45) * 0.08 * (1 - t);
+          blackHoleGroup.scale.setScalar(Math.max(0.04, squeeze));
+          collisionState.shake = 0.25 + t * 0.85;
 
-        // Если все планеты уже столкнулись и взорвались — финальный взрыв Солнца!
-        if (
-          !collisionState.sunDestroyed &&
-          planetObjects.every((p) => !p.alive)
-        ) {
-          collisionState.sunDestroyed = true;
-          sunGroup.visible = false;
-          spawnExplosion(new THREE.Vector3(0, 0, 0), 0xffaa22, 130, 4.2);
+          if (t >= 1) {
+            collisionState.phase = "done";
+            blackHoleGroup.visible = false;
+            spawnGrandBigBang();
+          }
         }
       }
 
       function resetSolarSystem() {
         collisionState.active = false;
+        collisionState.phase = "idle";
         collisionState.sunDestroyed = false;
-        sunGroup.visible = true;
+        collisionState.sunAlive = true;
+        collisionState.bhArrived = false;
+        collisionState.bhScale = 1.0;
+        collisionState.bhTargetScale = 1.0;
+        collisionState.shake = 0;
 
-        // Очищаем осколки и волны
+        sunGroup.visible = true;
+        sunGroup.position.set(0, 0, 0);
+        sunGroup.scale.set(1, 1, 1);
+
+        blackHoleGroup.visible = true;
+        blackHoleGroup.position.copy(bhHomePos);
+        blackHoleGroup.scale.set(1, 1, 1);
+
+        energyReport.classList.remove("visible");
+
         explosionDebris.forEach((d) => scene.remove(d.mesh));
         explosionDebris.length = 0;
         shockwaves.forEach((s) => scene.remove(s.mesh));
         shockwaves.length = 0;
+        if (bigBangCloud) {
+          scene.remove(bigBangCloud.points);
+          bigBangCloud = null;
+        }
 
-        // Возвращаем все планеты на их орбиты
         planetObjects.forEach((p) => {
           p.alive = true;
           p.group.visible = true;
-          p.velocity.set(0, 0, 0);
+          p.group.scale.set(1, 1, 1);
+          p.group.rotation.set(0, 0, 0);
           p.group.position.set(
             Math.cos(p.angle) * p.dist,
             0,
             Math.sin(p.angle) * p.dist,
           );
         });
-      }
 
+        deepSpaceBodies.forEach((b) => {
+          b.alive = true;
+          b.obj.visible = true;
+          b.obj.scale.set(1, 1, 1);
+          b.obj.position.copy(b.home);
+        });
+      }
       // === КОНЕЦ ЧАСТИ 3 (ЧЕТВЁРТУЮ, ФИНАЛЬНУЮ ЧАСТЬ ВСТАВЛЯТЬ СРАЗУ НИЖЕ) ===
       // =========================================================================
       // 11. ИНТЕРФЕЙС: МЕНЮ, КАРТОЧКА ХАРАКТЕРИСТИК, 3D-ПОДПИСИ
@@ -4275,10 +6542,11 @@
           infoTitle.textContent = c.name;
           infoType.textContent = "Созвездие небесной сферы";
           infoStats.innerHTML = `
-          <div class="stat-card"><div class="stat-label">Главных звёзд</div><div class="stat-val">${c.stars.length}</div></div>
-          <div class="stat-card"><div class="stat-label">Режим обзора</div><div class="stat-val">Видно с Земли</div></div>
-          <div class="stat-card full"><div class="stat-label">Ключевые звёзды</div><div class="stat-val">${c.stars.map((s) => s[2]).join(", ")}</div></div>
-        `;
+       <div class="stat-card"><div class="stat-label">Главных звёзд</div><div class="stat-val">${c.stars.length}</div></div>
+       <div class="stat-card"><div class="stat-label">Дата описания</div><div class="stat-val">${c.discoveredYear}</div></div>
+       <div class="stat-card full"><div class="stat-label">Кем открыто / описано</div><div class="stat-val">${c.discoveredBy}</div></div>
+       <div class="stat-card full"><div class="stat-label">Ключевые звёзды</div><div class="stat-val">${c.stars.map((s) => s[2]).join(", ")}</div></div>
+     `;
           infoDesc.textContent = c.desc;
           infoFact.innerHTML = `<strong>Интересный факт</strong>${c.fact}`;
         } else {
@@ -4482,7 +6750,7 @@
 
         showInfo("const_" + cid);
         const cData = CONSTELLATIONS_DATA.find((x) => x.id === cid);
-        statusPill.textContent = "🔭 Вид с Земли: " + (cData ? cData.name : "");
+        statusPill.textContent = "Вид с Земли: " + (cData ? cData.name : "");
       }
 
       function exitEarthSkyMode(flyBack = true) {
@@ -4514,7 +6782,7 @@
       const btnPause = document.getElementById("btn-pause");
       btnPause.addEventListener("click", () => {
         isPaused = !isPaused;
-        btnPause.textContent = isPaused ? "▶ Пуск" : "⏸ Пауза";
+        btnPause.textContent = isPaused ? "Пуск" : "Пауза";
         btnPause.classList.toggle("active", isPaused);
       });
 
@@ -4579,7 +6847,7 @@
         autoTourActive = false;
         clearInterval(autoTourTimer);
         btnTour.classList.remove("active");
-        btnTour.textContent = "▶ Авто-тур";
+        btnTour.textContent = "Авто-тур";
       }
 
       btnTour.addEventListener("click", () => {
@@ -4588,7 +6856,7 @@
         } else {
           autoTourActive = true;
           btnTour.classList.add("active");
-          btnTour.textContent = "⏹ Стоп-тур";
+          btnTour.textContent = "Стоп-тур";
           autoTourIndex = 0;
           focusOnObject(TOUR_SEQUENCE[autoTourIndex]);
           autoTourTimer = setInterval(() => {
@@ -4610,7 +6878,7 @@
         // Отводим камеру в удобную обзорную точку, чтобы увидеть столкновение всех планет
         camTransition = {
           startPos: camera.position.clone(),
-          endPos: new THREE.Vector3(0, 1650, 3900),
+          endPos: new THREE.Vector3(0, 3200, 7500),
           startLook: controls.target.clone(),
           endLook: new THREE.Vector3(0, 0, 0),
           targetId: null,
@@ -4619,8 +6887,7 @@
         };
 
         triggerCollision();
-        statusPill.textContent =
-          "💥 Гравитационный коллапс! Все планеты летят в центр!";
+        statusPill.textContent = "Гравитационный коллапс.";
         btnReset.style.display = "inline-block";
       });
 
@@ -4778,6 +7045,9 @@
         // 1. Шейдеры и визуальные эффекты (всегда живые)
         sunShaderMaterial.uniforms.uTime.value = elapsed;
         blackHoleDiskMaterial.uniforms.uTime.value = elapsed;
+        animatedShaderMats.forEach((m) => {
+          m.uniforms.uTime.value = elapsed;
+        });
 
         const pulse = 1 + Math.sin(elapsed * 2.2) * 0.035;
         sunCorona1.scale.set(135 * pulse, 135 * pulse, 1);
@@ -4797,6 +7067,78 @@
         milkyWayGroup.rotation.y += realDt * 0.008;
         orionNebulaGroup.rotation.y += realDt * 0.012;
         ringNebulaGroup.rotation.z += realDt * 0.015;
+        // Анимация Сферы Дайсона
+        dysonRings.forEach((r) => {
+          r.group.rotation.x += realDt * r.spd[0];
+          r.group.rotation.y += realDt * r.spd[1];
+          r.group.rotation.z += realDt * r.spd[2];
+        });
+        dysonSwarm.rotation.y -= realDt * 0.09;
+
+        // Анимация Двойной звезды-вампира и потока плазмы
+        if (!isPaused) {
+          vampireOrbitGroup.rotation.y += realDt * 0.32;
+          vampireDisk.rotation.y += realDt * 2.2;
+          const pArr = vampireStream.points.geometry.attributes.position.array;
+          for (let i = 0; i < vampireStream.count; i++) {
+            vampireStream.progress[i] =
+              (vampireStream.progress[i] + realDt * 0.55) % 1.0;
+            const u = vampireStream.progress[i];
+            const inv = 1 - u;
+            // Квадратичная кривая Безье от красного гиганта (-68,0,0) к диску карлика (135,0,0)
+            const bx = inv * inv * -68 + 2 * inv * u * 35 + u * u * 135;
+            const by = 2 * inv * u * 14;
+            const bz = 2 * inv * u * 54;
+            const spreadScale = Math.sin(u * Math.PI);
+            pArr[i * 3] = bx + vampireStream.spread[i * 3] * spreadScale;
+            pArr[i * 3 + 1] =
+              by + vampireStream.spread[i * 3 + 1] * spreadScale;
+            pArr[i * 3 + 2] =
+              bz + vampireStream.spread[i * 3 + 2] * spreadScale;
+          }
+          vampireStream.points.geometry.attributes.position.needsUpdate = true;
+
+          // Столпы Творения и Крабовидная туманность с пульсаром
+          pillarsGroup.rotation.y += realDt * 0.01;
+          crabGroup.rotation.y += realDt * 0.014;
+          crabPulsarSpin.rotation.y += realDt * 38;
+        }
+
+        // Орбита Кометы Галлея и ориентация двух хвостов строго от Солнца
+        if (!collisionState.active) {
+          if (!isPaused) {
+            // Быстрее около Солнца (закон Кеплера)
+            const curR = Math.max(180, halleyGroup.position.length());
+            halleyState.angle += (26 / curR) * Math.min(simDt, 0.8);
+          }
+          const hx = Math.cos(halleyState.angle) * halleyA - halleyFocus;
+          const hz = Math.sin(halleyState.angle) * halleyB;
+          halleyGroup.position.set(hx, 0, hz);
+
+          // Длина хвостов растёт при приближении к Солнцу
+          const distSun = halleyGroup.position.length();
+          const tailScale = THREE.MathUtils.clamp(
+            1.6 - distSun / 4200,
+            0.25,
+            1.55,
+          );
+          halleyIonTail.scale.set(1, 1, tailScale);
+          halleyDustTail.scale.set(1, 1, tailScale * 0.85);
+
+          // Ионный хвост — строго от Солнца (0,0,0); пылевой — чуть отклонён назад по орбите
+          const worldHalley = getWorldPos(halleyGroup, tmpVec);
+          const awayFromSun = worldHalley.clone().normalize();
+          halleyIonTail.lookAt(worldHalley.clone().add(awayFromSun));
+
+          const prevX =
+            Math.cos(halleyState.angle - 0.05) * halleyA - halleyFocus;
+          const prevZ = Math.sin(halleyState.angle - 0.05) * halleyB;
+          const backOrb = new THREE.Vector3(prevX - hx, 0, prevZ - hz)
+            .applyQuaternion(halleyOrbitGroup.quaternion)
+            .normalize();
+          const dustDir = awayFromSun.clone().lerp(backOrb, 0.28).normalize();
+          halleyDustTail.lookAt(worldHalley.clone().add(dustDir));
+        }
 
         // 2. Движение Солнечной системы (если не запущено столкновение)
         if (!isPaused && !collisionState.active) {
@@ -4814,6 +7156,8 @@
           if (earthCloudsMesh)
             earthCloudsMesh.rotation.y += 0.011 * Math.min(simDt, 0.5);
           if (issPivot) issPivot.rotation.y += 0.28 * Math.min(simDt, 0.4);
+          if (issPivot) issPivot.rotation.y += 0.65 * Math.min(simDt, 0.4);
+          if (issGroup) issGroup.rotation.y = 0;
           if (issGroup) issGroup.rotation.y = Math.PI / 2;
           if (moonPivot) moonPivot.rotation.y += 0.055 * Math.min(simDt, 0.5);
           if (ufoGroup) {
@@ -4996,7 +7340,7 @@
         seControls.dampingFactor = 0.06;
         seControls.enablePan = false;
         seControls.minDistance = 3.2;
-        seControls.maxDistance = 18;
+        seControls.maxDistance = 24;
         bindZoomButtons("se-zoom-in", "se-zoom-out", seCamera, seControls);
 
         // Фоновые 3D-звёзды внутри окна редактора
@@ -5220,28 +7564,31 @@
           return pts;
         })();
 
-        // Джеты квазара
+        const seJetMats = [];
+
+        // Объёмные GLSL-джеты квазара
         const quasarJets = new THREE.Group();
-        const qJetMat = new THREE.MeshBasicMaterial({
-          color: 0xb68aff,
-          transparent: true,
-          opacity: 0.55,
-          side: THREE.DoubleSide,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false,
+        const qJetOuter = createVolumetricJetMaterial(0xf0dcff, 0x8b5cf6, 6.5);
+        const qJetInner = createVolumetricJetMaterial(0xffffff, 0xc4a0ff, 9.5);
+        seJetMats.push(qJetOuter, qJetInner);
+
+        [-1, 1].forEach((sign) => {
+          const outer = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.95, 0.14, 12.5, 32, 1, true),
+            qJetOuter,
+          );
+          outer.position.y = sign * 6.5;
+          if (sign < 0) outer.rotation.x = Math.PI;
+
+          const inner = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.32, 0.05, 11.5, 24, 1, true),
+            qJetInner,
+          );
+          inner.position.y = sign * 6.0;
+          if (sign < 0) inner.rotation.x = Math.PI;
+
+          quasarJets.add(outer, inner);
         });
-        const qJetTop = new THREE.Mesh(
-          new THREE.ConeGeometry(0.55, 7.5, 24, 1, true),
-          qJetMat,
-        );
-        qJetTop.position.y = 4.2;
-        qJetTop.rotation.x = Math.PI;
-        const qJetBot = new THREE.Mesh(
-          new THREE.ConeGeometry(0.55, 7.5, 24, 1, true),
-          qJetMat,
-        );
-        qJetBot.position.y = -4.2;
-        quasarJets.add(qJetTop, qJetBot);
         bhGroup.add(quasarJets);
 
         // --- 3. Группа Пульсара / Нейтронной звезды ---
@@ -5272,27 +7619,29 @@
         pHalo.scale.set(2.8, 2.8, 1);
         pulsarSeGroup.add(pHalo);
 
+        // Объёмные вытянутые GLSL-лучи пульсара
         const pulsarBeams = new THREE.Group();
-        const pBeamMat = new THREE.MeshBasicMaterial({
-          color: 0x55f6ff,
-          transparent: true,
-          opacity: 0.6,
-          side: THREE.DoubleSide,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false,
+        const pJetOuter = createVolumetricJetMaterial(0xe0ffff, 0x1ac8ff, 9.5);
+        const pJetInner = createVolumetricJetMaterial(0xffffff, 0x80f8ff, 13.0);
+        seJetMats.push(pJetOuter, pJetInner);
+
+        [-1, 1].forEach((sign) => {
+          const outer = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.85, 0.09, 13.5, 32, 1, true),
+            pJetOuter,
+          );
+          outer.position.y = sign * 6.9;
+          if (sign < 0) outer.rotation.x = Math.PI;
+
+          const inner = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.28, 0.04, 12.5, 24, 1, true),
+            pJetInner,
+          );
+          inner.position.y = sign * 6.4;
+          if (sign < 0) inner.rotation.x = Math.PI;
+
+          pulsarBeams.add(outer, inner);
         });
-        const pb1 = new THREE.Mesh(
-          new THREE.ConeGeometry(0.45, 7.2, 24, 1, true),
-          pBeamMat,
-        );
-        pb1.position.y = 3.8;
-        pb1.rotation.x = Math.PI;
-        const pb2 = new THREE.Mesh(
-          new THREE.ConeGeometry(0.45, 7.2, 24, 1, true),
-          pBeamMat,
-        );
-        pb2.position.y = -3.8;
-        pulsarBeams.add(pb1, pb2);
         pulsarAxis.add(pulsarBeams);
 
         // 3D-петли магнитного поля
@@ -5725,6 +8074,9 @@
 
           starShaderMat.uniforms.uTime.value = t;
           seDiskMat.uniforms.uTime.value = t * (0.8 + state.spin * 0.02);
+          seJetMats.forEach((m) => {
+            m.uniforms.uTime.value = t;
+          });
 
           if (starMesh.visible) {
             starMesh.rotation.y += dt * spinSpeed;
