@@ -603,7 +603,7 @@
         background: var(--mac-blue);
       }
 
-      /* === macOS SHEET — 3D РЕДАКТОР ЗВЁЗД === */
+      /* === macOS SHEET — 3D НАУЧНАЯ АСТРОФИЗИЧЕСКАЯ ЛАБОРАТОРИЯ === */
       #se-modal {
         position: fixed;
         inset: 0;
@@ -611,9 +611,9 @@
         display: none;
         align-items: center;
         justify-content: center;
-        background: rgba(0, 0, 0, 0.58);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
+        background: rgba(0, 0, 0, 0.64);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         color: var(--mac-text);
       }
       #se-modal.se-visible {
@@ -621,32 +621,34 @@
       }
 
       .se-window {
-        width: min(980px, 94vw);
-        max-height: 90vh;
+        width: min(1200px, 96vw);
+        height: min(860px, 92vh);
         display: grid;
-        grid-template-columns: 1.15fr 1fr;
-        background: rgba(28, 28, 32, 0.88);
-        backdrop-filter: blur(40px) saturate(190%);
-        -webkit-backdrop-filter: blur(40px) saturate(190%);
+        grid-template-columns: 1.22fr 1fr;
+        background: rgba(24, 24, 29, 0.9);
+        backdrop-filter: blur(42px) saturate(190%);
+        -webkit-backdrop-filter: blur(42px) saturate(190%);
         border: 1px solid rgba(255, 255, 255, 0.18);
         border-radius: 20px;
         overflow: hidden;
         box-shadow:
-          0 30px 90px rgba(0, 0, 0, 0.78),
+          0 32px 96px rgba(0, 0, 0, 0.82),
           var(--mac-highlight);
       }
 
       .se-preview-pane {
         position: relative;
-        background: radial-gradient(circle at center, #141624 0%, #050508 80%);
+        background: radial-gradient(circle at center, #111524 0%, #030408 82%);
         display: flex;
         flex-direction: column;
-        min-height: 450px;
+        min-height: 460px;
+        overflow: hidden;
       }
       #se-canvas {
         width: 100%;
         height: 100%;
         flex: 1;
+        min-height: 0;
         display: block;
         cursor: grab;
       }
@@ -656,73 +658,185 @@
 
       .se-badge-box {
         position: absolute;
-        top: 16px;
+        top: 14px;
         left: 16px;
         right: 16px;
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
+        gap: 10px;
         pointer-events: none;
       }
       .se-type-title {
-        font-size: 21px;
+        font-size: 20px;
         font-weight: 700;
         letter-spacing: -0.3px;
-        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
       }
       .se-type-sub {
-        font-size: 12.5px;
+        font-size: 12px;
         color: var(--mac-text-2);
         margin-top: 2px;
       }
+      .se-pill-row {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 5px;
+      }
       .se-class-pill {
-        padding: 5px 11px;
+        padding: 4px 11px;
         border-radius: 999px;
         font-size: 12px;
         font-weight: 600;
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.13);
         backdrop-filter: blur(12px);
         border: 1px solid var(--mac-border);
+        white-space: nowrap;
+      }
+      .se-warn-pill {
+        display: none;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        background: rgba(255, 69, 58, 0.22);
+        border: 1px solid rgba(255, 69, 58, 0.55);
+        color: #ff9c96;
+        white-space: nowrap;
+      }
+      .se-warn-pill.visible {
+        display: inline-block;
       }
 
+      /* Живая мини-диаграмма Герцшпрунга–Рассела (H-R) */
+      #se-hr-box {
+        position: absolute;
+        right: 14px;
+        bottom: 132px;
+        width: 196px;
+        padding: 8px;
+        border-radius: 12px;
+        background: rgba(16, 17, 23, 0.82);
+        backdrop-filter: blur(18px);
+        border: 1px solid var(--mac-border);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+      }
+      #se-hr-box.se-hr-hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(8px);
+      }
+      .se-hr-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 10.5px;
+        font-weight: 600;
+        color: var(--mac-text-2);
+        margin-bottom: 5px;
+      }
+      #se-hr-canvas {
+        width: 100%;
+        height: 118px;
+        display: block;
+        border-radius: 7px;
+        background: #070910;
+      }
+
+      /* Кнопки зума в превью (приподняты над расширенной телеметрией) */
+      #se-zoom-controls {
+        position: absolute;
+        left: 14px;
+        bottom: 132px;
+      }
+
+      /* Расширенная научная телеметрия (8 параметров) */
       .se-stats-bar {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        padding: 12px 16px;
-        background: rgba(18, 18, 22, 0.85);
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        padding: 10px 14px;
+        background: rgba(15, 16, 21, 0.9);
         border-top: 1px solid var(--mac-border-subtle);
+      }
+      .se-stat-item {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 8px;
+        padding: 6px 8px;
+        min-width: 0;
       }
       .se-stat-item span {
         display: block;
         color: var(--mac-text-2);
-        font-size: 11px;
-        font-weight: 500;
+        font-size: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .se-stat-item strong {
+        display: block;
         color: var(--mac-text);
-        font-size: 13.5px;
+        font-size: 12px;
         font-weight: 600;
+        margin-top: 2px;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
+      /* Правая панель управления */
       .se-controls-pane {
-        padding: 20px 22px;
-        overflow-y: auto;
+        padding: 16px 18px;
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 11px;
         border-left: 1px solid var(--mac-border-subtle);
+        min-height: 0;
+        overflow: hidden;
       }
       .se-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
       }
       .se-header h2 {
         margin: 0;
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 700;
         letter-spacing: -0.2px;
+      }
+      .se-header-tools {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .se-mode-toggle {
+        padding: 5px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--mac-border);
+        background: rgba(10, 132, 255, 0.22);
+        color: #7cc4ff;
+        font-family: inherit;
+        font-size: 11.5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .se-mode-toggle.manual {
+        background: rgba(255, 159, 10, 0.22);
+        border-color: rgba(255, 159, 10, 0.5);
+        color: #ffd080;
       }
       #se-close-btn {
         background: rgba(255, 255, 255, 0.1);
@@ -742,37 +856,122 @@
         color: #fff;
       }
 
-      .se-presets {
+      /* Вкладки редактора в стиле macOS Segmented Control */
+      .se-tabs {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 3px;
+        padding: 3px;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.34);
+        border: 1px solid var(--mac-border-subtle);
+        flex-shrink: 0;
+      }
+      .se-tab-btn {
+        padding: 6px 4px;
+        border: none;
+        border-radius: 7px;
+        background: transparent;
+        color: var(--mac-text-2);
+        font-family: inherit;
+        font-size: 11.5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .se-tab-btn:hover {
+        color: var(--mac-text);
+      }
+      .se-tab-btn.active {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+      }
+
+      /* Прокручиваемая область вкладок с удобным широким скроллбаром для мультиборда */
+      .se-scroll-area {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding-right: 6px;
+        touch-action: pan-y;
+      }
+      .se-scroll-area::-webkit-scrollbar {
+        width: 14px;
+      }
+      .se-scroll-area::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .se-scroll-area::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.24);
+        border-radius: 999px;
+        border: 3px solid transparent;
+        background-clip: content-box;
+        min-height: 44px;
+      }
+      .se-scroll-area::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.42);
+        border: 3px solid transparent;
+        background-clip: content-box;
+      }
+
+      .se-tab-pane {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .se-tab-pane.active {
         display: flex;
-        flex-wrap: wrap;
+      }
+
+      .se-presets-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 6px;
       }
       .se-preset-btn {
-        padding: 6px 11px;
-        border-radius: 8px;
+        padding: 8px 10px;
+        border-radius: 9px;
         border: 1px solid var(--mac-border-subtle);
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.06);
         color: var(--mac-text);
         font-family: inherit;
         font-size: 12px;
-        font-weight: 500;
+        font-weight: 600;
+        text-align: left;
         cursor: pointer;
-        transition: background 0.15s;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+      }
+      .se-preset-btn span {
+        display: block;
+        font-size: 10.5px;
+        font-weight: 400;
+        color: var(--mac-text-2);
+        margin-top: 2px;
       }
       .se-preset-btn:hover {
         background: var(--mac-blue);
         border-color: transparent;
       }
+      .se-preset-btn:hover span {
+        color: rgba(255, 255, 255, 0.85);
+      }
 
       .se-slider-group {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 5px;
       }
       .se-slider-label {
         display: flex;
         justify-content: space-between;
-        font-size: 13px;
+        align-items: baseline;
+        gap: 8px;
+        font-size: 12.5px;
         color: var(--mac-text-2);
       }
       .se-slider-label b {
@@ -780,11 +979,15 @@
         font-weight: 600;
         font-variant-numeric: tabular-nums;
       }
+      .se-slider-hint {
+        font-size: 10.5px;
+        color: var(--mac-text-3);
+      }
       .se-slider-group input[type="range"] {
         -webkit-appearance: none;
         appearance: none;
         width: 100%;
-        height: 4px;
+        height: 5px;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.18);
         outline: none;
@@ -797,37 +1000,84 @@
         height: 18px;
         border-radius: 50%;
         background: #ffffff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
-        border: 0.5px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        border: 0.5px solid rgba(0, 0, 0, 0.2);
         transition: transform 0.1s;
       }
       .se-slider-group input[type="range"]::-webkit-slider-thumb:active {
-        transform: scale(1.12);
+        transform: scale(1.14);
+      }
+
+      .se-select {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 9px;
+        background: rgba(0, 0, 0, 0.36);
+        border: 1px solid var(--mac-border);
+        color: var(--mac-text);
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .se-toggle-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+      }
+      .se-toggle-btn {
+        padding: 8px 10px;
+        border-radius: 9px;
+        border: 1px solid var(--mac-border-subtle);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--mac-text-2);
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .se-toggle-btn.active {
+        background: var(--mac-blue);
+        border-color: transparent;
+        color: #fff;
       }
 
       .se-desc-box {
-        padding: 11px 13px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.06);
+        padding: 10px 12px;
+        border-radius: 11px;
+        background: rgba(255, 255, 255, 0.055);
         border: 1px solid var(--mac-border-subtle);
-        font-size: 12.5px;
-        line-height: 1.48;
-        color: rgba(245, 245, 247, 0.85);
+        font-size: 12px;
+        line-height: 1.46;
+        color: rgba(245, 245, 247, 0.86);
+        flex-shrink: 0;
+      }
+      .se-core-line {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #64d2ff;
+        font-weight: 600;
+        margin-bottom: 4px;
       }
 
       .se-actions {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-top: auto;
+        grid-template-columns: 1.2fr 1fr 1fr;
+        gap: 7px;
+        flex-shrink: 0;
       }
       .se-action-btn {
-        padding: 10px 12px;
+        padding: 9px 10px;
         border-radius: 10px;
         border: none;
         font-family: inherit;
         font-weight: 600;
-        font-size: 13px;
+        font-size: 12.5px;
         cursor: pointer;
         transition:
           filter 0.15s,
@@ -843,28 +1093,114 @@
       #se-supernova-btn:hover {
         filter: brightness(1.12);
       }
-      #se-random-btn {
+      #se-random-btn,
+      #se-reset-btn {
         background: rgba(255, 255, 255, 0.12);
         color: var(--mac-text);
       }
-      #se-random-btn:hover {
+      #se-random-btn:hover,
+      #se-reset-btn:hover {
         background: rgba(255, 255, 255, 0.2);
       }
 
-      @media (max-width: 900px) {
+      /* Таблица элементов Менделеева и полоса спектра */
+      .se-chem-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+      .se-el-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--mac-border-subtle);
+        border-radius: 9px;
+        padding: 6px 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .se-el-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: 11px;
+      }
+      .se-el-sym {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--mac-text);
+      }
+      .se-el-num {
+        font-size: 9.5px;
+        color: var(--mac-text-3);
+      }
+      .se-el-pct {
+        font-size: 11px;
+        font-weight: 600;
+        color: #64d2ff;
+        font-variant-numeric: tabular-nums;
+      }
+      .se-el-card input[type="range"] {
+        width: 100%;
+        height: 4px;
+      }
+      .se-spec-wrap {
+        background: rgba(0, 0, 0, 0.45);
+        border: 1px solid var(--mac-border-subtle);
+        border-radius: 10px;
+        padding: 8px;
+      }
+      .se-spec-head {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10.5px;
+        color: var(--mac-text-2);
+        margin-bottom: 5px;
+      }
+      #se-spec-canvas {
+        width: 100%;
+        height: 36px;
+        display: block;
+        border-radius: 5px;
+      }
+      .se-xyz-bar {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+        font-size: 11px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 8px;
+        padding: 6px;
+      }
+      .se-xyz-bar b {
+        display: block;
+        color: var(--mac-text);
+        font-size: 12px;
+      }
+      .se-xyz-bar span {
+        color: var(--mac-text-2);
+        font-size: 10px;
+      }
+
+      @media (max-width: 960px) {
         #sidebar {
           width: 215px;
         }
         #info-panel {
           width: 290px;
         }
-      }
-      @media (max-width: 780px) {
         .se-window {
           grid-template-columns: 1fr;
+          height: 94vh;
         }
         .se-preview-pane {
-          min-height: 280px;
+          min-height: 300px;
+        }
+        .se-stats-bar {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        #se-hr-box {
+          display: none;
         }
       }
       /* Карточка энергии после Большого взрыва (macOS) */
@@ -1047,12 +1383,13 @@
       }
     </script>
     <!-- === РЕДАКТОР ЗВЁЗД === -->
-    <button id="se-open-btn">Редактор звёзд</button>
+    <button id="se-open-btn">Лаборатория звёзд</button>
 
     <div id="se-modal">
       <div class="se-window">
         <div class="se-preview-pane">
           <canvas id="se-canvas"></canvas>
+
           <div id="se-zoom-controls" class="zoom-controls">
             <button class="zoom-btn" id="se-zoom-in" title="Приблизить">
               +
@@ -1061,104 +1398,446 @@
               −
             </button>
           </div>
+
           <div class="se-badge-box">
             <div>
               <div class="se-type-title" id="se-type-title">Жёлтый карлик</div>
               <div class="se-type-sub" id="se-type-sub">
-                Главная последовательность
+                Главная последовательность · Популяция I
               </div>
             </div>
-            <div class="se-class-pill" id="se-class-pill">Класс G2V</div>
+            <div class="se-pill-row">
+              <div class="se-class-pill" id="se-class-pill">Класс G2V</div>
+              <div class="se-warn-pill" id="se-warn-pill">
+                Предел Эддингтона превышен
+              </div>
+            </div>
           </div>
+
+          <div id="se-hr-box">
+            <div class="se-hr-head">
+              <span>Диаграмма Г–Р</span>
+              <span id="se-hr-mbol">Mbol +4.74</span>
+            </div>
+            <canvas id="se-hr-canvas" width="360" height="220"></canvas>
+          </div>
+
           <div class="se-stats-bar">
             <div class="se-stat-item">
-              <span>Светимость</span><strong id="se-stat-lum">1.0 L☉</strong>
+              <span>Светимость (L)</span
+              ><strong id="se-stat-lum">1.00 L☉</strong>
             </div>
             <div class="se-stat-item">
-              <span>Радиус</span><strong id="se-stat-rad">1.0 R☉</strong>
+              <span>Радиус (R)</span><strong id="se-stat-rad">1.00 R☉</strong>
             </div>
             <div class="se-stat-item">
-              <span>Время жизни</span
-              ><strong id="se-stat-life">10 млрд лет</strong>
+              <span>Гравитация (log g)</span
+              ><strong id="se-stat-logg">4.44</strong>
+            </div>
+            <div class="se-stat-item">
+              <span>Плотность (ρ)</span
+              ><strong id="se-stat-dens">1.41 г/см³</strong>
+            </div>
+            <div class="se-stat-item">
+              <span>2-я косм. скорость</span
+              ><strong id="se-stat-vesc">617 км/с</strong>
+            </div>
+            <div class="se-stat-item">
+              <span>Пик спектра (Вин)</span
+              ><strong id="se-stat-wien">500 нм (Вид.)</strong>
+            </div>
+            <div class="se-stat-item">
+              <span>Зона обитаемости</span
+              ><strong id="se-stat-hz">0.95 – 1.37 а.е.</strong>
+            </div>
+            <div class="se-stat-item">
+              <span>Время жизни / L/Ledd</span
+              ><strong id="se-stat-life">10.0 млрд лет</strong>
             </div>
           </div>
         </div>
 
         <div class="se-controls-pane">
           <div class="se-header">
-            <h2>Лаборатория звёзд</h2>
-            <button id="se-close-btn" title="Закрыть">✕</button>
-          </div>
-
-          <div class="se-presets">
-            <button class="se-preset-btn" data-preset="sun">Солнце</button>
-            <button class="se-preset-btn" data-preset="brown">
-              Коричневый
-            </button>
-            <button class="se-preset-btn" data-preset="betelgeuse">
-              Бетельгейзе
-            </button>
-            <button class="se-preset-btn" data-preset="whitedwarf">
-              Белый карлик
-            </button>
-            <button class="se-preset-btn" data-preset="pulsar">Пульсар</button>
-            <button class="se-preset-btn" data-preset="blackhole">
-              Чёрная дыра
-            </button>
-          </div>
-
-          <div class="se-slider-group">
-            <div class="se-slider-label">
-              <span>Масса</span><b id="se-val-mass">1.00 M☉</b>
+            <h2>Астрофизическая лаборатория</h2>
+            <div class="se-header-tools">
+              <button
+                class="se-mode-toggle"
+                id="se-physics-mode"
+                title="Автоматически связывать температуру и радиус по законам астрофизики"
+              >
+                Авто-физика
+              </button>
+              <button id="se-close-btn" title="Закрыть">✕</button>
             </div>
-            <input id="se-mass" type="range" min="0" max="1000" value="487" />
           </div>
 
-          <div class="se-slider-group">
-            <div class="se-slider-label">
-              <span>Стадия эволюции (возраст)</span><b id="se-val-age">45%</b>
+          <div class="se-tabs">
+            <button class="se-tab-btn active" data-setab="core">Основы</button>
+            <button class="se-tab-btn" data-setab="dyn">Динамика</button>
+            <button class="se-tab-btn" data-setab="chem">Состав</button>
+            <button class="se-tab-btn" data-setab="neb">Туманность</button>
+            <button class="se-tab-btn" data-setab="presets">Пресеты</button>
+          </div>
+
+          <div class="se-scroll-area">
+            <!-- ВКЛАДКА 1: ОСНОВЫ И ЭВОЛЮЦИЯ -->
+            <div class="se-tab-pane active" id="setab-core">
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Масса (M)</span><b id="se-val-mass">1.00 M☉</b>
+                </div>
+                <input
+                  id="se-mass"
+                  type="range"
+                  min="0"
+                  max="1000"
+                  value="440"
+                />
+                <div class="se-slider-hint">
+                  От 0.013 M☉ (13 M♃) до 150 M☉ и сверхмассивных ЧД (10⁹ M☉)
+                </div>
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Стадия эволюции (возраст)</span
+                  ><b id="se-val-age">45%</b>
+                </div>
+                <input id="se-age" type="range" min="0" max="100" value="45" />
+                <div class="se-slider-hint">
+                  0–5% Протозвезда · 6–80% ГП · 81–97% Гигант · 98–100% Остаток
+                </div>
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Эффективная температура (Teff)</span
+                  ><b id="se-val-temp">5 778 K</b>
+                </div>
+                <input
+                  id="se-temp"
+                  type="range"
+                  min="0"
+                  max="1000"
+                  value="450"
+                />
+                <div class="se-slider-hint">
+                  От 350 K (Y-карлик) до 200 000 K (Вольфа–Райе / ядро ПТ)
+                </div>
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Радиус / Сжатие (R)</span
+                  ><b id="se-val-radctrl">1.00 R☉</b>
+                </div>
+                <input
+                  id="se-radctrl"
+                  type="range"
+                  min="0"
+                  max="1000"
+                  value="495"
+                />
+                <div class="se-slider-hint">
+                  В ручном режиме позволяет сжать звезду за радиус Шварцшильда
+                </div>
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Металличность ([Fe/H])</span
+                  ><b id="se-val-metal">0.00 dex (Солн.)</b>
+                </div>
+                <input
+                  id="se-metal"
+                  type="range"
+                  min="-400"
+                  max="60"
+                  value="0"
+                />
+                <div class="se-slider-hint">
+                  −4.0 Популяция III (древние) · 0.0 Солнце · +0.6 богатые
+                  металлами
+                </div>
+              </div>
             </div>
-            <input id="se-age" type="range" min="0" max="100" value="45" />
-          </div>
 
-          <div class="se-slider-group">
-            <div class="se-slider-label">
-              <span>Температура поверхности</span
-              ><b id="se-val-temp">5 800 K</b>
+            <!-- ВКЛАДКА 2: ДИНАМИКА, МАГНЕТИЗМ, АККРЕЦИЯ -->
+            <div class="se-tab-pane" id="setab-dyn">
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span id="se-lbl-spin">Вращение (v / v_crit)</span
+                  ><b id="se-val-spin">10%</b>
+                </div>
+                <input
+                  id="se-spin"
+                  type="range"
+                  min="0"
+                  max="998"
+                  value="100"
+                />
+                <div class="se-slider-hint">
+                  Сплющивание и потемнение фон Цейпеля (для ЧД — спин Керра a*)
+                </div>
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Магнитное поле (log₁₀ B)</span
+                  ><b id="se-val-mag">1.0 Гс</b>
+                </div>
+                <input id="se-mag" type="range" min="0" max="150" value="10" />
+                <div class="se-slider-hint">
+                  1–10⁴ Гс пятна и петли · 10¹² Гс пульсар · 10¹⁵ Гс магнетар
+                </div>
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Наклон магнитной оси (α)</span
+                  ><b id="se-val-magtilt">30°</b>
+                </div>
+                <input
+                  id="se-magtilt"
+                  type="range"
+                  min="0"
+                  max="90"
+                  value="30"
+                />
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Темп аккреции (Ṁ / Ṁ_Edd)</span
+                  ><b id="se-val-acc">0%</b>
+                </div>
+                <input id="se-acc" type="range" min="0" max="150" value="0" />
+                <div class="se-slider-hint">
+                  Создаёт аккреционный диск и биполярные джеты у любого объекта
+                </div>
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Звёздный ветер / Сброс массы</span
+                  ><b id="se-val-wind">10%</b>
+                </div>
+                <input id="se-wind" type="range" min="0" max="100" value="10" />
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Радиальные пульсации (Цефеида / Мирида)</span
+                  ><b id="se-val-pulse">0%</b>
+                </div>
+                <input id="se-pulse" type="range" min="0" max="100" value="0" />
+              </div>
             </div>
-            <input
-              id="se-temp"
-              type="range"
-              min="900"
-              max="42000"
-              step="100"
-              value="5800"
-            />
-          </div>
 
-          <div class="se-slider-group">
-            <div class="se-slider-label">
-              <span>Скорость вращения</span><b id="se-val-spin">10%</b>
+            <!-- ВКЛАДКА 3: ХИМИЧЕСКИЙ СОСТАВ (ТАБЛИЦА МЕНДЕЛЕЕВА) И СПЕКТР -->
+            <div class="se-tab-pane" id="setab-chem">
+              <div class="se-xyz-bar">
+                <div><span>Водород (X)</span><b id="se-chem-x">73.4%</b></div>
+                <div><span>Гелий (Y)</span><b id="se-chem-y">25.0%</b></div>
+                <div><span>Металлы (Z)</span><b id="se-chem-z">1.6%</b></div>
+                <div><span>Мол. вес (μ)</span><b id="se-chem-mu">0.60</b></div>
+              </div>
+
+              <div class="se-spec-wrap">
+                <div class="se-spec-head">
+                  <span id="se-spec-mode">Спектр поглощения (380–750 нм)</span>
+                  <span id="se-spec-lines">Hα · Hβ · Fe I</span>
+                </div>
+                <canvas id="se-spec-canvas" width="420" height="44"></canvas>
+              </div>
+
+              <div class="se-chem-grid" id="se-chem-grid"></div>
+
+              <div class="se-toggle-grid">
+                <button class="se-toggle-btn" id="se-chem-solar">
+                  Состав Солнца
+                </button>
+                <button class="se-toggle-btn" id="se-chem-pop3">
+                  Популяция III (H/He)
+                </button>
+                <button class="se-toggle-btn" id="se-chem-co">
+                  C/O ядро (Б. карлик)
+                </button>
+                <button class="se-toggle-btn" id="se-chem-iron">
+                  Железное ядро (Fe)
+                </button>
+              </div>
             </div>
-            <input id="se-spin" type="range" min="0" max="100" value="10" />
-          </div>
 
-          <div class="se-slider-group">
-            <div class="se-slider-label">
-              <span>Гравитационное сжатие</span><b id="se-val-comp">1.0×</b>
+            <!-- ВКЛАДКА 4: КОНСТРУКТОР ТУМАННОСТЕЙ -->
+            <div class="se-tab-pane" id="setab-neb">
+              <div class="se-toggle-grid">
+                <button class="se-toggle-btn active" id="se-mode-star">
+                  Режим: Звезда / ЧД
+                </button>
+                <button class="se-toggle-btn" id="se-mode-neb">
+                  Режим: Туманность
+                </button>
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label"><span>Тип туманности</span></div>
+                <select id="se-neb-type" class="se-select">
+                  <option value="hii">
+                    Эмиссионная область H II (типа Ориона M42)
+                  </option>
+                  <option value="planetary">
+                    Планетарная туманность (типа Кольца M57)
+                  </option>
+                  <option value="snr">
+                    Остаток сверхновой (типа Краба M1)
+                  </option>
+                  <option value="reflection">
+                    Отражательная туманность (пыль / Плеяды)
+                  </option>
+                  <option value="dark">Тёмная молекулярная глобула Бока</option>
+                </select>
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Концентрация газа (n)</span
+                  ><b id="se-val-nebdens">1 000 см⁻³</b>
+                </div>
+                <input
+                  id="se-neb-dens"
+                  type="range"
+                  min="10"
+                  max="60"
+                  value="30"
+                />
+                <div class="se-slider-hint">
+                  От 10 см⁻³ (диффузная) до 10⁶ см⁻³ (плотное ядро)
+                </div>
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Электронная температура (Te)</span
+                  ><b id="se-val-nebtemp">10 000 K</b>
+                </div>
+                <input
+                  id="se-neb-temp"
+                  type="range"
+                  min="10"
+                  max="50000"
+                  step="100"
+                  value="10000"
+                />
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Радиус туманности</span
+                  ><b id="se-val-nebrad">4.0 св. лет</b>
+                </div>
+                <input
+                  id="se-neb-rad"
+                  type="range"
+                  min="5"
+                  max="300"
+                  value="40"
+                />
+              </div>
+
+              <div class="se-slider-group">
+                <div class="se-slider-label">
+                  <span>Скорость расширения (v_exp)</span
+                  ><b id="se-val-nebexp">25 км/с</b>
+                </div>
+                <input
+                  id="se-neb-exp"
+                  type="range"
+                  min="0"
+                  max="3000"
+                  step="10"
+                  value="25"
+                />
+              </div>
+
+              <div class="se-toggle-grid">
+                <button class="se-toggle-btn active" id="se-tog-hr">
+                  Диаграмма Г–Р
+                </button>
+                <button class="se-toggle-btn" id="se-tog-hz">
+                  Зона обитаемости
+                </button>
+                <button class="se-toggle-btn active" id="se-tog-mag">
+                  Силовые линии B
+                </button>
+                <button class="se-toggle-btn" id="se-tog-grid">
+                  Экватор. сетка
+                </button>
+              </div>
             </div>
-            <input id="se-comp" type="range" min="1" max="100" value="1" />
+
+            <!-- ВКЛАДКА 4: НАУЧНЫЕ ПРЕСЕТЫ (12 ОБЪЕКТОВ) -->
+            <div class="se-tab-pane" id="setab-presets">
+              <div class="se-presets-grid">
+                <button class="se-preset-btn" data-preset="sun">
+                  Солнце<span>G2V · 1.0 M☉ · 5 778 K</span>
+                </button>
+                <button class="se-preset-btn" data-preset="proto">
+                  Протозвезда T Тельца<span>Диск + джеты Хербига–Аро</span>
+                </button>
+                <button class="se-preset-btn" data-preset="proxima">
+                  Проксима Центавра<span>M5.5Ve · пятна и вспышки</span>
+                </button>
+                <button class="se-preset-btn" data-preset="brown">
+                  Коричневый карлик<span>T/Y класс · 0.04 M☉ · 900 K</span>
+                </button>
+                <button class="se-preset-btn" data-preset="altair">
+                  Альтаир (Ротатор)<span>A7V · сплющивание фон Цейпеля</span>
+                </button>
+                <button class="se-preset-btn" data-preset="cepheid">
+                  Дельта Цефея<span>Пульсирующий сверхгигант</span>
+                </button>
+                <button class="se-preset-btn" data-preset="betelgeuse">
+                  Бетельгейзе<span>M1Ia · 18 M☉ · конвекция</span>
+                </button>
+                <button class="se-preset-btn" data-preset="wolfrayet">
+                  Вольфа–Райе WR 102<span>WO2 · 180 000 K · ветер</span>
+                </button>
+                <button class="se-preset-btn" data-preset="whitedwarf">
+                  Белый карлик + ПТ<span>DA2 · вырожденное C/O ядро</span>
+                </button>
+                <button class="se-preset-btn" data-preset="pulsar">
+                  Пульсар Краба<span>PSR · B = 10¹² Гс · 30 Гц</span>
+                </button>
+                <button class="se-preset-btn" data-preset="magnetar">
+                  Магнетар SGR 1806<span>MAG · B = 10¹⁵ Гс · вспышки</span>
+                </button>
+                <button class="se-preset-btn" data-preset="quasar">
+                  Квазар Керра (TON 618)<span>10⁸ M☉ · спин 0.98 · джеты</span>
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div class="se-desc-box" id="se-desc">
-            Уравновешенная звезда, синтезирующая водород в гелий. Потяните
-            «Возраст» к 90%, чтобы раздуть её в гиганта, или к 100% — чтобы
-            увидеть финал эволюции.
+          <div class="se-desc-box">
+            <div class="se-core-line">
+              <span id="se-core-rxn">Ядро: p–p цепочка (H → He)</span>
+              <span id="se-rs-val">r_s = 2.95 км</span>
+            </div>
+            <div id="se-desc">
+              Уравновешенная звезда главной последовательности. Переключайте
+              вкладки сверху, чтобы менять магнитное поле, аккрецию,
+              металличность и компаньонов.
+            </div>
           </div>
 
           <div class="se-actions">
-            <button class="se-action-btn" id="se-supernova-btn">Взрыв</button>
-            <button class="se-action-btn" id="se-random-btn">Случайная</button>
+            <button class="se-action-btn" id="se-supernova-btn">
+              Коллапс / Сверхновая
+            </button>
+            <button class="se-action-btn" id="se-random-btn">Случайный</button>
+            <button class="se-action-btn" id="se-reset-btn">Сброс (G2V)</button>
           </div>
         </div>
       </div>
@@ -7291,39 +7970,97 @@
       renderNav("solar");
       showInfo("sun");
       animate();
-      // === РЕДАКТОР ЗВЁЗД (ЛОГИКА И 3D-ВИЗУАЛИЗАЦИЯ) ===
-      // === 3D-РЕДАКТОР ЗВЁЗД НА THREE.JS ===
-      // === 3D-РЕДАКТОР ЗВЁЗД НА THREE.JS ===
+      // === РЕДАКТОР ЗВЁЗД (НАУЧНАЯ 3D-АСТРОФИЗИЧЕСКАЯ ЛАБОРАТОРИЯ) ===
       (function initStarEditor() {
+        let labMode = "star"; // "star" | "nebula"
+
         const modal = document.getElementById("se-modal");
         const openBtn = document.getElementById("se-open-btn");
         const closeBtn = document.getElementById("se-close-btn");
         const canvas = document.getElementById("se-canvas");
+        const hrCanvas = document.getElementById("se-hr-canvas");
+        const hrCtx = hrCanvas.getContext("2d");
+        const hrBox = document.getElementById("se-hr-box");
+        const hrMbolEl = document.getElementById("se-hr-mbol");
 
+        // Элементы управления
         const elMass = document.getElementById("se-mass");
         const elAge = document.getElementById("se-age");
         const elTemp = document.getElementById("se-temp");
+        const elRadCtrl = document.getElementById("se-radctrl");
+        const elMetal = document.getElementById("se-metal");
         const elSpin = document.getElementById("se-spin");
-        const elComp = document.getElementById("se-comp");
+        const elMag = document.getElementById("se-mag");
+        const elMagTilt = document.getElementById("se-magtilt");
+        const elAcc = document.getElementById("se-acc");
+        const elWind = document.getElementById("se-wind");
+        const elPulse = document.getElementById("se-pulse");
 
+        const btnPhysMode = document.getElementById("se-physics-mode");
+        const btnTogHR = document.getElementById("se-tog-hr");
+        const btnTogHZ = document.getElementById("se-tog-hz");
+        const btnTogMag = document.getElementById("se-tog-mag");
+        const btnTogGrid = document.getElementById("se-tog-grid");
+
+        // Подписи значений
         const valMass = document.getElementById("se-val-mass");
         const valAge = document.getElementById("se-val-age");
         const valTemp = document.getElementById("se-val-temp");
+        const valRadCtrl = document.getElementById("se-val-radctrl");
+        const valMetal = document.getElementById("se-val-metal");
+        const lblSpin = document.getElementById("se-lbl-spin");
         const valSpin = document.getElementById("se-val-spin");
-        const valComp = document.getElementById("se-val-comp");
+        const valMag = document.getElementById("se-val-mag");
+        const valMagTilt = document.getElementById("se-val-magtilt");
+        const valAcc = document.getElementById("se-val-acc");
+        const valWind = document.getElementById("se-val-wind");
+        const valPulse = document.getElementById("se-val-pulse");
 
+        // Телеметрия
         const titleEl = document.getElementById("se-type-title");
         const subEl = document.getElementById("se-type-sub");
         const classEl = document.getElementById("se-class-pill");
+        const warnEl = document.getElementById("se-warn-pill");
         const descEl = document.getElementById("se-desc");
+        const coreRxnEl = document.getElementById("se-core-rxn");
+        const rsValEl = document.getElementById("se-rs-val");
+
         const statLum = document.getElementById("se-stat-lum");
         const statRad = document.getElementById("se-stat-rad");
+        const statLogg = document.getElementById("se-stat-logg");
+        const statDens = document.getElementById("se-stat-dens");
+        const statVesc = document.getElementById("se-stat-vesc");
+        const statWien = document.getElementById("se-stat-wien");
+        const statHZ = document.getElementById("se-stat-hz");
         const statLife = document.getElementById("se-stat-life");
 
-        // --- Инициализация отдельной 3D-сцены редактора ---
+        // Физические константы (СИ / СГС)
+        const G_SI = 6.6743e-11;
+        const C_SI = 2.99792458e8;
+        const M_SUN = 1.98847e30;
+        const R_SUN = 6.957e8;
+        const T_SUN = 5778;
+        const WIEN_B = 2.8977719e6; // нм·К
+
+        // Вкладки редактора
+        document.querySelectorAll(".se-tab-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            document
+              .querySelectorAll(".se-tab-btn")
+              .forEach((b) => b.classList.remove("active"));
+            document
+              .querySelectorAll(".se-tab-pane")
+              .forEach((p) => p.classList.remove("active"));
+            btn.classList.add("active");
+            const pane = document.getElementById("setab-" + btn.dataset.setab);
+            if (pane) pane.classList.add("active");
+          });
+        });
+
+        // --- 3D СЦЕНА ЛАБОРАТОРИИ ---
         const seScene = new THREE.Scene();
-        const seCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 500);
-        seCamera.position.set(0, 2.2, 8.2);
+        const seCamera = new THREE.PerspectiveCamera(44, 1, 0.08, 600);
+        seCamera.position.set(0, 2.5, 9.2);
 
         const seRenderer = new THREE.WebGLRenderer({
           canvas,
@@ -7333,29 +8070,29 @@
         });
         seRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         seRenderer.toneMapping = THREE.ACESFilmicToneMapping;
-        seRenderer.toneMappingExposure = 1.2;
+        seRenderer.toneMappingExposure = 1.18;
 
         const seControls = new OrbitControls(seCamera, canvas);
         seControls.enableDamping = true;
         seControls.dampingFactor = 0.06;
         seControls.enablePan = false;
-        seControls.minDistance = 3.2;
-        seControls.maxDistance = 24;
+        seControls.minDistance = 2.8;
+        seControls.maxDistance = 30;
         bindZoomButtons("se-zoom-in", "se-zoom-out", seCamera, seControls);
 
-        // Фоновые 3D-звёзды внутри окна редактора
+        // Фоновые звёзды сцены
         (function buildEditorStars() {
-          const count = 900;
+          const count = 1100;
           const pos = new Float32Array(count * 3);
           const col = new Float32Array(count * 3);
           for (let i = 0; i < count; i++) {
-            const r = 35 + Math.random() * 80;
+            const r = 40 + Math.random() * 110;
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos(2 * Math.random() - 1);
             pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
             pos[i * 3 + 1] = r * Math.cos(phi);
             pos[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
-            const c = 0.65 + Math.random() * 0.35;
+            const c = 0.55 + Math.random() * 0.45;
             col[i * 3] = c;
             col[i * 3 + 1] = c * (0.9 + Math.random() * 0.1);
             col[i * 3 + 2] = 1.0;
@@ -7367,7 +8104,7 @@
             new THREE.Points(
               geo,
               new THREE.PointsMaterial({
-                size: 0.45,
+                size: 0.48,
                 map: glowWhite,
                 vertexColors: true,
                 transparent: true,
@@ -7379,19 +8116,20 @@
           );
         })();
 
-        // Главный контейнер объекта
         const rootGroup = new THREE.Group();
         seScene.add(rootGroup);
 
-        // --- 1. Сфера звезды с процедурным 3D-шейдером плазмы ---
+        // --- 1. НАУЧНЫЙ GLSL-ШЕЙДЕР ЗВЕЗДЫ ---
         const starShaderMat = new THREE.ShaderMaterial({
           uniforms: {
             uTime: { value: 0 },
-            uColorMain: { value: new THREE.Color(0xffcc66) },
+            uColorMain: { value: new THREE.Color(0xfff1d6) },
             uColorHot: { value: new THREE.Color(0xffffff) },
-            uColorCool: { value: new THREE.Color(0xcc3300) },
+            uColorCool: { value: new THREE.Color(0xc95218) },
             uBanded: { value: 0.0 },
-            uTurbulence: { value: 1.0 },
+            uGranuleScale: { value: 5.5 },
+            uGravDark: { value: 0.0 },
+            uSpots: { value: 0.0 },
           },
           vertexShader: `
             varying vec3 vNormal;
@@ -7411,7 +8149,9 @@
             uniform vec3 uColorHot;
             uniform vec3 uColorCool;
             uniform float uBanded;
-            uniform float uTurbulence;
+            uniform float uGranuleScale;
+            uniform float uGravDark;
+            uniform float uSpots;
             varying vec3 vNormal;
             varying vec3 vPos;
             varying vec3 vViewDir;
@@ -7432,23 +8172,39 @@
             }
             void main() {
               vec3 nPos = normalize(vPos);
-              vec3 p = nPos * (4.2 + uTurbulence * 1.6);
-              float n1 = noise(p + vec3(uTime * 0.22, -uTime * 0.15, uTime * 0.12));
-              float n2 = noise(p * 2.4 - vec3(uTime * 0.35));
-              float n3 = noise(p * 5.2 + vec3(uTime * 0.5));
-              float plasma = n1 * 0.55 + n2 * 0.30 + n3 * 0.15;
+              vec3 p = nPos * uGranuleScale;
+              float n1 = noise(p + vec3(uTime * 0.22, -uTime * 0.14, uTime * 0.11));
+              float n2 = noise(p * 2.3 - vec3(uTime * 0.34));
+              float n3 = noise(p * 5.1 + vec3(uTime * 0.48));
+              float plasma = n1 * 0.56 + n2 * 0.29 + n3 * 0.15;
 
-              // Полосы атмосферы для коричневого карлика
               if (uBanded > 0.5) {
-                float bands = sin(nPos.y * 18.0 + plasma * 4.5) * 0.5 + 0.5;
-                plasma = mix(plasma, bands, 0.72);
+                float bands = sin(nPos.y * 20.0 + plasma * 4.8) * 0.5 + 0.5;
+                plasma = mix(plasma, bands, 0.76);
               }
 
-              vec3 col = mix(uColorCool, uColorMain, smoothstep(0.22, 0.68, plasma));
-              col = mix(col, uColorHot, smoothstep(0.66, 0.94, plasma));
+              vec3 col = mix(uColorCool, uColorMain, smoothstep(0.20, 0.68, plasma));
+              col = mix(col, uColorHot, smoothstep(0.68, 0.94, plasma));
 
-              float fresnel = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 2.4);
-              col += uColorMain * fresnel * (uBanded > 0.5 ? 0.35 : 0.95);
+              if (uSpots > 0.02) {
+                float spotN = noise(nPos * 6.5 + vec3(0.0, 0.0, uTime * 0.03));
+                float latBand = exp(-pow((abs(nPos.y) - 0.32) * 3.8, 2.0));
+                float spotMask = smoothstep(0.76 - uSpots * 0.22, 0.84 - uSpots * 0.20, spotN) * (0.45 + 0.55 * latBand);
+                col *= (1.0 - spotMask * 0.72 * uSpots);
+              }
+
+              if (uGravDark > 0.01) {
+                float eq = 1.0 - abs(nPos.y);
+                float dark = 1.0 - uGravDark * 0.58 * pow(eq, 2.2);
+                vec3 eqRed = mix(col, uColorCool * 0.85, uGravDark * 0.45 * pow(eq, 2.0));
+                col = eqRed * dark + uColorHot * (1.0 - eq) * uGravDark * 0.28;
+              }
+
+              float mu = max(dot(vNormal, vViewDir), 0.0);
+              float limbDark = mix(0.68, 1.0, pow(mu, 0.42));
+              float rim = pow(1.0 - mu, 3.2);
+              col = col * limbDark + uColorMain * rim * (uBanded > 0.5 ? 0.22 : 0.75);
+
               gl_FragColor = vec4(col, 1.0);
             }
           `,
@@ -7460,13 +8216,12 @@
         );
         rootGroup.add(starMesh);
 
-        // Корона (мягкий объёмный ореол вокруг звезды)
         const coronaInner = new THREE.Sprite(
           new THREE.SpriteMaterial({
             map: glowWhite,
-            color: 0xffcc66,
+            color: 0xffdd99,
             transparent: true,
-            opacity: 0.85,
+            opacity: 0.82,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
           }),
@@ -7474,30 +8229,30 @@
         const coronaOuter = new THREE.Sprite(
           new THREE.SpriteMaterial({
             map: glowGold,
-            color: 0xff7722,
+            color: 0xff8833,
             transparent: true,
-            opacity: 0.42,
+            opacity: 0.38,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
           }),
         );
         rootGroup.add(coronaInner, coronaOuter);
 
-        // --- 2. Группа Чёрной дыры / Квазара ---
+        // --- 2. ГРУППА ЧЁРНОЙ ДЫРЫ ---
         const bhGroup = new THREE.Group();
         bhGroup.visible = false;
         rootGroup.add(bhGroup);
 
         const bhCore = new THREE.Mesh(
-          new THREE.SphereGeometry(1.15, 64, 64),
+          new THREE.SphereGeometry(1.12, 64, 64),
           new THREE.MeshBasicMaterial({ color: 0x000000 }),
         );
         bhGroup.add(bhCore);
 
         const bhPhoton = new THREE.Mesh(
-          new THREE.RingGeometry(1.16, 1.32, 96),
+          new THREE.RingGeometry(1.13, 1.28, 96),
           new THREE.MeshBasicMaterial({
-            color: 0xfff2cc,
+            color: 0xfff4d6,
             transparent: true,
             opacity: 0.95,
             side: THREE.DoubleSide,
@@ -7507,38 +8262,91 @@
         );
         bhGroup.add(bhPhoton);
 
-        const seDiskMat = blackHoleDiskMaterial.clone();
-        const bhDisk1 = new THREE.Mesh(
-          new THREE.PlaneGeometry(7.8, 7.8),
+        const seDiskMat = new THREE.ShaderMaterial({
+          uniforms: {
+            uTime: { value: 0 },
+            uInnerR: { value: 0.32 },
+            uDoppler: { value: 0.45 },
+            uColorHot: { value: new THREE.Color(0xfff6e0) },
+            uColorMid: { value: new THREE.Color(0xff7722) },
+            uColorCool: { value: new THREE.Color(0x661204) },
+            uOpacity: { value: 0.95 },
+          },
+          vertexShader: `
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            uniform float uTime;
+            uniform float uInnerR;
+            uniform float uDoppler;
+            uniform vec3 uColorHot;
+            uniform vec3 uColorMid;
+            uniform vec3 uColorCool;
+            uniform float uOpacity;
+            varying vec2 vUv;
+            void main() {
+              vec2 p = (vUv - 0.5) * 2.0;
+              float r = length(p);
+              if (r < uInnerR || r > 1.0) discard;
+              float angle = atan(p.y, p.x);
+              float s1 = sin(angle * 4.0 - uTime * 2.8 + 11.0 / (r + 0.14)) * 0.5 + 0.5;
+              float s2 = sin(angle * 9.0 - uTime * 4.5 + 19.0 / (r + 0.18)) * 0.5 + 0.5;
+              float heat = smoothstep(1.0, uInnerR, r);
+              float turb = mix(s1, s2, 0.45);
+              float doppler = 0.72 + uDoppler * cos(angle + 0.5);
+              vec3 col = mix(uColorCool, uColorMid, heat);
+              col = mix(col, uColorHot, pow(heat, 2.7) * (0.55 + 0.45 * turb));
+              float edgeIn = smoothstep(uInnerR, uInnerR + 0.06, r);
+              float edgeOut = smoothstep(1.0, 0.62, r);
+              float alpha = edgeIn * edgeOut * (0.52 + 0.48 * turb) * uOpacity;
+              gl_FragColor = vec4(col * doppler * 1.4, clamp(alpha, 0.0, 0.98));
+            }
+          `,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        });
+
+        const accDiskGroup = new THREE.Group();
+        accDiskGroup.visible = false;
+        rootGroup.add(accDiskGroup);
+
+        const accDiskMain = new THREE.Mesh(
+          new THREE.PlaneGeometry(8.2, 8.2),
           seDiskMat,
         );
-        bhDisk1.rotation.x = Math.PI / 2 - 0.14;
-        bhGroup.add(bhDisk1);
+        accDiskMain.rotation.x = Math.PI / 2 - 0.12;
+        accDiskGroup.add(accDiskMain);
 
-        const bhDisk2 = new THREE.Mesh(
+        const bhLensingDisk = new THREE.Mesh(
           new THREE.PlaneGeometry(5.6, 5.6),
           seDiskMat,
         );
-        bhDisk2.rotation.y = 0.2;
-        bhGroup.add(bhDisk2);
+        bhLensingDisk.rotation.y = 0.2;
+        bhLensingDisk.visible = false;
+        accDiskGroup.add(bhLensingDisk);
 
-        // Частицы аккреционного вихря
-        const bhSwirl = (function () {
+        const accSwirl = (function () {
           const cnt = 1200;
           const p = new Float32Array(cnt * 3);
           const c = new Float32Array(cnt * 3);
           const cIn = new THREE.Color(0xfff4cc);
-          const cOut = new THREE.Color(0xff4800);
+          const cOut = new THREE.Color(0xff5511);
           for (let i = 0; i < cnt; i++) {
-            const r = 1.45 + Math.pow(Math.random(), 1.3) * 3.1;
+            const r = 1.65 + Math.pow(Math.random(), 1.25) * 3.1;
             const a = Math.random() * Math.PI * 2;
             p[i * 3] = Math.cos(a) * r;
-            p[i * 3 + 1] = (Math.random() - 0.5) * 0.25 * (r / 2.5);
+            p[i * 3 + 1] = (Math.random() - 0.5) * 0.22 * (r / 2.5);
             p[i * 3 + 2] = Math.sin(a) * r;
             const col = new THREE.Color().lerpColors(
               cIn,
               cOut,
-              (r - 1.45) / 3.1,
+              (r - 1.65) / 3.1,
             );
             c[i * 3] = col.r;
             c[i * 3 + 1] = col.g;
@@ -7554,103 +8362,102 @@
               map: glowGold,
               vertexColors: true,
               transparent: true,
-              opacity: 0.9,
+              opacity: 0.85,
               blending: THREE.AdditiveBlending,
               depthWrite: false,
             }),
           );
-          pts.rotation.x = -0.14;
-          bhGroup.add(pts);
+          pts.rotation.x = -0.12;
+          accDiskGroup.add(pts);
           return pts;
         })();
 
+        // --- 3. БИПОЛЯРНЫЕ / РЕЛЯТИВИСТСКИЕ ДЖЕТЫ ---
         const seJetMats = [];
+        const jetGroup = new THREE.Group();
+        jetGroup.visible = false;
+        rootGroup.add(jetGroup);
 
-        // Объёмные GLSL-джеты квазара
-        const quasarJets = new THREE.Group();
-        const qJetOuter = createVolumetricJetMaterial(0xf0dcff, 0x8b5cf6, 6.5);
-        const qJetInner = createVolumetricJetMaterial(0xffffff, 0xc4a0ff, 9.5);
-        seJetMats.push(qJetOuter, qJetInner);
+        const jOuterMat = createVolumetricJetMaterial(0xe0f6ff, 0x6b7cff, 7.5);
+        const jInnerMat = createVolumetricJetMaterial(0xffffff, 0x99e8ff, 11.0);
+        seJetMats.push(jOuterMat, jInnerMat);
 
         [-1, 1].forEach((sign) => {
           const outer = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.95, 0.14, 12.5, 32, 1, true),
-            qJetOuter,
+            new THREE.CylinderGeometry(0.92, 0.11, 13.0, 32, 1, true),
+            jOuterMat,
           );
-          outer.position.y = sign * 6.5;
+          outer.position.y = sign * 6.7;
           if (sign < 0) outer.rotation.x = Math.PI;
-
           const inner = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.32, 0.05, 11.5, 24, 1, true),
-            qJetInner,
+            new THREE.CylinderGeometry(0.28, 0.04, 12.2, 24, 1, true),
+            jInnerMat,
           );
-          inner.position.y = sign * 6.0;
+          inner.position.y = sign * 6.3;
           if (sign < 0) inner.rotation.x = Math.PI;
-
-          quasarJets.add(outer, inner);
+          jetGroup.add(outer, inner);
         });
-        bhGroup.add(quasarJets);
 
-        // --- 3. Группа Пульсара / Нейтронной звезды ---
-        const pulsarSeGroup = new THREE.Group();
-        pulsarSeGroup.visible = false;
-        rootGroup.add(pulsarSeGroup);
+        // --- 4. МАГНИТОСФЕРА И НЕЙТРОННАЯ ЗВЕЗДА / ПУЛЬСАР / МАГНЕТАР ---
+        const magAxisGroup = new THREE.Group();
+        rootGroup.add(magAxisGroup);
 
-        const pulsarAxis = new THREE.Group();
-        pulsarAxis.rotation.z = 0.55;
-        pulsarSeGroup.add(pulsarAxis);
-
-        const pCore = new THREE.Mesh(
+        const nsCore = new THREE.Mesh(
           new THREE.SphereGeometry(0.42, 32, 32),
           new THREE.MeshBasicMaterial({ color: 0xeaffff }),
         );
-        pulsarAxis.add(pCore);
+        nsCore.visible = false;
+        magAxisGroup.add(nsCore);
 
-        const pHalo = new THREE.Sprite(
+        const nsHalo = new THREE.Sprite(
           new THREE.SpriteMaterial({
             map: glowCyan,
-            color: 0x33f2ff,
+            color: 0x38f0ff,
             transparent: true,
             opacity: 0.95,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
           }),
         );
-        pHalo.scale.set(2.8, 2.8, 1);
-        pulsarSeGroup.add(pHalo);
+        nsHalo.scale.set(2.8, 2.8, 1);
+        nsHalo.visible = false;
+        rootGroup.add(nsHalo);
 
-        // Объёмные вытянутые GLSL-лучи пульсара
         const pulsarBeams = new THREE.Group();
-        const pJetOuter = createVolumetricJetMaterial(0xe0ffff, 0x1ac8ff, 9.5);
-        const pJetInner = createVolumetricJetMaterial(0xffffff, 0x80f8ff, 13.0);
-        seJetMats.push(pJetOuter, pJetInner);
-
+        pulsarBeams.visible = false;
+        const pJetOut = createVolumetricJetMaterial(0xe0ffff, 0x1ac8ff, 10.0);
+        const pJetIn = createVolumetricJetMaterial(0xffffff, 0x80f8ff, 13.5);
+        seJetMats.push(pJetOut, pJetIn);
         [-1, 1].forEach((sign) => {
-          const outer = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.85, 0.09, 13.5, 32, 1, true),
-            pJetOuter,
+          const o = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.8, 0.08, 13.0, 28, 1, true),
+            pJetOut,
           );
-          outer.position.y = sign * 6.9;
-          if (sign < 0) outer.rotation.x = Math.PI;
-
-          const inner = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.28, 0.04, 12.5, 24, 1, true),
-            pJetInner,
+          o.position.y = sign * 6.65;
+          if (sign < 0) o.rotation.x = Math.PI;
+          const inn = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.24, 0.03, 12.0, 20, 1, true),
+            pJetIn,
           );
-          inner.position.y = sign * 6.4;
-          if (sign < 0) inner.rotation.x = Math.PI;
-
-          pulsarBeams.add(outer, inner);
+          inn.position.y = sign * 6.15;
+          if (sign < 0) inn.rotation.x = Math.PI;
+          pulsarBeams.add(o, inn);
         });
-        pulsarAxis.add(pulsarBeams);
+        magAxisGroup.add(pulsarBeams);
 
-        // 3D-петли магнитного поля
-        for (let i = 0; i < 10; i++) {
-          const phi = (i / 10) * Math.PI * 2;
+        const magFieldLines = new THREE.Group();
+        const magLineMat = new THREE.LineBasicMaterial({
+          color: 0x38d2ff,
+          transparent: true,
+          opacity: 0.45,
+          blending: THREE.AdditiveBlending,
+        });
+        for (let i = 0; i < 12; i++) {
+          const phi = (i / 12) * Math.PI * 2;
           const pts = [];
-          for (let t = 0; t <= 40; t++) {
-            const theta = (t / 40) * Math.PI;
-            const rad = 2.2 * Math.pow(Math.sin(theta), 2) + 0.38;
+          for (let t = 0; t <= 44; t++) {
+            const theta = (t / 44) * Math.PI;
+            const rad = 2.6 * Math.pow(Math.sin(theta), 2) + 0.4;
             pts.push(
               new THREE.Vector3(
                 rad * Math.sin(theta) * Math.cos(phi),
@@ -7659,36 +8466,61 @@
               ),
             );
           }
-          pulsarAxis.add(
+          magFieldLines.add(
             new THREE.Line(
               new THREE.BufferGeometry().setFromPoints(pts),
-              new THREE.LineBasicMaterial({
-                color: 0x26c6ff,
-                transparent: true,
-                opacity: 0.45,
-                blending: THREE.AdditiveBlending,
-              }),
+              magLineMat,
             ),
           );
         }
+        magAxisGroup.add(magFieldLines);
 
-        // --- 4. Планетарная туманность вокруг Белого карлика ---
+        // --- 5. ЗВЁЗДНЫЙ ВЕТЕР ---
+        const windData = (function buildStellarWind() {
+          const cnt = 750;
+          const pos = new Float32Array(cnt * 3);
+          const dirs = new Float32Array(cnt * 3);
+          const radii = new Float32Array(cnt);
+          for (let i = 0; i < cnt; i++) {
+            const th = Math.random() * Math.PI * 2;
+            const ph = Math.acos(2 * Math.random() - 1);
+            dirs[i * 3] = Math.sin(ph) * Math.cos(th);
+            dirs[i * 3 + 1] = Math.cos(ph);
+            dirs[i * 3 + 2] = Math.sin(ph) * Math.sin(th);
+            radii[i] = 1.6 + Math.random() * 4.5;
+          }
+          const g = new THREE.BufferGeometry();
+          g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+          const mat = new THREE.PointsMaterial({
+            size: 0.14,
+            map: glowWhite,
+            color: 0x99d8ff,
+            transparent: true,
+            opacity: 0.45,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          });
+          const pts = new THREE.Points(g, mat);
+          rootGroup.add(pts);
+          return { pts, mat, dirs, radii, cnt };
+        })();
+
+        // --- 6. АВТО-ОБОЛОЧКИ ЗВЁЗД (ПТ / ПРОТОДИСК / ПУЗЫРЬ WR) ---
         const nebulaGroup = new THREE.Group();
         nebulaGroup.visible = false;
         rootGroup.add(nebulaGroup);
-
-        (function buildWhiteDwarfNebula() {
-          const cnt = 1800;
+        (function buildPlanetaryNebula() {
+          const cnt = 2000;
           const pos = new Float32Array(cnt * 3);
           const col = new Float32Array(cnt * 3);
           const c1 = new THREE.Color(0x38fff0);
-          const c2 = new THREE.Color(0xc24dff);
+          const c2 = new THREE.Color(0xb65cff);
           const c3 = new THREE.Color(0xff4d88);
           for (let i = 0; i < cnt; i++) {
             const a = Math.random() * Math.PI * 2;
             const b = Math.random() * Math.PI * 2;
-            const maj = 2.4 + (Math.random() - 0.5) * 0.7;
-            const min = 0.55 + Math.random() * 0.75;
+            const maj = 2.6 + (Math.random() - 0.5) * 0.7;
+            const min = 0.6 + Math.random() * 0.85;
             pos[i * 3] = (maj + min * Math.cos(b)) * Math.cos(a);
             pos[i * 3 + 1] = (maj + min * Math.cos(b)) * Math.sin(a);
             pos[i * 3 + 2] = min * Math.sin(b) * 1.1;
@@ -7714,7 +8546,7 @@
                 map: glowPink,
                 vertexColors: true,
                 transparent: true,
-                opacity: 0.58,
+                opacity: 0.55,
                 blending: THREE.AdditiveBlending,
                 depthWrite: false,
               }),
@@ -7722,20 +8554,19 @@
           );
         })();
 
-        // --- 5. Газопылевой диск Протозвезды ---
-        const protoDisk = (function () {
-          const cnt = 1400;
+        const protoDisk = (function buildProtoDisk() {
+          const cnt = 1600;
           const pos = new Float32Array(cnt * 3);
           const col = new Float32Array(cnt * 3);
           const cIn = new THREE.Color(0xffaa55);
-          const cOut = new THREE.Color(0x6e4228);
+          const cOut = new THREE.Color(0x5c3620);
           for (let i = 0; i < cnt; i++) {
-            const r = 1.9 + Math.random() * 2.9;
+            const r = 2.0 + Math.random() * 3.4;
             const a = Math.random() * Math.PI * 2;
             pos[i * 3] = Math.cos(a) * r;
-            pos[i * 3 + 1] = (Math.random() - 0.5) * 0.32;
+            pos[i * 3 + 1] = (Math.random() - 0.5) * 0.34;
             pos[i * 3 + 2] = Math.sin(a) * r;
-            const c = new THREE.Color().lerpColors(cIn, cOut, (r - 1.9) / 2.9);
+            const c = new THREE.Color().lerpColors(cIn, cOut, (r - 2.0) / 3.4);
             col[i * 3] = c.r;
             col[i * 3 + 1] = c.g;
             col[i * 3 + 2] = c.b;
@@ -7760,14 +8591,84 @@
           return pts;
         })();
 
-        // --- 6. 3D-ударная волна сверхновой ---
+        const wrBubble = (function buildWRBubble() {
+          const cnt = 1400;
+          const pos = new Float32Array(cnt * 3);
+          const col = new Float32Array(cnt * 3);
+          const c1 = new THREE.Color(0x38c8ff);
+          const c2 = new THREE.Color(0x8866ff);
+          for (let i = 0; i < cnt; i++) {
+            const th = Math.random() * Math.PI * 2;
+            const ph = Math.acos(2 * Math.random() - 1);
+            const r = 3.2 + (Math.random() - 0.5) * 0.85;
+            pos[i * 3] = r * Math.sin(ph) * Math.cos(th);
+            pos[i * 3 + 1] = r * Math.cos(ph);
+            pos[i * 3 + 2] = r * Math.sin(ph) * Math.sin(th);
+            const c = new THREE.Color().lerpColors(c1, c2, Math.random());
+            col[i * 3] = c.r;
+            col[i * 3 + 1] = c.g;
+            col[i * 3 + 2] = c.b;
+          }
+          const g = new THREE.BufferGeometry();
+          g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+          g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+          const pts = new THREE.Points(
+            g,
+            new THREE.PointsMaterial({
+              size: 0.42,
+              map: glowCyan,
+              vertexColors: true,
+              transparent: true,
+              opacity: 0.46,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false,
+            }),
+          );
+          pts.visible = false;
+          rootGroup.add(pts);
+          return pts;
+        })();
+
+        // --- 7. КОНСТРУКТОР НАУЧНЫХ ТУМАННОСТЕЙ ---
+        const customNebulaGroup = new THREE.Group();
+        customNebulaGroup.visible = false;
+        rootGroup.add(customNebulaGroup);
+
+        // --- 8. ОВЕРЛЕИ: ЗОНА ОБИТАЕМОСТИ, СЕТКА И УДАРНАЯ ВОЛНА ---
+        const hzRing = new THREE.Mesh(
+          new THREE.RingGeometry(3.4, 4.7, 96),
+          new THREE.MeshBasicMaterial({
+            color: 0x30d158,
+            transparent: true,
+            opacity: 0.22,
+            side: THREE.DoubleSide,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+        hzRing.rotation.x = Math.PI / 2;
+        hzRing.visible = false;
+        seScene.add(hzRing);
+
+        const eqGrid = new THREE.PolarGridHelper(
+          6.5,
+          12,
+          6,
+          64,
+          0x3b6ea8,
+          0x223859,
+        );
+        eqGrid.material.transparent = true;
+        eqGrid.material.opacity = 0.35;
+        eqGrid.visible = false;
+        seScene.add(eqGrid);
+
         const shockMesh = new THREE.Mesh(
-          new THREE.SphereGeometry(1, 32, 32),
+          new THREE.SphereGeometry(1, 36, 36),
           new THREE.MeshBasicMaterial({
             color: 0xb8eeff,
             transparent: true,
             opacity: 0,
-            wireframe: false,
             side: THREE.BackSide,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
@@ -7776,284 +8677,1436 @@
         shockMesh.visible = false;
         seScene.add(shockMesh);
 
-        // --- Логика расчёта параметров ---
+        // --- 9. ТАБЛИЦА МЕНДЕЛЕЕВА И СПЕКТР ---
+        const PERIODIC_ASTRO = [
+          {
+            sym: "H",
+            z: 1,
+            name: "Водород",
+            val: 73.4,
+            lines: [656.3, 486.1, 434.0],
+            color: 0xff3b6b,
+            label: "Hα 656",
+          },
+          {
+            sym: "He",
+            z: 2,
+            name: "Гелий",
+            val: 25.0,
+            lines: [587.6, 468.6],
+            color: 0xffe066,
+            label: "He I 588",
+          },
+          {
+            sym: "C",
+            z: 6,
+            name: "Углерод",
+            val: 0.3,
+            lines: [580.1, 426.7],
+            color: 0xb0c4de,
+            label: "C IV 580",
+          },
+          {
+            sym: "N",
+            z: 7,
+            name: "Азот",
+            val: 0.1,
+            lines: [658.4, 654.8],
+            color: 0xff4d4d,
+            label: "[N II] 658",
+          },
+          {
+            sym: "O",
+            z: 8,
+            name: "Кислород",
+            val: 0.7,
+            lines: [500.7, 495.9, 630.0],
+            color: 0x20e3c2,
+            label: "[O III] 501",
+          },
+          {
+            sym: "Ne",
+            z: 10,
+            name: "Неон",
+            val: 0.15,
+            lines: [386.9, 640.2],
+            color: 0xff8040,
+            label: "[Ne III] 387",
+          },
+          {
+            sym: "Mg",
+            z: 12,
+            name: "Магний",
+            val: 0.08,
+            lines: [517.3, 518.4],
+            color: 0x80ffaa,
+            label: "Mg I 517",
+          },
+          {
+            sym: "Si",
+            z: 14,
+            name: "Кремний",
+            val: 0.07,
+            lines: [634.7, 637.1],
+            color: 0xd4a373,
+            label: "Si II 635",
+          },
+          {
+            sym: "S",
+            z: 16,
+            name: "Сера",
+            val: 0.05,
+            lines: [671.6, 673.1],
+            color: 0xd92b2b,
+            label: "[S II] 672",
+          },
+          {
+            sym: "Fe",
+            z: 26,
+            name: "Железо",
+            val: 0.15,
+            lines: [527.0, 438.4, 495.8],
+            color: 0xa6b1c2,
+            label: "Fe I 527",
+          },
+        ];
+
+        const chemWeights = {};
+        PERIODIC_ASTRO.forEach((e) => {
+          chemWeights[e.sym] = e.val;
+        });
+
+        function buildPeriodicControls(onChange) {
+          const grid = document.getElementById("se-chem-grid");
+          if (!grid) return;
+          grid.innerHTML = "";
+          PERIODIC_ASTRO.forEach((el) => {
+            const card = document.createElement("div");
+            card.className = "se-el-card";
+            card.innerHTML = `
+              <div class="se-el-head">
+                <span><span class="se-el-num">${el.z}</span> <span class="se-el-sym">${el.sym}</span></span>
+                <span class="se-el-pct" id="se-pct-${el.sym}">${el.val.toFixed(1)}%</span>
+              </div>
+              <input type="range" min="0" max="100" step="0.5" value="${el.val}" id="se-inp-${el.sym}" title="${el.name}" />
+            `;
+            grid.appendChild(card);
+            card.querySelector("input").addEventListener("input", (ev) => {
+              chemWeights[el.sym] = parseFloat(ev.target.value);
+              onChange();
+            });
+          });
+        }
+
+        function computeCompositionPhysics() {
+          let total = 0;
+          PERIODIC_ASTRO.forEach((e) => {
+            total += chemWeights[e.sym];
+          });
+          if (total <= 0.0001) {
+            chemWeights.H = 100;
+            total = 100;
+          }
+          const frac = {};
+          PERIODIC_ASTRO.forEach((e) => {
+            frac[e.sym] = chemWeights[e.sym] / total;
+            const lbl = document.getElementById("se-pct-" + e.sym);
+            if (lbl) lbl.textContent = (frac[e.sym] * 100).toFixed(1) + "%";
+          });
+
+          const X = frac.H;
+          const Y = frac.He;
+          const Z = Math.max(0, 1 - X - Y);
+          const mu = 1 / Math.max(0.05, 2 * X + 0.75 * Y + 0.5 * Z);
+          const feh =
+            X > 0.001 && Z > 1e-6
+              ? Math.max(-4.0, Math.min(1.5, Math.log10(Z / X / 0.0181)))
+              : Z > 0.5
+                ? 1.5
+                : -4.0;
+
+          document.getElementById("se-chem-x").textContent =
+            (X * 100).toFixed(1) + "%";
+          document.getElementById("se-chem-y").textContent =
+            (Y * 100).toFixed(1) + "%";
+          document.getElementById("se-chem-z").textContent =
+            (Z * 100).toFixed(1) + "%";
+          document.getElementById("se-chem-mu").textContent = mu.toFixed(2);
+
+          return { frac, X, Y, Z, mu, feh };
+        }
+
+        function wavelengthToRgb(nm) {
+          let r = 0,
+            g = 0,
+            b = 0;
+          if (nm >= 380 && nm < 440) {
+            r = -(nm - 440) / 60;
+            b = 1;
+          } else if (nm >= 440 && nm < 490) {
+            g = (nm - 440) / 50;
+            b = 1;
+          } else if (nm >= 490 && nm < 510) {
+            g = 1;
+            b = -(nm - 510) / 20;
+          } else if (nm >= 510 && nm < 580) {
+            r = (nm - 510) / 70;
+            g = 1;
+          } else if (nm >= 580 && nm < 645) {
+            r = 1;
+            g = -(nm - 645) / 65;
+          } else if (nm >= 645 && nm <= 750) {
+            r = 1;
+          }
+          return `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`;
+        }
+
+        function drawSpectrumBar(comp, isNebulaMode) {
+          const c = document.getElementById("se-spec-canvas");
+          if (!c) return;
+          const ctx = c.getContext("2d");
+          const w = c.width,
+            h = c.height;
+          ctx.clearRect(0, 0, w, h);
+
+          if (!isNebulaMode) {
+            for (let x = 0; x < w; x++) {
+              const nm = 380 + (x / w) * 370;
+              ctx.fillStyle = wavelengthToRgb(nm);
+              ctx.fillRect(x, 0, 1, h);
+            }
+          } else {
+            ctx.fillStyle = "#05070c";
+            ctx.fillRect(0, 0, w, h);
+          }
+
+          const activeLabels = [];
+          PERIODIC_ASTRO.forEach((el) => {
+            const weight = comp.frac[el.sym] || 0;
+            if (weight < 0.005) return;
+            if (weight > 0.03) activeLabels.push(el.label);
+
+            const strength = Math.min(1.0, Math.sqrt(weight) * 1.4);
+            el.lines.forEach((nm) => {
+              const x = ((nm - 380) / 370) * w;
+              if (x < 0 || x > w) return;
+              if (!isNebulaMode) {
+                ctx.fillStyle = `rgba(0, 0, 0, ${0.25 + strength * 0.72})`;
+                ctx.fillRect(x - 1, 0, 2.2, h);
+              } else {
+                ctx.fillStyle = wavelengthToRgb(nm);
+                ctx.globalAlpha = 0.35 + strength * 0.65;
+                ctx.fillRect(x - 1.5, 0, 3, h);
+                ctx.globalAlpha = 1.0;
+              }
+            });
+          });
+
+          document.getElementById("se-spec-mode").textContent = isNebulaMode
+            ? "Эмиссионный спектр газа (380–750 нм)"
+            : "Фраунгоферов спектр поглощения (380–750 нм)";
+          document.getElementById("se-spec-lines").textContent =
+            activeLabels.slice(0, 4).join(" · ") || "Непрерывный";
+        }
+
+        function rebuildScientificNebula(
+          nebType,
+          logDens,
+          tempE,
+          radLy,
+          expVel,
+          comp,
+        ) {
+          while (customNebulaGroup.children.length > 0) {
+            const ch = customNebulaGroup.children[0];
+            if (ch.geometry) ch.geometry.dispose();
+            if (ch.material) ch.material.dispose();
+            customNebulaGroup.remove(ch);
+          }
+
+          const count = 4200;
+          const pos = new Float32Array(count * 3);
+          const col = new Float32Array(count * 3);
+
+          const weightedColors = [];
+          PERIODIC_ASTRO.forEach((el) => {
+            const w = comp.frac[el.sym] || 0;
+            if (w > 0.005)
+              weightedColors.push({ c: new THREE.Color(el.color), w });
+          });
+          const pickElementColor = () => {
+            if (nebType === "reflection")
+              return new THREE.Color(0x55a8ff).lerp(
+                new THREE.Color(0xcce8ff),
+                Math.random(),
+              );
+            if (nebType === "dark")
+              return new THREE.Color(0x1c1412).lerp(
+                new THREE.Color(0x4a2c22),
+                Math.random(),
+              );
+            let r = Math.random();
+            for (const item of weightedColors) {
+              r -= item.w;
+              if (r <= 0) return item.c.clone();
+            }
+            return new THREE.Color(0xff4d88);
+          };
+
+          const scaleR = THREE.MathUtils.clamp(
+            2.2 + Math.log10(Math.max(0.5, radLy)) * 1.4,
+            1.8,
+            4.6,
+          );
+
+          for (let i = 0; i < count; i++) {
+            const th = Math.random() * Math.PI * 2;
+            const ph = Math.acos(2 * Math.random() - 1);
+            let x = 0,
+              y = 0,
+              z = 0;
+
+            if (nebType === "planetary") {
+              const b = Math.random() * Math.PI * 2;
+              const maj = scaleR * 0.72 + (Math.random() - 0.5) * 0.5;
+              const min = scaleR * (0.18 + Math.random() * 0.24);
+              x = (maj + min * Math.cos(b)) * Math.cos(th);
+              y = (maj + min * Math.cos(b)) * Math.sin(th);
+              z = min * Math.sin(b) * 1.15;
+            } else if (nebType === "snr") {
+              const fil =
+                1 + 0.28 * Math.sin(th * 7 + ph * 5) * Math.cos(ph * 6);
+              const r = scaleR * (0.55 + Math.random() * 0.45) * fil;
+              x = r * Math.sin(ph) * Math.cos(th);
+              y = r * Math.cos(ph);
+              z = r * Math.sin(ph) * Math.sin(th);
+            } else if (nebType === "dark") {
+              const r = Math.pow(Math.random(), 0.75) * scaleR * 0.85;
+              x = r * Math.sin(ph) * Math.cos(th) + Math.sin(ph * 4) * 0.4;
+              y = r * Math.cos(ph) * 0.8;
+              z = r * Math.sin(ph) * Math.sin(th);
+            } else {
+              const r = Math.pow(Math.random(), 0.62) * scaleR;
+              const swirl = Math.sin(th * 3 + r * 1.4) * 0.45;
+              x = r * Math.sin(ph) * Math.cos(th) + swirl;
+              y = r * Math.cos(ph) * 0.72;
+              z = r * Math.sin(ph) * Math.sin(th);
+            }
+
+            pos[i * 3] = x;
+            pos[i * 3 + 1] = y;
+            pos[i * 3 + 2] = z;
+
+            const c = pickElementColor();
+            const br = nebType === "dark" ? 0.5 : 0.45 + Math.random() * 0.55;
+            col[i * 3] = c.r * br;
+            col[i * 3 + 1] = c.g * br;
+            col[i * 3 + 2] = c.b * br;
+          }
+
+          const geo = new THREE.BufferGeometry();
+          geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+          geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+
+          const mat = new THREE.PointsMaterial({
+            size: nebType === "dark" ? 0.68 : 0.52,
+            map: nebType === "dark" ? glowWhite : glowPink,
+            vertexColors: true,
+            transparent: true,
+            opacity:
+              nebType === "dark"
+                ? 0.88
+                : THREE.MathUtils.clamp(
+                    0.32 + (logDens - 1) * 0.08,
+                    0.35,
+                    0.78,
+                  ),
+            blending:
+              nebType === "dark"
+                ? THREE.NormalBlending
+                : THREE.AdditiveBlending,
+            depthWrite: false,
+          });
+          customNebulaGroup.add(new THREE.Points(geo, mat));
+
+          if (nebType !== "dark") {
+            const coreStar = new THREE.Sprite(
+              new THREE.SpriteMaterial({
+                map: glowWhite,
+                color: nebType === "reflection" ? 0x99d6ff : 0xffffff,
+                transparent: true,
+                opacity: 0.95,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+              }),
+            );
+            coreStar.scale.set(0.9, 0.9, 1);
+            customNebulaGroup.add(coreStar);
+          }
+
+          const nCm3 = Math.pow(10, logDens);
+          const radCm = radLy * 9.461e17;
+          const massG =
+            (4 / 3) *
+            Math.PI *
+            Math.pow(radCm, 3) *
+            nCm3 *
+            comp.mu *
+            1.6726e-24;
+          const massSolar = massG / 1.9885e33;
+          const dynAgeYr =
+            expVel > 0 ? (radLy * 9.461e12) / (expVel * 3.156e7) : Infinity;
+
+          return { nCm3, massSolar, dynAgeYr };
+        }
+
+        // --- СОСТОЯНИЕ И ШКАЛЫ ---
         let isOpen = false;
         let rafId = null;
         let shockwave = 0;
+        let autoPhysics = true;
+        let showHR = true;
+        let showHZ = false;
+        let showMagLines = true;
+        let showGrid = false;
         const seClock = new THREE.Clock();
         let state = {};
 
-        const sliderToMass = (v) => 0.02 * Math.pow(3000, v / 1000);
-        const massToSlider = (m) =>
-          Math.round((Math.log(m / 0.02) / Math.log(3000)) * 1000);
-
-        function tempToRgb(kelvin) {
-          const t = Math.max(1000, Math.min(40000, kelvin)) / 100;
-          const r =
-            t <= 66
-              ? 255
-              : Math.max(
-                  0,
-                  Math.min(255, 329.6987 * Math.pow(t - 60, -0.1332)),
-                );
-          const g =
-            t <= 66
-              ? Math.max(0, Math.min(255, 99.4708 * Math.log(t) - 161.1195))
-              : Math.max(
-                  0,
-                  Math.min(255, 288.1221 * Math.pow(t - 60, -0.0755)),
-                );
-          const b =
-            t >= 66
-              ? 255
-              : t <= 19
-                ? 0
-                : Math.max(
-                    0,
-                    Math.min(255, 138.5177 * Math.log(t - 10) - 305.0448),
-                  );
-          return new THREE.Color(r / 255, g / 255, b / 255);
+        function sliderToMass(v) {
+          if (v <= 850) return 0.013 * Math.pow(150 / 0.013, v / 850);
+          return 150 * Math.pow(1e9 / 150, (v - 850) / 150);
+        }
+        function massToSlider(m) {
+          m = Math.max(0.013, Math.min(1e9, m));
+          if (m <= 150)
+            return Math.round(
+              (Math.log(m / 0.013) / Math.log(150 / 0.013)) * 850,
+            );
+          return Math.round(
+            850 + (Math.log(m / 150) / Math.log(1e9 / 150)) * 150,
+          );
+        }
+        function sliderToTemp(v) {
+          return Math.round(350 * Math.pow(200000 / 350, v / 1000));
+        }
+        function tempToSlider(t) {
+          t = Math.max(350, Math.min(200000, t));
+          return Math.round(
+            (Math.log(t / 350) / Math.log(200000 / 350)) * 1000,
+          );
+        }
+        function sliderToRad(v) {
+          return 1e-5 * Math.pow(2000 / 1e-5, v / 1000);
+        }
+        function radToSlider(r) {
+          r = Math.max(1e-5, Math.min(2000, r));
+          return Math.round(
+            (Math.log(r / 1e-5) / Math.log(2000 / 1e-5)) * 1000,
+          );
         }
 
-        function autoTemperature(mass, age) {
-          if (mass < 0.08) return Math.round(1100 + mass * 15000);
-          if (age <= 5) return Math.round(2800 + mass * 120);
-          if (age >= 82 && age < 98)
-            return Math.round(3200 + Math.min(mass, 15) * 40);
-          if (age >= 98) {
-            if (mass < 8) return 26000;
-            if (mass < 20) return 40000;
-            return 12000;
+        function blackbodyColor(kelvin) {
+          const t = Math.max(600, Math.min(60000, kelvin)) / 100;
+          let r, g, b;
+          if (t <= 66) {
+            r = 255;
+            g = t <= 1 ? 0 : 99.4708 * Math.log(t) - 161.1195;
+            b = t <= 19 ? 0 : 138.5177 * Math.log(t - 10) - 305.0448;
+          } else {
+            r = 329.6987 * Math.pow(t - 60, -0.1332);
+            g = 288.1221 * Math.pow(t - 60, -0.0755);
+            b = 255;
           }
-          return Math.min(42000, Math.round(5800 * Math.pow(mass, 0.52)));
+          const col = new THREE.Color(
+            Math.max(0, Math.min(255, r)) / 255,
+            Math.max(0, Math.min(255, g)) / 255,
+            Math.max(0, Math.min(255, b)) / 255,
+          );
+          if (kelvin < 1300) {
+            const k = Math.max(0, (kelvin - 350) / 950);
+            col.lerp(new THREE.Color(0x4a1c18), 1 - k);
+          }
+          return col;
         }
 
-        function applyVisualState() {
-          const { type, color, mass, spin, comp } = state;
+        function derivePhysicsFromEvolution(mass, age, feh) {
+          if (mass > 150) {
+            const rsSolar = (2 * G_SI * mass * M_SUN) / (C_SI * C_SI) / R_SUN;
+            return { temp: 15000, radius: Math.max(1e-5, rsSolar) };
+          }
+          const zTempFactor = Math.pow(10, -0.055 * feh);
+          const zRadFactor = Math.pow(10, 0.045 * feh);
 
-          const isBH = type === "blackhole" || type === "quasar";
-          const isNS = type === "neutron" || type === "pulsar";
+          if (mass < 0.08) {
+            const t = Math.max(
+              380,
+              2400 * Math.pow(mass / 0.08, 0.85) * (1.2 - age * 0.009),
+            );
+            return { temp: t, radius: 0.095 + 0.02 * (1 - age / 100) };
+          }
+          if (age <= 5) {
+            return {
+              temp: Math.max(2400, 3200 + mass * 160),
+              radius: Math.pow(mass, 0.72) * (3.6 - age * 0.35),
+            };
+          }
+          if (age >= 98) {
+            if (mass < 8) {
+              const wdMass = Math.min(1.38, 0.45 + mass * 0.11);
+              return {
+                temp: 34000,
+                radius: 0.0126 * Math.pow(wdMass / 0.6, -1 / 3),
+              };
+            }
+            if (mass < 20) return { temp: 160000, radius: 1.65e-5 };
+            const rsSolar = (2 * G_SI * mass * M_SUN) / (C_SI * C_SI) / R_SUN;
+            return { temp: 12000, radius: Math.max(1e-5, rsSolar) };
+          }
+          if (age >= 81) {
+            const prog = (age - 81) / 16;
+            if (mass >= 25 && prog > 0.55) {
+              return {
+                temp: 110000 + (mass - 25) * 900,
+                radius: 2.5 + mass * 0.06,
+              };
+            }
+            const rGiant =
+              mass >= 8
+                ? (120 + mass * 28) * (0.6 + 0.55 * prog)
+                : (8 + mass * 16) * (0.5 + 1.4 * prog);
+            const tGiant = (mass >= 8 ? 3500 : 3800 - prog * 700) * zTempFactor;
+            return {
+              temp: Math.max(2600, tGiant),
+              radius: Math.min(1850, rGiant * zRadFactor),
+            };
+          }
+          const rMS =
+            (mass < 1 ? Math.pow(mass, 0.8) : Math.pow(mass, 0.57)) *
+            (0.94 + age * 0.0022) *
+            zRadFactor;
+          const lumMS =
+            mass < 0.43
+              ? 0.23 * Math.pow(mass, 2.3)
+              : mass < 2
+                ? Math.pow(mass, 4.0)
+                : mass < 55
+                  ? 1.4 * Math.pow(mass, 3.5)
+                  : 32000 * mass;
+          const tMS = T_SUN * Math.pow(lumMS / (rMS * rMS), 0.25) * zTempFactor;
+          return { temp: Math.min(180000, Math.max(2200, tMS)), radius: rMS };
+        }
 
-          starMesh.visible = !isBH && !isNS;
-          coronaInner.visible = !isBH && !isNS;
-          coronaOuter.visible = !isBH && !isNS;
+        function formatSci(val, unit = "") {
+          if (!isFinite(val) || val === 0)
+            return "0" + (unit ? " " + unit : "");
+          const abs = Math.abs(val);
+          if (abs >= 0.01 && abs < 10000) {
+            const dec = abs < 1 ? 3 : abs < 10 ? 2 : abs < 100 ? 1 : 0;
+            return val.toFixed(dec) + (unit ? " " + unit : "");
+          }
+          const exp = Math.floor(Math.log10(abs));
+          const m = (val / Math.pow(10, exp)).toFixed(2);
+          return `${m}×10^${exp}${unit ? " " + unit : ""}`;
+        }
 
-          bhGroup.visible = isBH;
-          quasarJets.visible = type === "quasar";
+        function getSpectralClass(type, temp, radius, lum) {
+          if (type === "quasar") return "QSO / Керр";
+          if (type === "blackhole") return "BH (Керр)";
+          if (type === "magnetar") return "MAG (NS)";
+          if (type === "pulsar") return "PSR (NS)";
+          if (type === "neutron") return "NS";
+          if (type === "whitedwarf") return temp > 20000 ? "DA1" : "DA4";
+          if (type === "wolfrayet") return temp > 120000 ? "WO2" : "WN5";
+          if (type === "proto") return "YSO (T Tau)";
 
-          pulsarSeGroup.visible = isNS;
-          pulsarBeams.visible = type === "pulsar";
+          let letter = "M";
+          if (temp >= 30000) letter = "O";
+          else if (temp >= 10000) letter = "B";
+          else if (temp >= 7500) letter = "A";
+          else if (temp >= 6000) letter = "F";
+          else if (temp >= 5200) letter = "G";
+          else if (temp >= 3700) letter = "K";
+          else if (temp >= 2200) letter = "M";
+          else if (temp >= 1300) letter = "L";
+          else if (temp >= 600) letter = "T";
+          else letter = "Y";
 
-          nebulaGroup.visible = type === "whitedwarf";
-          protoDisk.visible = type === "proto";
+          let lumClass = "V";
+          if (letter === "L" || letter === "T" || letter === "Y") lumClass = "";
+          else if (radius > 180 || lum > 30000) lumClass = "Ia";
+          else if (radius > 45 || lum > 1500) lumClass = "Ib";
+          else if (radius > 8 || lum > 60) lumClass = "III";
+          else if (radius > 2.5) lumClass = "IV";
+          return `${letter}${lumClass}`;
+        }
 
-          if (starMesh.visible) {
-            let scale = 0.72 + Math.min(mass, 25) / 48;
-            if (type === "brown") scale = 0.58;
-            if (type === "giant") scale = 1.42;
-            if (type === "supergiant") scale = 1.68;
-            if (type === "whitedwarf") scale = 0.34;
-            if (type === "main") scale /= 1 + (comp - 1) * 0.012;
+        function drawHRDiagram(temp, lum, colorObj, isCompact) {
+          const w = hrCanvas.width;
+          const h = hrCanvas.height;
+          hrCtx.clearRect(0, 0, w, h);
 
-            // Сплющивание звезды от быстрого вращения
-            const flatX = scale * (1 + spin * 0.0022);
-            const flatY = scale * (1 - spin * 0.0014);
-            starMesh.scale.set(flatX, flatY, flatX);
+          const xFromT = (t) => {
+            const lt = Math.log10(Math.max(500, Math.min(180000, t)));
+            return 28 + ((5.1 - lt) / (5.1 - 3.3)) * (w - 40);
+          };
+          const yFromL = (l) => {
+            const ll = Math.log10(Math.max(1e-5, Math.min(1e7, l)));
+            return h - 22 - ((ll + 5) / 12) * (h - 32);
+          };
 
-            starShaderMat.uniforms.uColorMain.value.copy(color);
-            starShaderMat.uniforms.uColorCool.value
-              .copy(color)
-              .multiplyScalar(type === "brown" ? 0.22 : 0.38);
-            starShaderMat.uniforms.uColorHot.value
-              .copy(color)
-              .lerp(new THREE.Color(0xffffff), type === "brown" ? 0.25 : 0.85);
-            starShaderMat.uniforms.uBanded.value = type === "brown" ? 1.0 : 0.0;
-            starShaderMat.uniforms.uTurbulence.value =
-              type === "supergiant" || type === "giant" ? 1.8 : 1.0;
+          hrCtx.strokeStyle = "rgba(255,255,255,0.08)";
+          hrCtx.lineWidth = 1;
+          for (let i = 1; i < 5; i++) {
+            const x = 28 + ((w - 40) * i) / 5;
+            hrCtx.beginPath();
+            hrCtx.moveTo(x, 8);
+            hrCtx.lineTo(x, h - 20);
+            hrCtx.stroke();
+          }
 
-            coronaInner.material.color.copy(color);
-            coronaOuter.material.color.copy(color);
-            coronaInner.material.opacity = type === "brown" ? 0.25 : 0.85;
-            coronaOuter.material.opacity = type === "brown" ? 0.12 : 0.42;
-            coronaInner.scale.setScalar(scale * 4.6);
-            coronaOuter.scale.setScalar(scale * 7.4);
+          hrCtx.strokeStyle = "rgba(100, 180, 255, 0.24)";
+          hrCtx.lineWidth = 14;
+          hrCtx.lineCap = "round";
+          hrCtx.beginPath();
+          [
+            [42000, 3e5],
+            [18000, 1200],
+            [9500, 40],
+            [5778, 1],
+            [4000, 0.12],
+            [2800, 0.004],
+          ].forEach(([t, l], idx) => {
+            const x = xFromT(t),
+              y = yFromL(l);
+            if (idx === 0) hrCtx.moveTo(x, y);
+            else hrCtx.lineTo(x, y);
+          });
+          hrCtx.stroke();
+
+          hrCtx.fillStyle = "rgba(255, 130, 70, 0.16)";
+          hrCtx.beginPath();
+          hrCtx.ellipse(
+            xFromT(3800),
+            yFromL(180),
+            42,
+            22,
+            -0.2,
+            0,
+            Math.PI * 2,
+          );
+          hrCtx.fill();
+
+          hrCtx.fillStyle = "rgba(255, 80, 50, 0.14)";
+          hrCtx.beginPath();
+          hrCtx.ellipse(xFromT(7000), yFromL(80000), 95, 16, 0, 0, Math.PI * 2);
+          hrCtx.fill();
+
+          hrCtx.fillStyle = "rgba(130, 220, 255, 0.18)";
+          hrCtx.beginPath();
+          hrCtx.ellipse(
+            xFromT(22000),
+            yFromL(0.005),
+            42,
+            12,
+            0.2,
+            0,
+            Math.PI * 2,
+          );
+          hrCtx.fill();
+
+          hrCtx.fillStyle = "rgba(235,235,245,0.45)";
+          hrCtx.font = "11px -apple-system, sans-serif";
+          hrCtx.fillText("Сверхгиганты", 92, 24);
+          hrCtx.fillText("Гиганты", 248, 88);
+          hrCtx.fillText("ГП", 180, 126);
+          hrCtx.fillText("Б. карлики", 92, 186);
+
+          hrCtx.fillStyle = "rgba(235,235,245,0.55)";
+          hrCtx.font = "10px -apple-system, sans-serif";
+          [
+            ["O", 35000],
+            ["B", 16000],
+            ["A", 8800],
+            ["G", 5778],
+            ["K", 4300],
+            ["M", 3000],
+          ].forEach(([lbl, t]) => {
+            hrCtx.fillText(lbl, xFromT(t) - 4, h - 6);
+          });
+
+          if (!isCompact) {
+            const cx = Math.max(16, Math.min(w - 10, xFromT(temp)));
+            const cy = Math.max(10, Math.min(h - 22, yFromL(lum)));
+            const hex = "#" + colorObj.getHexString();
+            hrCtx.beginPath();
+            hrCtx.arc(cx, cy, 8, 0, Math.PI * 2);
+            hrCtx.fillStyle = "rgba(255,255,255,0.22)";
+            hrCtx.fill();
+            hrCtx.beginPath();
+            hrCtx.arc(cx, cy, 4.5, 0, Math.PI * 2);
+            hrCtx.fillStyle = hex;
+            hrCtx.fill();
+            hrCtx.strokeStyle = "#ffffff";
+            hrCtx.lineWidth = 1.5;
+            hrCtx.stroke();
           }
         }
 
         function computeStarState() {
           const mass = sliderToMass(Number(elMass.value));
           const age = Number(elAge.value);
-          const temp = Number(elTemp.value);
-          const spin = Number(elSpin.value);
-          const comp = Number(elComp.value);
+          const temp = sliderToTemp(Number(elTemp.value));
+          const radiusSolar = sliderToRad(Number(elRadCtrl.value));
+          const feh = Number(elMetal.value) / 100;
+          const spinFrac = Number(elSpin.value) / 1000;
+          const logB = Number(elMag.value) / 10;
+          const magTiltDeg = Number(elMagTilt.value);
+          const accPct = Number(elAcc.value);
+          const windPct = Number(elWind.value);
+          const pulsePct = Number(elPulse.value);
+
+          const massKg = mass * M_SUN;
+          const radM = radiusSolar * R_SUN;
+          const rsM = (2 * G_SI * massKg) / (C_SI * C_SI);
+          const rsSolar = rsM / R_SUN;
+
+          const isBlackHole =
+            radM <= rsM * 1.15 || mass > 150 || (age >= 98 && mass >= 20);
+          const isNeutron =
+            !isBlackHole &&
+            ((age >= 98 && mass >= 8 && mass < 20) ||
+              (radiusSolar < 0.00015 && mass >= 1.1 && mass < 3.2));
+          const isMagnetar = isNeutron && logB >= 13.5;
+          const isPulsar =
+            isNeutron && !isMagnetar && (spinFrac >= 0.15 || logB >= 10.5);
+          const isWhiteDwarf =
+            !isBlackHole &&
+            !isNeutron &&
+            ((age >= 98 && mass >= 0.45 && mass < 8) ||
+              (radiusSolar < 0.04 && mass < 1.44));
+          const isBrownDwarf =
+            !isBlackHole && !isNeutron && !isWhiteDwarf && mass < 0.08;
+          const isProto =
+            !isBlackHole &&
+            !isNeutron &&
+            !isWhiteDwarf &&
+            !isBrownDwarf &&
+            age <= 5;
+          const isWR =
+            !isBlackHole &&
+            !isNeutron &&
+            !isWhiteDwarf &&
+            mass >= 20 &&
+            temp >= 45000 &&
+            radiusSolar < 25;
 
           let type = "main";
+          if (isBlackHole)
+            type = mass >= 1e5 || accPct >= 45 ? "quasar" : "blackhole";
+          else if (isMagnetar) type = "magnetar";
+          else if (isPulsar) type = "pulsar";
+          else if (isNeutron) type = "neutron";
+          else if (isWhiteDwarf) type = "whitedwarf";
+          else if (isBrownDwarf) type = "brown";
+          else if (isProto) type = "proto";
+          else if (isWR) type = "wolfrayet";
+          else if (radiusSolar > 150) type = "supergiant";
+          else if (radiusSolar > 10) type = "giant";
+
+          const lumSolar = isBlackHole
+            ? accPct > 0
+              ? 32000 * mass * (accPct / 100)
+              : 0
+            : Math.pow(radiusSolar, 2) * Math.pow(temp / T_SUN, 4);
+
+          const lumEdd = 32000 * mass;
+          const eddRatio = lumSolar / Math.max(1e-6, lumEdd);
+
+          const effRadM = isBlackHole ? rsM : radM;
+          const gCGS = ((G_SI * massKg) / (effRadM * effRadM)) * 100;
+          const logG = Math.log10(Math.max(1e-4, gCGS));
+
+          const volCm3 = (4 / 3) * Math.PI * Math.pow(effRadM * 100, 3);
+          const density = (massKg * 1000) / volCm3;
+          const vEscKmS = Math.sqrt((2 * G_SI * massKg) / effRadM) / 1000;
+
+          const wienNm = WIEN_B / Math.max(100, temp);
+          const wienBand =
+            wienNm < 10
+              ? "Рентген"
+              : wienNm < 380
+                ? "УФ"
+                : wienNm <= 750
+                  ? "Вид."
+                  : wienNm < 1e6
+                    ? "ИК"
+                    : "Радио";
+
+          const hzIn = Math.sqrt(Math.max(0, lumSolar) / 1.1);
+          const hzOut = Math.sqrt(Math.max(0, lumSolar) / 0.53);
+          const mBol = lumSolar > 0 ? 4.74 - 2.5 * Math.log10(lumSolar) : 99;
+          const lifeGyr = (10 * mass) / Math.max(1e-5, Math.pow(mass, 3.5));
+          const popLabel =
+            feh < -2.5
+              ? "Популяция III"
+              : feh < -1.0
+                ? "Популяция II"
+                : "Популяция I";
+
+          let coreRxn = "p–p цепочка (H → He)";
+          if (type === "blackhole" || type === "quasar")
+            coreRxn = `Сингулярность Керра (a* = ${spinFrac.toFixed(2)})`;
+          else if (isNeutron) coreRxn = "Нейтронная сверхжидкость (вырождение)";
+          else if (isWhiteDwarf) coreRxn = "Вырожденное C/O ядро (остывание)";
+          else if (isBrownDwarf)
+            coreRxn =
+              mass >= 0.013
+                ? "Синтез дейтерия (D → ³He)"
+                : "Нет термоядерного синтеза";
+          else if (isProto)
+            coreRxn = "Гравитационное сжатие (Кельвин–Гельмгольц)";
+          else if (isWR) coreRxn = "Горение гелия и углерода (3α → C, O)";
+          else if (type === "supergiant")
+            coreRxn = "Слоевое горение He / C / Ne / O / Si";
+          else if (type === "giant")
+            coreRxn = "Тройная гелиевая реакция (He → C)";
+          else if (mass >= 1.3) coreRxn = "CNO-цикл (H → He через C, N, O)";
+
           let title = "Звезда главной последовательности";
-          let sub = "Стабильный синтез водорода";
-          let specClass = "G2V";
+          let sub = `Главная последовательность · ${popLabel}`;
           let desc = "";
-          let radiusSolar = Math.pow(mass, 0.78) / (1 + (comp - 1) * 0.08);
-          let lum = Math.pow(mass, 3.5);
-          let lifeYears = 10 / Math.pow(Math.max(mass, 0.05), 2.5);
 
-          const forcedBH = comp >= 85 && mass >= 1.5;
-
-          if (forcedBH || (age >= 98 && mass >= 20)) {
-            type = mass >= 45 ? "quasar" : "blackhole";
-            title =
-              type === "quasar" ? "Квазар (Сверхмассивная ЧД)" : "Чёрная дыра";
-            sub = forcedBH
-              ? "Критическое гравитационное сжатие"
-              : "Гравитационный коллапс ядра";
-            specClass = type === "quasar" ? "QSO" : "BH";
-            radiusSolar = (mass * 2.95) / 696340;
-            lum = type === "quasar" ? 1e6 : 0;
+          if (type === "quasar") {
+            title = "Квазар / Активная ЧД Керра";
+            sub = `Релятивистская аккреция · ISCO = ${(6 - 4.76 * spinFrac).toFixed(2)} r_g`;
             desc =
-              type === "quasar"
-                ? "Экстремальная масса и аккреция рождают релятивистские джеты, затмевающие целые галактики."
-                : "Радиус меньше горизонта событий: даже свет не может покинуть гравитационную ловушку. Крутите камеру, чтобы рассмотреть аккреционный диск в 3D.";
-          } else if (age >= 98 && mass >= 8) {
-            type = spin >= 30 ? "pulsar" : "neutron";
-            title = type === "pulsar" ? "Пульсар" : "Нейтронная звезда";
-            sub =
-              type === "pulsar"
-                ? "Быстровращающийся радиомаяк"
-                : "Сверхплотный остаток сверхновой";
-            specClass = type === "pulsar" ? "PSR" : "NS";
-            radiusSolar = 0.00002;
-            lum = 0.05;
+              "Сверхмассивная или активно аккрецирующая чёрная дыра. Спин Керра сдвигает внутреннюю устойчивую орбиту (ISCO) ближе к горизонту, разгоняя джеты механизмом Блэндфорда–Знаека.";
+          } else if (type === "blackhole") {
+            title = "Чёрная дыра";
+            sub = `Горизонт событий · a* = ${spinFrac.toFixed(2)}`;
             desc =
-              type === "pulsar"
-                ? "Сжатая до ~20 км звезда вращается сотни раз в секунду и бьёт мощными лучами радиации с магнитных полюсов."
-                : "Чайная ложка её вещества весит миллиарды тонн. Увеличьте «Вращение» выше 30%, чтобы запустить лучи пульсара.";
-          } else if (age >= 98 && mass >= 0.45) {
-            type = "whitedwarf";
+              "Гравитационный радиус Шварцшильда превысил физический радиус объекта. Свет не может покинуть горизонт событий; увеличьте темп аккреции, чтобы зажечь диск и джеты.";
+          } else if (type === "magnetar") {
+            title = "Магнетар";
+            sub = `Экстремальное поле B = 10^${logB.toFixed(1)} Гс`;
+            desc =
+              "Редчайший тип нейтронной звезды со сверхсильным магнитным полем. Энергия магнитосферы питает мощнейшие гамма- и рентгеновские вспышки.";
+          } else if (type === "pulsar") {
+            title = "Пульсар";
+            sub = `Вращающаяся нейтронная звезда · α = ${magTiltDeg}°`;
+            desc =
+              "Сверхплотный остаток сверхновой с дипольным полем, наклонённым к оси вращения. Узкие пучки синхротронного излучения вращаются как космический маяк.";
+          } else if (type === "neutron") {
+            title = "Нейтронная звезда";
+            sub = "Сверхплотный остаток (предел ТОB)";
+            desc =
+              "Ядро массой 1.4–2.1 M☉, сжатое до ~22 км. Плотность сопоставима с плотностью атомного ядра (~10¹⁴ г/см³).";
+          } else if (type === "whitedwarf") {
             title = "Белый карлик";
-            sub = "Окружён 3D-планетарной туманностью";
-            specClass = "DA2";
-            radiusSolar = 0.012;
-            lum = 0.01;
+            sub = `Предел Чандрасекара (1.44 M☉) · ${popLabel}`;
             desc =
-              "Внешняя оболочка сброшена и светится как объёмная туманность, а в центре остывает сверхплотное ядро размером с Землю.";
-          } else if (mass < 0.08) {
-            type = "brown";
+              "Обнажённое вырожденное ядро звезды малой или средней массы, удерживаемое давлением вырожденных электронов.";
+          } else if (type === "brown") {
             title = "Коричневый карлик";
-            sub = "Субзвёздный объект";
-            specClass = "L/T";
-            radiusSolar = 0.1;
-            lum = 0.0001;
-            lifeYears = 10000;
+            sub = `Субзвёздный объект · ${Math.round(mass * 1047)} M♃`;
             desc =
-              "Массы не хватило для запуска синтеза водорода. Тлеет в инфракрасном диапазоне с плотными атмосферными полосами.";
-          } else if (age <= 5) {
-            type = "proto";
-            title = "Протозвезда";
-            sub = "Формирование из газопылевого облака";
-            specClass = "YSO";
-            radiusSolar = Math.pow(mass, 0.7) * 2.2;
+              "Массы недостаточно для устойчивого синтеза протия (порог 0.08 M☉). В атмосфере формируются полосы метановых и силикатных облаков.";
+          } else if (type === "proto") {
+            title = "Протозвезда (T Тельца)";
+            sub = "Гравитационный коллапс + протодиск";
             desc =
-              "Газ и пыль сжимаются под действием гравитации, формируя вокруг молодой звезды вращающийся протопланетный диск.";
-          } else if (age >= 82 && mass >= 0.45) {
-            type = mass >= 8 ? "supergiant" : "giant";
+              "Молодая звезда на стадии сжатия до выхода на главную последовательность. Окружена газопылевым диском.";
+          } else if (type === "wolfrayet") {
+            title = "Звезда Вольфа–Райе";
+            sub = "Экстремальный звёздный ветер и УФ-излучение";
+            desc =
+              "Массивная проэволюционировавшая звезда, сорвавшая собственную водородную оболочку. Светит в жёстком ультрафиолете.";
+          } else if (type === "supergiant") {
             title =
-              type === "supergiant" ? "Красный сверхгигант" : "Красный гигант";
-            sub = "Поздняя стадия (горение гелия)";
-            specClass = type === "supergiant" ? "M1Ia" : "K5III";
-            radiusSolar = type === "supergiant" ? 600 : 45;
-            lum = type === "supergiant" ? 85000 : 400;
+              temp < 4500
+                ? "Красный сверхгигант"
+                : temp > 10000
+                  ? "Голубой сверхгигант"
+                  : "Жёлтый сверхгигант";
+            sub = `Гигантские конвективные ячейки · ${popLabel}`;
             desc =
-              type === "supergiant"
-                ? "Колоссальная звезда на грани взрыва сверхновой. Доведите «Возраст» до 100% или нажмите «Коллапс»."
-                : "Водород в ядре иссяк, оболочка раздулась в десятки раз и остыла до багрового свечения.";
+              "Колоссальная звезда на финальных стадиях термоядерного синтеза с крайне низкой средней плотностью.";
+          } else if (type === "giant") {
+            title = temp < 5000 ? "Красный гигант" : "Гигант";
+            sub = `Ветвь гигантов · ${popLabel}`;
+            desc =
+              "Водород в ядре исчерпан, внешние слои расширились в десятки раз.";
           } else {
-            if (temp >= 28000) {
-              specClass = "O5V";
-              title = "Голубой гигант";
-            } else if (temp >= 10000) {
-              specClass = "B3V";
-              title = "Бело-голубая звезда";
-            } else if (temp >= 7500) {
-              specClass = "A1V";
-              title = "Белая звезда";
-            } else if (temp >= 6000) {
-              specClass = "F5V";
-              title = "Жёлто-белая звезда";
-            } else if (temp >= 5200) {
-              specClass = "G2V";
-              title = "Жёлтый карлик";
-            } else if (temp >= 3700) {
-              specClass = "K2V";
-              title = "Оранжевый карлик";
-            } else {
-              specClass = "M4V";
-              title = "Красный карлик";
-            }
+            if (temp >= 28000) title = "Голубая звезда (класс O)";
+            else if (temp >= 10000) title = "Бело-голубая звезда (класс B)";
+            else if (temp >= 7500) title = "Белая звезда (класс A)";
+            else if (temp >= 6000) title = "Жёлто-белая звезда (класс F)";
+            else if (temp >= 5200) title = "Жёлтый карлик (класс G)";
+            else if (temp >= 3700) title = "Оранжевый карлик (класс K)";
+            else title = "Красный карлик (класс M)";
             desc =
-              "Стабильная звезда главной последовательности. Крутите 3D-модель мышкой, приближайте колёсиком и меняйте параметры.";
+              "Устойчивая звезда в гидростатическом равновесии. Меняйте химический состав во вкладке «Состав» или перейдите в «Туманность».";
           }
 
-          valMass.textContent = `${mass < 1 ? mass.toFixed(2) : mass.toFixed(1)} M☉`;
+          let warnText = "";
+          if (!isBlackHole && eddRatio > 1.05)
+            warnText = `L > L_Edd (${eddRatio.toFixed(1)}×)`;
+          else if (isWhiteDwarf && mass > 1.44)
+            warnText = "Предел Чандрасекара (> 1.44 M☉)";
+          else if (isNeutron && mass > 2.2)
+            warnText = "Предел ТОB (> 2.2 M☉ → ЧД)";
+          else if (!isBlackHole && spinFrac > 0.92)
+            warnText = "Близко к разрыву (v ≈ v_crit)";
+          warnEl.textContent = warnText;
+          warnEl.classList.toggle("visible", warnText.length > 0);
+
+          valMass.textContent =
+            mass >= 1000
+              ? `${formatSci(mass)} M☉`
+              : `${mass < 1 ? mass.toFixed(3) : mass.toFixed(1)} M☉`;
           valAge.textContent = `${age}%`;
           valTemp.textContent = `${temp.toLocaleString("ru-RU")} K`;
-          valSpin.textContent = `${spin}%`;
-          valComp.textContent = `${comp}.0×`;
+          valRadCtrl.textContent =
+            radiusSolar < 0.005
+              ? `${Math.round(radiusSolar * 695700).toLocaleString("ru-RU")} км`
+              : `${formatSci(radiusSolar)} R☉`;
+          valMetal.textContent = `${feh >= 0 ? "+" : ""}${feh.toFixed(2)} dex`;
+          lblSpin.textContent = isBlackHole
+            ? "Спин Керра (a*)"
+            : "Вращение (v / v_crit)";
+          valSpin.textContent = isBlackHole
+            ? spinFrac.toFixed(3)
+            : `${Math.round(spinFrac * 100)}%`;
+          valMag.textContent =
+            logB < 3
+              ? `${Math.pow(10, logB).toFixed(0)} Гс`
+              : `10^${logB.toFixed(1)} Гс`;
+          valMagTilt.textContent = `${magTiltDeg}°`;
+          valAcc.textContent = `${accPct}%`;
+          valWind.textContent = `${windPct}%`;
+          valPulse.textContent = `${pulsePct}%`;
 
           titleEl.textContent = title;
           subEl.textContent = sub;
-          classEl.textContent = `Класс ${specClass}`;
+          classEl.textContent = `Класс ${getSpectralClass(type, temp, radiusSolar, lumSolar)}`;
+          coreRxnEl.textContent = `Ядро: ${coreRxn}`;
+          rsValEl.textContent =
+            rsM > 1e8
+              ? `r_s = ${formatSci(rsSolar)} R☉`
+              : `r_s = ${(rsM / 1000).toFixed(2)} км`;
           descEl.textContent = desc;
 
           statLum.textContent =
-            lum >= 1000
-              ? `${Math.round(lum).toLocaleString("ru-RU")} L☉`
-              : `${lum.toFixed(lum < 0.1 ? 4 : 1)} L☉`;
-          statRad.textContent =
-            radiusSolar < 0.01
-              ? `${Math.round(radiusSolar * 696340)} км`
-              : `${radiusSolar.toFixed(radiusSolar > 10 ? 0 : 2)} R☉`;
+            isBlackHole && accPct === 0
+              ? "≈ 0 L☉"
+              : `${formatSci(lumSolar)} L☉`;
+          statRad.textContent = isBlackHole
+            ? rsM > 1e8
+              ? `${formatSci(rsSolar)} R☉`
+              : `${(rsM / 1000).toFixed(1)} км`
+            : radiusSolar < 0.005
+              ? `${Math.round(radiusSolar * 695700).toLocaleString("ru-RU")} км`
+              : `${formatSci(radiusSolar)} R☉`;
+          statLogg.textContent = isBlackHole ? "∞ (горизонт)" : logG.toFixed(2);
+          statDens.textContent = `${formatSci(density)} г/см³`;
+          statVesc.textContent = isBlackHole
+            ? "≥ 1.00 c"
+            : vEscKmS > 30000
+              ? `${(vEscKmS / 299792).toFixed(2)} c`
+              : `${Math.round(vEscKmS).toLocaleString("ru-RU")} км/с`;
+          statWien.textContent =
+            isBlackHole && accPct === 0
+              ? "Хокинг (ИК/Радио)"
+              : `${wienNm >= 1000 ? (wienNm / 1000).toFixed(1) + " мкм" : Math.round(wienNm) + " нм"} (${wienBand})`;
+          statHZ.textContent =
+            lumSolar > 1e-4 && !isBlackHole
+              ? `${formatSci(hzIn)}–${formatSci(hzOut)} а.е.`
+              : "Нет";
           statLife.textContent =
-            type === "blackhole" ||
-            type === "quasar" ||
-            type === "neutron" ||
-            type === "pulsar" ||
-            type === "whitedwarf"
-              ? "Финал эволюции"
-              : lifeYears > 100
+            isBlackHole || isNeutron || isWhiteDwarf
+              ? `L/Ledd = ${formatSci(eddRatio)}`
+              : lifeGyr > 100
                 ? "> 100 млрд лет"
-                : lifeYears < 0.1
-                  ? `${Math.round(lifeYears * 1000)} млн лет`
-                  : `${lifeYears.toFixed(1)} млрд лет`;
+                : lifeGyr < 0.1
+                  ? `${Math.max(1, Math.round(lifeGyr * 1000))} млн лет`
+                  : `${lifeGyr.toFixed(1)} млрд лет`;
+
+          hrMbolEl.textContent =
+            mBol < 50
+              ? `Mbol ${mBol >= 0 ? "+" : ""}${mBol.toFixed(1)}`
+              : "Вне Г–Р";
+
+          const color = blackbodyColor(temp);
+          drawHRDiagram(temp, lumSolar, color, isBlackHole || isNeutron);
 
           state = {
             mass,
             age,
             temp,
-            spin,
-            comp,
+            radiusSolar,
+            feh,
+            spinFrac,
+            logB,
+            magTiltDeg,
+            accPct,
+            windPct,
+            pulsePct,
             type,
-            color: tempToRgb(temp),
+            isBlackHole,
+            isNeutron,
+            isMagnetar,
+            isPulsar,
+            isWhiteDwarf,
+            isBrownDwarf,
+            isProto,
+            isWR,
+            color,
+            lumSolar,
           };
+
           applyVisualState();
         }
 
+        function applyVisualState() {
+          if (labMode === "nebula") {
+            hzRing.visible = false;
+            eqGrid.visible = showGrid;
+            hrBox.classList.toggle("se-hr-hidden", !showHR);
+            return;
+          }
+
+          const {
+            type,
+            isBlackHole,
+            isNeutron,
+            isMagnetar,
+            isPulsar,
+            isWhiteDwarf,
+            isBrownDwarf,
+            isProto,
+            isWR,
+            color,
+            radiusSolar,
+            spinFrac,
+            logB,
+            magTiltDeg,
+            accPct,
+            windPct,
+          } = state;
+
+          customNebulaGroup.visible = false;
+
+          const showStar = !isBlackHole && !isNeutron;
+          starMesh.visible = showStar;
+          coronaInner.visible = showStar;
+          coronaOuter.visible = showStar;
+
+          let visualScale = 1.0;
+          if (showStar) {
+            visualScale = THREE.MathUtils.clamp(
+              0.95 + Math.log10(Math.max(0.01, radiusSolar)) * 0.34,
+              0.34,
+              1.88,
+            );
+            if (isWhiteDwarf) visualScale = 0.36;
+            if (isBrownDwarf) visualScale = 0.62;
+
+            const flatX = visualScale * (1 + spinFrac * 0.28);
+            const flatY = visualScale * (1 - spinFrac * 0.22);
+            starMesh.scale.set(flatX, flatY, flatX);
+
+            starShaderMat.uniforms.uColorMain.value.copy(color);
+            starShaderMat.uniforms.uColorCool.value
+              .copy(color)
+              .multiplyScalar(isBrownDwarf ? 0.2 : 0.36);
+            starShaderMat.uniforms.uColorHot.value
+              .copy(color)
+              .lerp(new THREE.Color(0xffffff), isBrownDwarf ? 0.22 : 0.88);
+            starShaderMat.uniforms.uBanded.value = isBrownDwarf ? 1.0 : 0.0;
+            starShaderMat.uniforms.uGranuleScale.value =
+              type === "supergiant" ? 2.6 : type === "giant" ? 3.8 : 6.0;
+            starShaderMat.uniforms.uGravDark.value =
+              spinFrac > 0.35 ? (spinFrac - 0.35) / 0.65 : 0.0;
+            starShaderMat.uniforms.uSpots.value =
+              !isWhiteDwarf && !isWR && logB > 1.8
+                ? Math.min(1.0, (logB - 1.8) / 3.5)
+                : 0.0;
+
+            coronaInner.material.color.copy(color);
+            coronaOuter.material.color.copy(color);
+            coronaInner.material.opacity = isBrownDwarf ? 0.2 : 0.82;
+            coronaOuter.material.opacity = isBrownDwarf ? 0.08 : 0.38;
+            coronaInner.scale.setScalar(visualScale * 4.5);
+            coronaOuter.scale.setScalar(visualScale * 7.2);
+          }
+
+          bhGroup.visible = isBlackHole;
+
+          nsCore.visible = isNeutron;
+          nsHalo.visible = isNeutron;
+          pulsarBeams.visible = isPulsar || isMagnetar;
+          nsHalo.material.color.setHex(isMagnetar ? 0xb45cff : 0x38f0ff);
+          pJetOut.uniforms.uOuter.value.setHex(
+            isMagnetar ? 0x9b4dff : 0x1ac8ff,
+          );
+          pJetIn.uniforms.uOuter.value.setHex(isMagnetar ? 0xe0a6ff : 0x80f8ff);
+
+          magAxisGroup.rotation.z = THREE.MathUtils.degToRad(magTiltDeg);
+          magFieldLines.visible = showMagLines && (isNeutron || logB >= 2.8);
+          magLineMat.color.setHex(
+            isMagnetar ? 0xc066ff : isNeutron ? 0x26c6ff : 0xffaa44,
+          );
+          magLineMat.opacity = isMagnetar
+            ? 0.72
+            : isNeutron
+              ? 0.48
+              : Math.min(0.55, (logB - 2.5) * 0.14);
+          magFieldLines.scale.setScalar(
+            isNeutron ? 1.0 : Math.max(0.95, visualScale * 0.9),
+          );
+
+          const hasDisk =
+            (isBlackHole && accPct > 0) ||
+            accPct >= 10 ||
+            (isBlackHole && type === "quasar");
+          accDiskGroup.visible = hasDisk;
+          bhLensingDisk.visible = isBlackHole && hasDisk;
+          if (hasDisk) {
+            seDiskMat.uniforms.uInnerR.value = isBlackHole
+              ? 0.4 - spinFrac * 0.14
+              : 0.36;
+            seDiskMat.uniforms.uDoppler.value = isBlackHole
+              ? 0.25 + spinFrac * 0.55
+              : 0.22;
+            seDiskMat.uniforms.uOpacity.value = Math.min(
+              0.98,
+              0.35 + (accPct / 100) * 0.65,
+            );
+            accDiskGroup.scale.setScalar(
+              isBlackHole ? 1.0 : Math.max(0.85, visualScale * 0.82),
+            );
+          }
+
+          const hasJets =
+            accPct >= 30 || type === "quasar" || (isProto && accPct >= 15);
+          jetGroup.visible = hasJets && !isNeutron;
+          if (jetGroup.visible) {
+            jOuterMat.uniforms.uOuter.value.setHex(
+              isProto ? 0xff7744 : type === "quasar" ? 0x8b5cf6 : 0x3b9eff,
+            );
+            const jScale = 0.55 + Math.min(1.0, accPct / 100) * 0.65;
+            jetGroup.scale.set(jScale, jScale, jScale);
+          }
+
+          nebulaGroup.visible = isWhiteDwarf;
+          protoDisk.visible = isProto;
+          wrBubble.visible = isWR;
+
+          windData.pts.visible = windPct > 5 && !isBlackHole;
+          windData.mat.color.copy(isWR ? new THREE.Color(0x66e0ff) : color);
+          windData.mat.opacity = Math.min(0.75, (windPct / 100) * 0.72);
+
+          hzRing.visible = showHZ && !isBlackHole && state.lumSolar > 1e-4;
+          eqGrid.visible = showGrid;
+          hrBox.classList.toggle("se-hr-hidden", !showHR);
+        }
+
+        function updateNebulaMode(comp) {
+          const nebType = document.getElementById("se-neb-type").value;
+          const logDens =
+            Number(document.getElementById("se-neb-dens").value) / 10;
+          const tempE = Number(document.getElementById("se-neb-temp").value);
+          const radLy =
+            Number(document.getElementById("se-neb-rad").value) / 10;
+          const expVel = Number(document.getElementById("se-neb-exp").value);
+
+          starMesh.visible = coronaInner.visible = coronaOuter.visible = false;
+          bhGroup.visible = accDiskGroup.visible = jetGroup.visible = false;
+          nsCore.visible =
+            nsHalo.visible =
+            pulsarBeams.visible =
+            magFieldLines.visible =
+              false;
+          windData.pts.visible =
+            nebulaGroup.visible =
+            protoDisk.visible =
+            wrBubble.visible =
+              false;
+          hzRing.visible = false;
+          eqGrid.visible = showGrid;
+          hrBox.classList.toggle("se-hr-hidden", !showHR);
+          customNebulaGroup.visible = true;
+
+          const stats = rebuildScientificNebula(
+            nebType,
+            logDens,
+            tempE,
+            radLy,
+            expVel,
+            comp,
+          );
+
+          document.getElementById("se-val-nebdens").textContent =
+            `${formatSci(stats.nCm3)} см⁻³`;
+          document.getElementById("se-val-nebtemp").textContent =
+            `${tempE.toLocaleString("ru-RU")} K`;
+          document.getElementById("se-val-nebrad").textContent =
+            `${radLy.toFixed(1)} св. лет`;
+          document.getElementById("se-val-nebexp").textContent =
+            `${expVel} км/с`;
+
+          const names = {
+            hii: "Эмиссионная туманность (H II)",
+            planetary: "Планетарная туманность",
+            snr: "Остаток сверхновой",
+            reflection: "Отражательная туманность",
+            dark: "Тёмная молекулярная глобула",
+          };
+          titleEl.textContent = names[nebType];
+          subEl.textContent = `Состав: H ${(comp.X * 100).toFixed(0)}% · He ${(comp.Y * 100).toFixed(0)}% · O ${(comp.frac.O * 100).toFixed(1)}%`;
+          classEl.textContent =
+            nebType === "dark" ? "Мол. облако" : `Te = ${tempE} K`;
+          warnEl.classList.remove("visible");
+
+          statLum.textContent = `${formatSci(stats.massSolar)} M☉ (газ)`;
+          statRad.textContent = `${radLy.toFixed(1)} св. лет`;
+          statLogg.textContent = `n = ${formatSci(stats.nCm3)} см⁻³`;
+          statDens.textContent = `μ = ${comp.mu.toFixed(2)}`;
+          statVesc.textContent = `${expVel} км/с (расш.)`;
+          statWien.textContent =
+            nebType === "dark" ? "Субмм / ИК" : "Линейчатый";
+          statHZ.textContent = "Нет";
+          statLife.textContent = isFinite(stats.dynAgeYr)
+            ? `~${formatSci(stats.dynAgeYr)} лет`
+            : "Стационарна";
+          coreRxnEl.textContent =
+            nebType === "dark"
+              ? "Механизм: самогравитация Джинса"
+              : "Механизм: фотоионизация и рекомбинация";
+          rsValEl.textContent = `M_газа ≈ ${formatSci(stats.massSolar)} M☉`;
+          descEl.textContent =
+            "Цвет туманности физически формируется из выбранных элементов таблицы Менделеева: Hα даёт малиновый (656 нм), [O III] — бирюзовый (501 нм), [S II] — красный (672 нм).";
+        }
+
+        function onChemUpdate() {
+          const comp = computeCompositionPhysics();
+          drawSpectrumBar(comp, labMode === "nebula");
+          elMetal.value = Math.round(
+            Math.max(-400, Math.min(60, comp.feh * 100)),
+          );
+
+          if (labMode === "nebula") {
+            updateNebulaMode(comp);
+          } else {
+            computeStarState();
+            if (comp.frac.Fe > 0.55) {
+              warnEl.textContent =
+                "Железное ядро (синтез Fe поглощает энергию → коллапс)";
+              warnEl.classList.add("visible");
+              coreRxnEl.textContent =
+                "Ядро: фотодезинтеграция ⁵⁶Fe (коллапс < 1 с)";
+            } else if (comp.X < 0.05 && comp.Y > 0.4) {
+              coreRxnEl.textContent = "Ядро: гелиевое горение (3α → ¹²C)";
+            } else if (comp.X < 0.05 && comp.frac.C + comp.frac.O > 0.5) {
+              coreRxnEl.textContent =
+                "Ядро: горение углерода и кислорода (C/O)";
+            }
+          }
+        }
+
+        const setLabMode = (m) => {
+          labMode = m;
+          document
+            .getElementById("se-mode-star")
+            .classList.toggle("active", m === "star");
+          document
+            .getElementById("se-mode-neb")
+            .classList.toggle("active", m === "nebula");
+          customNebulaGroup.visible = m === "nebula";
+          onChemUpdate();
+        };
+
         const PRESETS = {
-          sun: { mass: 1.0, age: 45, temp: 5800, spin: 10, comp: 1 },
-          brown: { mass: 0.05, age: 50, temp: 1400, spin: 20, comp: 1 },
-          betelgeuse: { mass: 18.0, age: 90, temp: 3500, spin: 5, comp: 1 },
-          whitedwarf: { mass: 1.4, age: 100, temp: 26000, spin: 25, comp: 1 },
-          pulsar: { mass: 12.0, age: 100, temp: 40000, spin: 92, comp: 1 },
-          blackhole: { mass: 32.0, age: 100, temp: 12000, spin: 70, comp: 1 },
+          sun: {
+            mass: 1.0,
+            age: 45,
+            temp: 5778,
+            rad: 1.0,
+            feh: 0.0,
+            spin: 0.02,
+            mag: 0.5,
+            tilt: 10,
+            acc: 0,
+            wind: 10,
+            pulse: 0,
+          },
+          proto: {
+            mass: 1.2,
+            age: 2,
+            temp: 3900,
+            rad: 2.8,
+            feh: 0.0,
+            spin: 0.25,
+            mag: 3.1,
+            tilt: 20,
+            acc: 35,
+            wind: 40,
+            pulse: 10,
+          },
+          proxima: {
+            mass: 0.12,
+            age: 35,
+            temp: 3042,
+            rad: 0.15,
+            feh: 0.21,
+            spin: 0.05,
+            mag: 2.8,
+            tilt: 25,
+            acc: 0,
+            wind: 25,
+            pulse: 0,
+          },
+          brown: {
+            mass: 0.04,
+            age: 55,
+            temp: 920,
+            rad: 0.1,
+            feh: 0.0,
+            spin: 0.35,
+            mag: 3.0,
+            tilt: 15,
+            acc: 0,
+            wind: 0,
+            pulse: 0,
+          },
+          altair: {
+            mass: 1.86,
+            age: 40,
+            temp: 7550,
+            rad: 1.8,
+            feh: -0.2,
+            spin: 0.88,
+            mag: 1.2,
+            tilt: 15,
+            acc: 0,
+            wind: 15,
+            pulse: 0,
+          },
+          cepheid: {
+            mass: 4.5,
+            age: 86,
+            temp: 5900,
+            rad: 44.5,
+            feh: 0.08,
+            spin: 0.08,
+            mag: 1.5,
+            tilt: 12,
+            acc: 0,
+            wind: 30,
+            pulse: 85,
+          },
+          betelgeuse: {
+            mass: 18.0,
+            age: 92,
+            temp: 3500,
+            rad: 760,
+            feh: 0.0,
+            spin: 0.05,
+            mag: 1.2,
+            tilt: 18,
+            acc: 0,
+            wind: 75,
+            pulse: 25,
+          },
+          wolfrayet: {
+            mass: 28.0,
+            age: 95,
+            temp: 180000,
+            rad: 0.55,
+            feh: 0.1,
+            spin: 0.35,
+            mag: 3.4,
+            tilt: 22,
+            acc: 0,
+            wind: 100,
+            pulse: 0,
+          },
+          whitedwarf: {
+            mass: 0.65,
+            age: 100,
+            temp: 35000,
+            rad: 0.012,
+            feh: 0.0,
+            spin: 0.2,
+            mag: 6.0,
+            tilt: 30,
+            acc: 0,
+            wind: 15,
+            pulse: 0,
+          },
+          pulsar: {
+            mass: 1.45,
+            age: 100,
+            temp: 140000,
+            rad: 1.6e-5,
+            feh: 0.0,
+            spin: 0.85,
+            mag: 12.6,
+            tilt: 42,
+            acc: 0,
+            wind: 40,
+            pulse: 0,
+          },
+          magnetar: {
+            mass: 1.75,
+            age: 100,
+            temp: 190000,
+            rad: 1.7e-5,
+            feh: 0.0,
+            spin: 0.32,
+            mag: 15.0,
+            tilt: 55,
+            acc: 0,
+            wind: 60,
+            pulse: 0,
+          },
+          quasar: {
+            mass: 1e8,
+            age: 100,
+            temp: 18000,
+            rad: 420,
+            feh: 0.3,
+            spin: 0.98,
+            mag: 4.5,
+            tilt: 5,
+            acc: 110,
+            wind: 80,
+            pulse: 0,
+          },
         };
 
         function applyPreset(key) {
           const p = PRESETS[key];
           if (!p) return;
+          if (labMode !== "star") {
+            labMode = "star";
+            document.getElementById("se-mode-star").classList.add("active");
+            document.getElementById("se-mode-neb").classList.remove("active");
+            customNebulaGroup.visible = false;
+          }
           elMass.value = massToSlider(p.mass);
           elAge.value = p.age;
-          elTemp.value = p.temp;
-          elSpin.value = p.spin;
-          elComp.value = p.comp;
+          elTemp.value = tempToSlider(p.temp);
+          elRadCtrl.value = radToSlider(p.rad);
+          elMetal.value = Math.round(p.feh * 100);
+          elSpin.value = Math.round(p.spin * 1000);
+          elMag.value = Math.round(p.mag * 10);
+          elMagTilt.value = p.tilt;
+          elAcc.value = p.acc;
+          elWind.value = p.wind;
+          elPulse.value = p.pulse;
           computeStarState();
+          drawSpectrumBar(computeCompositionPhysics(), false);
         }
 
         function resizeEditor() {
@@ -8070,69 +10123,220 @@
 
           const dt = Math.min(seClock.getDelta(), 0.05);
           const t = seClock.elapsedTime;
-          const spinSpeed = 0.15 + state.spin * 0.035;
+          const spinRate = 0.12 + (state.spinFrac || 0) * 3.8;
 
           starShaderMat.uniforms.uTime.value = t;
-          seDiskMat.uniforms.uTime.value = t * (0.8 + state.spin * 0.02);
+          seDiskMat.uniforms.uTime.value =
+            t * (0.8 + (state.spinFrac || 0) * 2.2);
           seJetMats.forEach((m) => {
             m.uniforms.uTime.value = t;
           });
 
+          if (customNebulaGroup.visible) {
+            customNebulaGroup.rotation.y += dt * 0.08;
+          }
+
           if (starMesh.visible) {
-            starMesh.rotation.y += dt * spinSpeed;
-            if (state.type === "giant" || state.type === "supergiant") {
-              const p = 1 + Math.sin(t * 2.8) * 0.025;
-              coronaInner.scale.setScalar(starMesh.scale.x * 4.6 * p);
+            starMesh.rotation.y += dt * spinRate;
+            const pulseAmp = (state.pulsePct / 100) * 0.14;
+            const pWave = pulseAmp > 0 ? 1 + Math.sin(t * 3.2) * pulseAmp : 1.0;
+            const baseScale = THREE.MathUtils.clamp(
+              0.95 + Math.log10(Math.max(0.01, state.radiusSolar)) * 0.34,
+              0.34,
+              1.88,
+            );
+            const s = state.isWhiteDwarf
+              ? 0.36
+              : state.isBrownDwarf
+                ? 0.62
+                : baseScale;
+            const flatX = s * (1 + state.spinFrac * 0.28) * pWave;
+            const flatY = s * (1 - state.spinFrac * 0.22) * pWave;
+            starMesh.scale.set(flatX, flatY, flatX);
+            coronaInner.scale.setScalar(s * 4.5 * (1 + (pWave - 1) * 1.6));
+          }
+
+          if (bhGroup.visible) bhPhoton.lookAt(seCamera.position);
+          if (accDiskGroup.visible)
+            accSwirl.rotation.y += dt * (0.6 + state.spinFrac * 2.4);
+
+          if (nsCore.visible || magFieldLines.visible) {
+            const nsSpin = state.isNeutron
+              ? 2.5 + state.spinFrac * 24
+              : spinRate;
+            magAxisGroup.rotation.y += dt * nsSpin;
+            if (state.isNeutron) {
+              const p = 1 + Math.sin(t * (state.isMagnetar ? 24 : 15)) * 0.14;
+              nsHalo.scale.set(2.8 * p, 2.8 * p, 1);
             }
           }
 
-          if (bhGroup.visible) {
-            bhPhoton.lookAt(seCamera.position);
-            bhSwirl.rotation.y += dt * (0.5 + state.spin * 0.02);
-          }
-
-          if (pulsarSeGroup.visible) {
-            pulsarSeGroup.rotation.y += dt * (4 + state.spin * 0.35);
-            const p = 1 + Math.sin(t * 16) * 0.12;
-            pHalo.scale.set(2.8 * p, 2.8 * p, 1);
-          }
-
           if (nebulaGroup.visible) {
-            nebulaGroup.rotation.y += dt * 0.18;
-            nebulaGroup.rotation.x += dt * 0.07;
+            nebulaGroup.rotation.y += dt * 0.16;
+            nebulaGroup.rotation.x += dt * 0.06;
+          }
+          if (protoDisk.visible)
+            protoDisk.rotation.y += dt * (0.35 + state.spinFrac * 1.1);
+          if (wrBubble.visible) wrBubble.rotation.y -= dt * 0.12;
+
+          if (windData.pts.visible) {
+            const wPos = windData.pts.geometry.attributes.position.array;
+            const spd = 0.8 + (state.windPct / 100) * 3.8;
+            for (let i = 0; i < windData.cnt; i++) {
+              windData.radii[i] += dt * spd;
+              if (windData.radii[i] > 6.5) windData.radii[i] = 1.45;
+              const r = windData.radii[i];
+              wPos[i * 3] = windData.dirs[i * 3] * r;
+              wPos[i * 3 + 1] = windData.dirs[i * 3 + 1] * r;
+              wPos[i * 3 + 2] = windData.dirs[i * 3 + 2] * r;
+            }
+            windData.pts.geometry.attributes.position.needsUpdate = true;
           }
 
-          if (protoDisk.visible) {
-            protoDisk.rotation.y += dt * (0.35 + state.spin * 0.015);
-          }
-
-          // Анимация 3D-взрыва сверхновой
           if (shockwave > 0) {
-            shockwave = Math.max(0, shockwave - dt * 1.1);
+            shockwave = Math.max(0, shockwave - dt * 1.05);
             shockMesh.visible = shockwave > 0;
-            const s = 1 + (1 - shockwave) * 9.5;
-            shockMesh.scale.setScalar(s);
-            shockMesh.material.opacity = shockwave * 0.85;
+            shockMesh.scale.setScalar(1 + (1 - shockwave) * 11.0);
+            shockMesh.material.opacity = shockwave * 0.88;
           }
 
           seControls.update();
           seRenderer.render(seScene, seCamera);
         }
 
-        // События ползунков и кнопок
-        elMass.addEventListener("input", () => {
-          const m = sliderToMass(Number(elMass.value));
-          elTemp.value = autoTemperature(m, Number(elAge.value));
+        // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
+        function ensureStarMode() {
+          if (labMode !== "star") {
+            labMode = "star";
+            document.getElementById("se-mode-star").classList.add("active");
+            document.getElementById("se-mode-neb").classList.remove("active");
+            customNebulaGroup.visible = false;
+            drawSpectrumBar(computeCompositionPhysics(), false);
+          }
+        }
+
+        function onEvolutionInput() {
+          ensureStarMode();
+          if (autoPhysics) {
+            const m = sliderToMass(Number(elMass.value));
+            const a = Number(elAge.value);
+            const z = Number(elMetal.value) / 100;
+            const d = derivePhysicsFromEvolution(m, a, z);
+            elTemp.value = tempToSlider(d.temp);
+            elRadCtrl.value = radToSlider(d.radius);
+          }
           computeStarState();
+        }
+
+        elMass.addEventListener("input", onEvolutionInput);
+        elAge.addEventListener("input", onEvolutionInput);
+        elMetal.addEventListener("input", onEvolutionInput);
+
+        [elTemp, elRadCtrl].forEach((el) => {
+          el.addEventListener("input", () => {
+            ensureStarMode();
+            if (autoPhysics) {
+              autoPhysics = false;
+              btnPhysMode.textContent = "Ручной режим";
+              btnPhysMode.classList.add("manual");
+            }
+            computeStarState();
+          });
         });
-        elAge.addEventListener("input", () => {
-          const m = sliderToMass(Number(elMass.value));
-          elTemp.value = autoTemperature(m, Number(elAge.value));
-          computeStarState();
+
+        [elSpin, elMag, elMagTilt, elAcc, elWind, elPulse].forEach((el) => {
+          el.addEventListener("input", () => {
+            ensureStarMode();
+            computeStarState();
+          });
         });
-        elTemp.addEventListener("input", computeStarState);
-        elSpin.addEventListener("input", computeStarState);
-        elComp.addEventListener("input", computeStarState);
+
+        document
+          .getElementById("se-mode-star")
+          .addEventListener("click", () => setLabMode("star"));
+        document
+          .getElementById("se-mode-neb")
+          .addEventListener("click", () => setLabMode("nebula"));
+        [
+          "se-neb-type",
+          "se-neb-dens",
+          "se-neb-temp",
+          "se-neb-rad",
+          "se-neb-exp",
+        ].forEach((id) => {
+          document.getElementById(id).addEventListener("input", () => {
+            if (labMode !== "nebula") setLabMode("nebula");
+            else onChemUpdate();
+          });
+        });
+
+        const applyChemPreset = (obj) => {
+          PERIODIC_ASTRO.forEach((e) => {
+            chemWeights[e.sym] = obj[e.sym] || 0;
+            const inp = document.getElementById("se-inp-" + e.sym);
+            if (inp) inp.value = chemWeights[e.sym];
+          });
+          onChemUpdate();
+        };
+        document
+          .getElementById("se-chem-solar")
+          .addEventListener("click", () =>
+            applyChemPreset({
+              H: 73.4,
+              He: 25,
+              C: 0.3,
+              N: 0.1,
+              O: 0.7,
+              Ne: 0.15,
+              Mg: 0.08,
+              Si: 0.07,
+              S: 0.05,
+              Fe: 0.15,
+            }),
+          );
+        document
+          .getElementById("se-chem-pop3")
+          .addEventListener("click", () => applyChemPreset({ H: 75, He: 25 }));
+        document
+          .getElementById("se-chem-co")
+          .addEventListener("click", () =>
+            applyChemPreset({ C: 48, O: 50, He: 2 }),
+          );
+        document
+          .getElementById("se-chem-iron")
+          .addEventListener("click", () =>
+            applyChemPreset({ Fe: 82, Si: 10, S: 5, O: 3 }),
+          );
+
+        btnPhysMode.addEventListener("click", () => {
+          autoPhysics = !autoPhysics;
+          btnPhysMode.textContent = autoPhysics
+            ? "Авто-физика"
+            : "Ручной режим";
+          btnPhysMode.classList.toggle("manual", !autoPhysics);
+          if (autoPhysics) onEvolutionInput();
+        });
+
+        btnTogHR.addEventListener("click", () => {
+          showHR = !showHR;
+          btnTogHR.classList.toggle("active", showHR);
+          applyVisualState();
+        });
+        btnTogHZ.addEventListener("click", () => {
+          showHZ = !showHZ;
+          btnTogHZ.classList.toggle("active", showHZ);
+          applyVisualState();
+        });
+        btnTogMag.addEventListener("click", () => {
+          showMagLines = !showMagLines;
+          btnTogMag.classList.toggle("active", showMagLines);
+          applyVisualState();
+        });
+        btnTogGrid.addEventListener("click", () => {
+          showGrid = !showGrid;
+          btnTogGrid.classList.toggle("active", showGrid);
+          applyVisualState();
+        });
 
         document.querySelectorAll(".se-preset-btn").forEach((btn) => {
           btn.addEventListener("click", () => applyPreset(btn.dataset.preset));
@@ -8141,33 +10345,70 @@
         document
           .getElementById("se-supernova-btn")
           .addEventListener("click", () => {
+            ensureStarMode();
             shockwave = 1.0;
             shockMesh.visible = true;
             elAge.value = 100;
             const m = sliderToMass(Number(elMass.value));
-            elTemp.value = autoTemperature(m, 100);
+            const z = Number(elMetal.value) / 100;
+            const d = derivePhysicsFromEvolution(m, 100, z);
+            elTemp.value = tempToSlider(d.temp);
+            elRadCtrl.value = radToSlider(d.radius);
+            if (m >= 8 && m < 20 && Number(elMag.value) < 115) {
+              elMag.value = 122;
+              elSpin.value = Math.max(Number(elSpin.value), 650);
+            }
+            if (m >= 20 && Number(elAcc.value) < 40) {
+              elAcc.value = 65;
+            }
             computeStarState();
           });
 
         document
           .getElementById("se-random-btn")
           .addEventListener("click", () => {
-            elMass.value = Math.floor(Math.random() * 1000);
+            ensureStarMode();
+            const keys = Object.keys(PRESETS);
+            if (Math.random() < 0.35) {
+              applyPreset(keys[Math.floor(Math.random() * keys.length)]);
+              return;
+            }
+            elMass.value = Math.floor(Math.random() * 940);
             elAge.value = Math.floor(Math.random() * 101);
-            elSpin.value = Math.floor(Math.random() * 101);
-            elComp.value = Math.random() < 0.15 ? 90 : 1;
-            elTemp.value = autoTemperature(
-              sliderToMass(Number(elMass.value)),
+            elMetal.value = Math.floor(Math.random() * 460) - 400;
+            elSpin.value = Math.floor(Math.random() * 980);
+            elMag.value = Math.floor(Math.random() * 145);
+            elAcc.value =
+              Math.random() < 0.35 ? Math.floor(Math.random() * 120) : 0;
+            elWind.value = Math.floor(Math.random() * 90);
+            elPulse.value =
+              Math.random() < 0.25 ? Math.floor(Math.random() * 90) : 0;
+            const m = sliderToMass(Number(elMass.value));
+            const d = derivePhysicsFromEvolution(
+              m,
               Number(elAge.value),
+              Number(elMetal.value) / 100,
             );
+            elTemp.value = tempToSlider(d.temp);
+            elRadCtrl.value = radToSlider(d.radius);
             computeStarState();
+          });
+
+        document
+          .getElementById("se-reset-btn")
+          .addEventListener("click", () => {
+            autoPhysics = true;
+            btnPhysMode.textContent = "Авто-физика";
+            btnPhysMode.classList.remove("manual");
+            applyPreset("sun");
           });
 
         openBtn.addEventListener("click", () => {
           isOpen = true;
           modal.classList.add("se-visible");
           resizeEditor();
-          computeStarState();
+          if (labMode === "nebula") onChemUpdate();
+          else computeStarState();
           seClock.getDelta();
           cancelAnimationFrame(rafId);
           renderEditor();
@@ -8184,7 +10425,9 @@
           if (isOpen) resizeEditor();
         });
 
-        computeStarState();
+        // Стартовая инициализация таблицы Менделеева, спектра и Солнца
+        buildPeriodicControls(onChemUpdate);
+        applyPreset("sun");
       })();
     </script>
   </body>
